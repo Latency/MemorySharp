@@ -5,17 +5,16 @@
  * Copyright (C) 2012-2016 Jämes Ménétrey (a.k.a. ZenLulz).
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
-*/
-namespace Binarysharp.MemoryManagement.Internals
+ */
+namespace MemorySharp.Internals;
+
+/// <summary>
+/// Defines a element with a name.
+/// </summary>
+public interface INamedElement : IApplicableElement
 {
     /// <summary>
-    /// Defines a element with a name.
+    /// The name of the element.
     /// </summary>
-    public interface INamedElement : IApplicableElement
-    {
-        /// <summary>
-        /// The name of the element.
-        /// </summary>
-        string Name { get; }
-    }
+    string Name { get; }
 }

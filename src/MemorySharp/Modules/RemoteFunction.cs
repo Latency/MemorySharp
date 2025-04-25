@@ -6,41 +6,36 @@
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
 */
-using System;
-using Binarysharp.MemoryManagement.Memory;
 
-namespace Binarysharp.MemoryManagement.Modules
+using MemorySharp.Memory;
+
+namespace MemorySharp.Modules;
+
+/// <summary>
+/// Class representing a function in the remote process.
+/// </summary>
+public class RemoteFunction(MemorySharp memorySharp, IntPtr address, string functionName) : RemotePointer(memorySharp, address)
 {
+    #region Properties
     /// <summary>
-    /// Class representing a function in the remote process.
+    /// The name of the function.
     /// </summary>
-    public class RemoteFunction : RemotePointer
-    {
-        #region Properties
-        /// <summary>
-        /// The name of the function.
-        /// </summary>
-        public string Name { get; private set; }
-        #endregion
+    public string Name { get; private set; } = functionName;
+    #endregion
 
-        #region Constructor
-        public RemoteFunction(MemorySharp memorySharp, IntPtr address, string functionName) : base(memorySharp, address)
-        {
-            // Save the parameter
-            Name = functionName;
-        }
-        #endregion
+    #region Constructor
 
-        #region Methods
-        #region ToString (override)
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        public override string ToString()
-        {
-            return string.Format("BaseAddress = 0x{0:X} Name = {1}", BaseAddress.ToInt64(), Name);
-        }
-        #endregion
-        #endregion
-    }
+    // Save the parameter
+
+    #endregion
+
+    #region Methods
+    #region ToString (override)
+    /// <summary>
+    /// Returns a string that represents the current object.
+    /// </summary>
+    public override string ToString() => $"BaseAddress = 0x{BaseAddress.ToInt64():X} Name = {Name}";
+
+    #endregion
+    #endregion
 }

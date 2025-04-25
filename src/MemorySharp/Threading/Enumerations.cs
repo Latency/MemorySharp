@@ -5,39 +5,38 @@
  * Copyright (C) 2012-2016 Jämes Ménétrey (a.k.a. ZenLulz).
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
-*/
-namespace Binarysharp.MemoryManagement.Threading
+ */
+namespace MemorySharp.Threading;
+
+#region SegmentRegisters
+/// <summary>
+/// List of segment registers.
+/// </summary>
+public enum SegmentRegisters
 {
-    #region SegmentRegisters
     /// <summary>
-    /// List of segment registers.
+    /// The code segment.
     /// </summary>
-    public enum SegmentRegisters
-    {
-        /// <summary>
-        /// The code segment.
-        /// </summary>
-        Cs,
-        /// <summary>
-        /// The Data segment.
-        /// </summary>
-        Ds,
-        /// <summary>
-        /// The extra data segment.
-        /// </summary>
-        Es,
-        /// <summary>
-        /// The points to Thread Information Block (TIB).
-        /// </summary>
-        Fs,
-        /// <summary>
-        /// The extra data segment.
-        /// </summary>
-        Gs,
-        /// <summary>
-        /// The stack segment.
-        /// </summary>
-        Ss
-    }
-    #endregion
+    Cs,
+    /// <summary>
+    /// The Data segment.
+    /// </summary>
+    Ds,
+    /// <summary>
+    /// The extra data segment.
+    /// </summary>
+    Es,
+    /// <summary>
+    /// The points to Thread Information Block (TIB).
+    /// </summary>
+    Fs,
+    /// <summary>
+    /// The extra data segment.
+    /// </summary>
+    Gs,
+    /// <summary>
+    /// The stack segment.
+    /// </summary>
+    Ss
 }
+#endregion

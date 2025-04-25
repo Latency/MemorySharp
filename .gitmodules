@@ -1,0 +1,3 @@
+[submodule "Fasm.NET"]
+	path = Fasm.NET
+	url = https://github.com/Latency/Fasm.NET.git

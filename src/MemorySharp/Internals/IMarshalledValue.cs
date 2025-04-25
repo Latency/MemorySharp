@@ -6,23 +6,22 @@
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
 */
-using System;
-using Binarysharp.MemoryManagement.Memory;
 
-namespace Binarysharp.MemoryManagement.Internals
+using MemorySharp.Memory;
+
+namespace MemorySharp.Internals;
+
+/// <summary>
+/// Interface representing a value within the memory of a remote process.
+/// </summary>
+public interface IMarshalledValue : IDisposable
 {
     /// <summary>
-    /// Interface representing a value within the memory of a remote process.
+    /// The memory allocated where the value is fully written if needed. It can be unused.
     /// </summary>
-    public interface IMarshalledValue : IDisposable
-    {
-        /// <summary>
-        /// The memory allocated where the value is fully written if needed. It can be unused.
-        /// </summary>
-        RemoteAllocation Allocated { get; }
-        /// <summary>
-        /// The reference of the value. It can be directly the value or a pointer.
-        /// </summary>
-        IntPtr Reference { get; }
-    }
+    RemoteAllocation Allocated { get; }
+    /// <summary>
+    /// The reference of the value. It can be directly the value or a pointer.
+    /// </summary>
+    IntPtr Reference { get; }
 }
