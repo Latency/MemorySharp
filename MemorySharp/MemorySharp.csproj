@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net11.0</TargetFrameworks>
+		<Description>MemorySharp is a C# based memory editing library targeting Windows applications, offering various functions to extract and inject data and codes into remote processes to allow interoperability.</Description>
+		<PackageProjectUrl>https://github.com/Latency/MemorySharp</PackageProjectUrl>
+		<Version>2.0.0</Version>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="keystoneengine.csharp" Version="0.9.1.1" />
+		<PackageReference Include="dnlib" Version="4.5.0" />
+	</ItemGroup>
+
+</Project>
