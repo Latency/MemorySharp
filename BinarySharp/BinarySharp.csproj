@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Description>MemorySharp is a C# based memory editing library targeting Windows applications, offering various functions to extract and inject data and codes into remote processes to allow interoperability.</Description>
+		<XamlDebuggingInformation Condition="'$(Configuration)' == 'Debug'">True</XamlDebuggingInformation>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <WarningsAsErrors>$(WarningsAsErrors);NU1605</WarningsAsErrors>
+	  <NoWarn>$(NoWarn);NU5104;MSB3270</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <WarningsAsErrors>$(WarningsAsErrors);NU1605</WarningsAsErrors>
+	  <NoWarn>$(NoWarn);NU5104;MSB3270</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Remove="bin\Debug\net9.0-windows\README.md" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Fasm.NET\Fasm.NET\Fasm.NET.vcxproj" />
+	</ItemGroup>
+
+</Project>
