@@ -27,13 +27,13 @@ public interface ICallingConvention
     /// </summary>
     /// <param name="parameters">An array of parameters.</param>
     /// <returns>The mnemonics to pass the parameters.</returns>
-    string FormatParameters(IntPtr[] parameters);
+    string FormatParameters(nint[] parameters);
     /// <summary>
     /// Formats the call of a given function.
     /// </summary>
     /// <param name="function">The function to call.</param>
     /// <returns>The mnemonics to call the function.</returns>
-    string FormatCalling(IntPtr function);
+    string FormatCalling(nint function);
     /// <summary>
     /// Formats the cleaning of a given number of parameters.
     /// </summary>

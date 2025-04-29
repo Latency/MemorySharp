@@ -87,7 +87,7 @@ public class ThreadFactory : IFactory
     /// <param name="parameter">A variable to be passed to the thread function.</param>
     /// <param name="isStarted">Sets if the thread must be started just after being created.</param>
     /// <returns>A new instance of the <see cref="RemoteThread"/> class.</returns>
-    public RemoteThread Create(IntPtr address, dynamic parameter, bool isStarted = true)
+    public RemoteThread Create(nint address, dynamic parameter, bool isStarted = true)
     {
         // Marshal the parameter
         var marshalledParameter = MarshalValue.Marshal(MemorySharp, parameter);
@@ -121,11 +121,11 @@ public class ThreadFactory : IFactory
     /// </param>
     /// <param name="isStarted">Sets if the thread must be started just after being created.</param>
     /// <returns>A new instance of the <see cref="RemoteThread"/> class.</returns>
-    public RemoteThread Create(IntPtr address, bool isStarted = true)
+    public RemoteThread Create(nint address, bool isStarted = true)
     {
         // Create the thread
         var ret = ThreadCore.NtQueryInformationThread(
-            ThreadCore.CreateRemoteThread(MemorySharp.Handle, address, IntPtr.Zero, ThreadCreationFlags.Suspended));
+            ThreadCore.CreateRemoteThread(MemorySharp.Handle, address, nint.Zero, ThreadCreationFlags.Suspended));
 
         // Get the native thread previously created
         // Loop until the native thread is retrieved
@@ -155,7 +155,7 @@ public class ThreadFactory : IFactory
     /// </param>
     /// <param name="parameter">A variable to be passed to the thread function.</param>
     /// <returns>A new instance of the <see cref="RemoteThread"/> class.</returns>
-    public RemoteThread CreateAndJoin(IntPtr address, dynamic parameter)
+    public RemoteThread CreateAndJoin(nint address, dynamic parameter)
     {
         // Create the thread
         var ret = Create(address, parameter);
@@ -173,7 +173,7 @@ public class ThreadFactory : IFactory
     /// the starting address of the thread in the remote process.
     /// </param>
     /// <returns>A new instance of the <see cref="RemoteThread"/> class.</returns>
-    public RemoteThread CreateAndJoin(IntPtr address)
+    public RemoteThread CreateAndJoin(nint address)
     {
         // Create the thread
         var ret = Create(address);

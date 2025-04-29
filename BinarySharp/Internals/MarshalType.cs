@@ -26,9 +26,9 @@ public static class MarshalType<T>
     /// </summary>
     public static bool CanBeStoredInRegisters { get; private set; }
     /// <summary>
-    /// State if the type is <see cref="IntPtr"/>.
+    /// State if the type is <see cref="nint"/>.
     /// </summary>
-    public static bool IsIntPtr { get; private set; }
+    public static bool Isnint { get; private set; }
     /// <summary>
     /// The real type.
     /// </summary>
@@ -50,13 +50,13 @@ public static class MarshalType<T>
     static MarshalType()
     {
         // Gather information related to the provided type
-        IsIntPtr = typeof(T) == typeof(IntPtr);
+        Isnint = typeof(T) == typeof(nint);
         RealType = typeof(T);
         Size     = TypeCode == TypeCode.Boolean ? 1 : Marshal.SizeOf(RealType);
         TypeCode = Type.GetTypeCode(RealType);
         // Check if the type can be stored in registers
         CanBeStoredInRegisters =
-            IsIntPtr ||
+            Isnint ||
             #if x64
                 TypeCode == TypeCode.Int64 ||
                 TypeCode == TypeCode.UInt64 ||
@@ -88,14 +88,14 @@ public static class MarshalType<T>
         switch (TypeCode)
         {
             case TypeCode.Object:
-                if (IsIntPtr)
+                if (Isnint)
                 {
                     switch (Size)
                     {
                         case 4:
-                            return BitConverter.GetBytes(((IntPtr)((object?)obj)!).ToInt32());
+                            return BitConverter.GetBytes(((nint)((object?)obj)!).ToInt32());
                         case 8:
-                            return BitConverter.GetBytes(((IntPtr)((object?)obj)!).ToInt64());
+                            return BitConverter.GetBytes(((nint)((object?)obj)!).ToInt64());
                     }
                 }
                 break;
@@ -147,18 +147,18 @@ public static class MarshalType<T>
         switch (TypeCode)
         {
             case TypeCode.Object:
-                if (IsIntPtr)
+                if (Isnint)
                 {
                     switch (byteArray.Length)
                     {
                         case 1:
-                            return (T)(object)new IntPtr(BitConverter.ToInt32([byteArray[index], 0x0, 0x0, 0x0], index));
+                            return (T)(object)new nint(BitConverter.ToInt32([byteArray[index], 0x0, 0x0, 0x0], index));
                         case 2:
-                            return (T)(object)new IntPtr(BitConverter.ToInt32([byteArray[index], byteArray[index + 1], 0x0, 0x0], index));
+                            return (T)(object)new nint(BitConverter.ToInt32([byteArray[index], byteArray[index + 1], 0x0, 0x0], index));
                         case 4:
-                            return (T)(object)new IntPtr(BitConverter.ToInt32(byteArray, index));
+                            return (T)(object)new nint(BitConverter.ToInt32(byteArray, index));
                         case 8:
-                            return (T)(object)new IntPtr(BitConverter.ToInt64(byteArray, index));
+                            return (T)(object)new nint(BitConverter.ToInt64(byteArray, index));
                     }
                 }
                 break;
@@ -205,7 +205,7 @@ public static class MarshalType<T>
     /// <param name="memorySharp">The concerned process.</param>
     /// <param name="pointer">The pointer to convert.</param>
     /// <returns>The return value is the pointer converted to the given data type.</returns>
-    public static T? PtrToObject(MemorySharp memorySharp, IntPtr pointer)
+    public static T? PtrToObject(MemorySharp memorySharp, nint pointer)
     {
         return ByteArrayToObject(CanBeStoredInRegisters
                                      ? BitConverter.GetBytes(pointer.ToInt64())

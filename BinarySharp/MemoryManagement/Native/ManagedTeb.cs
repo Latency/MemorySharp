@@ -21,65 +21,65 @@ public class ManagedTeb : RemotePointer
     /// <summary>
     /// Current Structured Exception Handling (SEH) frame.
     /// </summary>
-    public IntPtr CurrentSehFrame
+    public nint CurrentSehFrame
     {
-        get => Read<IntPtr>(TebStructure.CurrentSehFrame);
+        get => Read<nint>(TebStructure.CurrentSehFrame);
         set => Write(TebStructure.CurrentSehFrame, value);
     }
     /// <summary>
     /// The top of stack.
     /// </summary>
-    public IntPtr TopOfStack
+    public nint TopOfStack
     {
-        get => Read<IntPtr>(TebStructure.TopOfStack);
+        get => Read<nint>(TebStructure.TopOfStack);
         set => Write(TebStructure.TopOfStack, value);
     }
     /// <summary>
     /// The current bottom of stack.
     /// </summary>
-    public IntPtr BottomOfStack
+    public nint BottomOfStack
     {
-        get => Read<IntPtr>(TebStructure.BottomOfStack);
+        get => Read<nint>(TebStructure.BottomOfStack);
         set => Write(TebStructure.BottomOfStack, value);
     }
     /// <summary>
     /// The TEB sub system.
     /// </summary>
-    public IntPtr SubSystemTeb
+    public nint SubSystemTeb
     {
-        get => Read<IntPtr>(TebStructure.SubSystemTeb);
+        get => Read<nint>(TebStructure.SubSystemTeb);
         set => Write(TebStructure.SubSystemTeb, value);
     }
     /// <summary>
     /// The fiber data.
     /// </summary>
-    public IntPtr FiberData
+    public nint FiberData
     {
-        get => Read<IntPtr>(TebStructure.FiberData);
+        get => Read<nint>(TebStructure.FiberData);
         set => Write(TebStructure.FiberData, value);
     }
     /// <summary>
     /// The arbitrary data slot.
     /// </summary>
-    public IntPtr ArbitraryDataSlot
+    public nint ArbitraryDataSlot
     {
-        get => Read<IntPtr>(TebStructure.ArbitraryDataSlot);
+        get => Read<nint>(TebStructure.ArbitraryDataSlot);
         set => Write(TebStructure.ArbitraryDataSlot, value);
     }
     /// <summary>
     /// The linear address of Thread Environment Block (TEB).
     /// </summary>
-    public IntPtr Teb
+    public nint Teb
     {
-        get => Read<IntPtr>(TebStructure.Teb);
+        get => Read<nint>(TebStructure.Teb);
         set => Write(TebStructure.Teb, value);
     }
     /// <summary>
     /// The environment pointer.
     /// </summary>
-    public IntPtr EnvironmentPointer
+    public nint EnvironmentPointer
     {
-        get => Read<IntPtr>(TebStructure.EnvironmentPointer);
+        get => Read<nint>(TebStructure.EnvironmentPointer);
         set => Write(TebStructure.EnvironmentPointer, value);
     }
     /// <summary>
@@ -101,25 +101,25 @@ public class ManagedTeb : RemotePointer
     /// <summary>
     /// The active RPC handle.
     /// </summary>
-    public IntPtr RpcHandle
+    public nint RpcHandle
     {
-        get => Read<IntPtr>(TebStructure.RpcHandle);
+        get => Read<nint>(TebStructure.RpcHandle);
         set => Write(TebStructure.RpcHandle, value);
     }
     /// <summary>
     /// The linear address of the thread-local storage (TLS) array.
     /// </summary>
-    public IntPtr Tls
+    public nint Tls
     {
-        get => Read<IntPtr>(TebStructure.Tls);
+        get => Read<nint>(TebStructure.Tls);
         set => Write(TebStructure.Tls, value);
     }
     /// <summary>
     /// The linear address of Process Environment Block (PEB).
     /// </summary>
-    public IntPtr Peb
+    public nint Peb
     {
-        get => Read<IntPtr>(TebStructure.Peb);
+        get => Read<nint>(TebStructure.Peb);
         set => Write(TebStructure.Peb, value);
     }
     /// <summary>
@@ -141,17 +141,17 @@ public class ManagedTeb : RemotePointer
     /// <summary>
     /// The address of CSR Client Thread.
     /// </summary>
-    public IntPtr CsrClientThread
+    public nint CsrClientThread
     {
-        get => Read<IntPtr>(TebStructure.CsrClientThread);
+        get => Read<nint>(TebStructure.CsrClientThread);
         set => Write(TebStructure.CsrClientThread, value);
     }
     /// <summary>
     /// Win32 Thread Information.
     /// </summary>
-    public IntPtr Win32ThreadInfo
+    public nint Win32ThreadInfo
     {
-        get => Read<IntPtr>(TebStructure.Win32ThreadInfo);
+        get => Read<nint>(TebStructure.Win32ThreadInfo);
         set => Write(TebStructure.Win32ThreadInfo, value);
     }
     /// <summary>
@@ -165,25 +165,25 @@ public class ManagedTeb : RemotePointer
     /// <summary>
     /// Reserved for Wow64. Contains a pointer to FastSysCall in Wow64.
     /// </summary>
-    public IntPtr WoW64Reserved
+    public nint WoW64Reserved
     {
-        get => Read<IntPtr>(TebStructure.WoW64Reserved);
+        get => Read<nint>(TebStructure.WoW64Reserved);
         set => Write(TebStructure.WoW64Reserved, value);
     }
     /// <summary>
     /// The current locale
     /// </summary>
-    public IntPtr CurrentLocale
+    public nint CurrentLocale
     {
-        get => Read<IntPtr>(TebStructure.CurrentLocale);
+        get => Read<nint>(TebStructure.CurrentLocale);
         set => Write(TebStructure.CurrentLocale, value);
     }
     /// <summary>
     /// The FP Software Status Register.
     /// </summary>
-    public IntPtr FpSoftwareStatusRegister
+    public nint FpSoftwareStatusRegister
     {
-        get => Read<IntPtr>(TebStructure.FpSoftwareStatusRegister);
+        get => Read<nint>(TebStructure.FpSoftwareStatusRegister);
         set => Write(TebStructure.FpSoftwareStatusRegister, value);
     }
     /// <summary>
@@ -198,9 +198,9 @@ public class ManagedTeb : RemotePointer
     /// <summary>
     /// The exception code.
     /// </summary>
-    public IntPtr ExceptionCode
+    public nint ExceptionCode
     {
-        get => Read<IntPtr>(TebStructure.ExceptionCode);
+        get => Read<nint>(TebStructure.ExceptionCode);
         set => Write(TebStructure.ExceptionCode, value);
     }
     /// <summary>
@@ -238,25 +238,25 @@ public class ManagedTeb : RemotePointer
     /// <summary>
     /// The GDI Region.
     /// </summary>
-    public IntPtr GdiRegion
+    public nint GdiRegion
     {
-        get => Read<IntPtr>(TebStructure.GdiRegion);
+        get => Read<nint>(TebStructure.GdiRegion);
         set => Write(TebStructure.GdiRegion, value);
     }
     /// <summary>
     /// The GDI Pen.
     /// </summary>
-    public IntPtr GdiPen
+    public nint GdiPen
     {
-        get => Read<IntPtr>(TebStructure.GdiPen);
+        get => Read<nint>(TebStructure.GdiPen);
         set => Write(TebStructure.GdiPen, value);
     }
     /// <summary>
     /// The GDI Brush.
     /// </summary>
-    public IntPtr GdiBrush
+    public nint GdiBrush
     {
-        get => Read<IntPtr>(TebStructure.GdiBrush);
+        get => Read<nint>(TebStructure.GdiBrush);
         set => Write(TebStructure.GdiBrush, value);
     }
     /// <summary>
@@ -278,33 +278,33 @@ public class ManagedTeb : RemotePointer
     /// <summary>
     /// The GDI cached process handle.
     /// </summary>
-    public IntPtr GdiCachedProcessHandle
+    public nint GdiCachedProcessHandle
     {
-        get => Read<IntPtr>(TebStructure.GdiCachedProcessHandle);
+        get => Read<nint>(TebStructure.GdiCachedProcessHandle);
         set => Write(TebStructure.GdiCachedProcessHandle, value);
     }
     /// <summary>
     /// The GDI client process Id (PID).
     /// </summary>
-    public IntPtr GdiClientProcessId
+    public nint GdiClientProcessId
     {
-        get => Read<IntPtr>(TebStructure.GdiClientProcessId);
+        get => Read<nint>(TebStructure.GdiClientProcessId);
         set => Write(TebStructure.GdiClientProcessId, value);
     }
     /// <summary>
     /// The GDI client thread Id (TID).
     /// </summary>
-    public IntPtr GdiClientThreadId
+    public nint GdiClientThreadId
     {
-        get => Read<IntPtr>(TebStructure.GdiClientThreadId);
+        get => Read<nint>(TebStructure.GdiClientThreadId);
         set => Write(TebStructure.GdiClientThreadId, value);
     }
     /// <summary>
     /// The GDI thread locale information.
     /// </summary>
-    public IntPtr GdiThreadLocalInfo
+    public nint GdiThreadLocalInfo
     {
-        get => Read<IntPtr>(TebStructure.GdiThreadLocalInfo);
+        get => Read<nint>(TebStructure.GdiThreadLocalInfo);
         set => Write(TebStructure.GdiThreadLocalInfo, value);
     }
     /// <summary>
@@ -342,17 +342,17 @@ public class ManagedTeb : RemotePointer
     /// <summary>
     /// The pointer to deallocation stack.
     /// </summary>
-    public IntPtr DeallocationStack
+    public nint DeallocationStack
     {
-        get => Read<IntPtr>(TebStructure.DeallocationStack);
+        get => Read<nint>(TebStructure.DeallocationStack);
         set => Write(TebStructure.DeallocationStack, value);
     }
     /// <summary>
     /// The TLS slots, 4 byte per slot.
     /// </summary>
-    public IntPtr[] TlsSlots
+    public nint[] TlsSlots
     {
-        get => Read<IntPtr>(TebStructure.TlsSlots, 64);
+        get => Read<nint>(TebStructure.TlsSlots, 64);
         set => Write(TebStructure.TlsSlots, value);
     }
     /// <summary>
@@ -366,25 +366,25 @@ public class ManagedTeb : RemotePointer
     /// <summary>
     /// Virtual DOS Machine.
     /// </summary>
-    public IntPtr Vdm
+    public nint Vdm
     {
-        get => Read<IntPtr>(TebStructure.Vdm);
+        get => Read<nint>(TebStructure.Vdm);
         set => Write(TebStructure.Vdm, value);
     }
     /// <summary>
     /// Reserved for RPC.
     /// </summary>
-    public IntPtr RpcReserved
+    public nint RpcReserved
     {
-        get => Read<IntPtr>(TebStructure.RpcReserved);
+        get => Read<nint>(TebStructure.RpcReserved);
         set => Write(TebStructure.RpcReserved, value);
     }
     /// <summary>
     /// The thread error mode (RtlSetThreadErrorMode).
     /// </summary>
-    public IntPtr ThreadErrorMode
+    public nint ThreadErrorMode
     {
-        get => Read<IntPtr>(TebStructure.ThreadErrorMode);
+        get => Read<nint>(TebStructure.ThreadErrorMode);
         set => Write(TebStructure.ThreadErrorMode, value);
     }
     #endregion
@@ -395,7 +395,7 @@ public class ManagedTeb : RemotePointer
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     /// <param name="address">The location of the teb.</param>
-    internal ManagedTeb(MemorySharp memorySharp, IntPtr address) : base(memorySharp, address) {}
+    internal ManagedTeb(MemorySharp memorySharp, nint address) : base(memorySharp, address) {}
     #endregion
 
     #region Methods
@@ -403,8 +403,8 @@ public class ManagedTeb : RemotePointer
     /// Finds the Thread Environment Block address of a specified thread.
     /// </summary>
     /// <param name="threadHandle">A handle of the thread.</param>
-    /// <returns>A <see cref="IntPtr"/> pointer of the TEB.</returns>
-    public static IntPtr FindTeb(SafeMemoryHandle threadHandle) => ThreadCore.NtQueryInformationThread(threadHandle).TebBaseAdress;
+    /// <returns>A <see cref="nint"/> pointer of the TEB.</returns>
+    public static nint FindTeb(SafeMemoryHandle threadHandle) => ThreadCore.NtQueryInformationThread(threadHandle).TebBaseAdress;
 
     #endregion
 }

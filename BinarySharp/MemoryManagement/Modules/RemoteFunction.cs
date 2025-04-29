@@ -14,7 +14,7 @@ namespace Binarysharp.MemoryManagement.Modules;
 /// <summary>
 /// Class representing a function in the remote process.
 /// </summary>
-public class RemoteFunction(MemorySharp memorySharp, IntPtr address, string functionName) : RemotePointer(memorySharp, address)
+public class RemoteFunction(MemorySharp memorySharp, nint address, string functionName) : RemotePointer(memorySharp, address)
 {
     #region Properties
     /// <summary>

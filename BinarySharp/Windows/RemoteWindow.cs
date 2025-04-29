@@ -39,7 +39,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <summary>
     /// Gets all the child window handles of this window.
     /// </summary>
-    protected IEnumerable<IntPtr> ChildrenHandles => WindowCore.EnumChildWindows(Handle);
+    protected IEnumerable<nint> ChildrenHandles => WindowCore.EnumChildWindows(Handle);
 
     #endregion
     #region ClassName
@@ -57,7 +57,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// The type here is not <see cref="SafeMemoryHandle"/> because a window cannot be closed by calling <see cref="NativeMethods.CloseHandle"/>.
     /// For more information, see: http://stackoverflow.com/questions/8507307/why-cant-i-close-the-window-handle-in-my-code.
     /// </remarks>
-    public IntPtr Handle { get; private set; }
+    public nint Handle { get; private set; }
     #endregion
 
     #region Height
@@ -198,7 +198,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp.MemorySharp"/> object.</param>
     /// <param name="handle">The handle of a window.</param>
-    internal RemoteWindow(MemorySharp? memorySharp, IntPtr handle)
+    internal RemoteWindow(MemorySharp? memorySharp, nint handle)
     {
         // Save the parameters
         MemorySharp = memorySharp;
@@ -221,7 +221,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <summary>
     /// Closes the window.
     /// </summary>
-    public void Close() => PostMessage(WindowsMessages.Close, UIntPtr.Zero, UIntPtr.Zero);
+    public void Close() => PostMessage(WindowsMessages.Close, nint.Zero, nint.Zero);
     #endregion
 
     #region Equals (override)
@@ -289,7 +289,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <param name="message">The message to be posted.</param>
     /// <param name="wParam">Additional message-specific information.</param>
     /// <param name="lParam">Additional message-specific information.</param>
-    public void PostMessage(WindowsMessages message, UIntPtr wParam, UIntPtr lParam) => WindowCore.PostMessage(Handle, message, wParam, lParam);
+    public void PostMessage(WindowsMessages message, nint wParam, nint lParam) => WindowCore.PostMessage(Handle, message, wParam, lParam);
 
     /// <summary>
     /// Places (posts) a message in the message queue associated with the thread that created the window and returns without waiting for the thread to process the message.
@@ -297,7 +297,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <param name="message">The message to be posted.</param>
     /// <param name="wParam">Additional message-specific information.</param>
     /// <param name="lParam">Additional message-specific information.</param>
-    public void PostMessage(uint message, UIntPtr wParam, UIntPtr lParam) => WindowCore.PostMessage(Handle, message, wParam, lParam);
+    public void PostMessage(uint message, nint wParam, nint lParam) => WindowCore.PostMessage(Handle, message, wParam, lParam);
 
     #endregion
     #region SendMessage
@@ -309,7 +309,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <param name="wParam">Additional message-specific information.</param>
     /// <param name="lParam">Additional message-specific information.</param>
     /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
-    public IntPtr SendMessage(WindowsMessages message, UIntPtr wParam, IntPtr lParam) => WindowCore.SendMessage(Handle, message, wParam, lParam);
+    public nint SendMessage(WindowsMessages message, nint wParam, nint lParam) => WindowCore.SendMessage(Handle, message, wParam, lParam);
 
     /// <summary>
     /// Sends the specified message to a window or windows.
@@ -319,7 +319,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <param name="wParam">Additional message-specific information.</param>
     /// <param name="lParam">Additional message-specific information.</param>
     /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
-    public IntPtr SendMessage(uint message, UIntPtr wParam, IntPtr lParam) => WindowCore.SendMessage(Handle, message, wParam, lParam);
+    public nint SendMessage(uint message, nint wParam, nint lParam) => WindowCore.SendMessage(Handle, message, wParam, lParam);
 
     #endregion
     #region ToString (override)

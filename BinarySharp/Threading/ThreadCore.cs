@@ -28,7 +28,7 @@ public static class ThreadCore
     /// <param name="parameter">A pointer to a variable to be passed to the thread function.</param>
     /// <param name="creationFlags">The flags that control the creation of the thread.</param>
     /// <returns>A handle to the new thread.</returns>
-    public static SafeMemoryHandle CreateRemoteThread(SafeMemoryHandle processHandle, IntPtr startAddress, IntPtr parameter, ThreadCreationFlags creationFlags = ThreadCreationFlags.Run)
+    public static SafeMemoryHandle CreateRemoteThread(SafeMemoryHandle processHandle, nint startAddress, nint parameter, ThreadCreationFlags creationFlags = ThreadCreationFlags.Run)
     {
         // Check if the handles are valid
         HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
@@ -36,7 +36,7 @@ public static class ThreadCore
 
         // Create the remote thread
         int threadId;
-        var ret = NativeMethods.CreateRemoteThread(processHandle, IntPtr.Zero, 0, startAddress, parameter, creationFlags, out threadId);
+        var ret = NativeMethods.CreateRemoteThread(processHandle, nint.Zero, 0, startAddress, parameter, creationFlags, out threadId);
 
         // If the thread is created
         if (ret is { IsClosed: false, IsInvalid: false })
@@ -53,7 +53,7 @@ public static class ThreadCore
     /// </summary>
     /// <param name="threadHandle">A handle to the thread.</param>
     /// <returns>Nullable type: the return value is A pointer to a variable to receive the thread termination status or <code>null</code> if it is running.</returns>
-    public static IntPtr? GetExitCodeThread(SafeMemoryHandle threadHandle)
+    public static nint? GetExitCodeThread(SafeMemoryHandle threadHandle)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(threadHandle, "threadHandle");
@@ -63,7 +63,7 @@ public static class ThreadCore
             throw new Win32Exception("Couldn't get the exit code of the thread.");
 
         // If the thread is still active
-        if (exitCode == new IntPtr(259))
+        if (exitCode == new nint(259))
             return null;
 
         return exitCode;
@@ -154,7 +154,7 @@ public static class ThreadCore
         var info = new ThreadBasicInformation();
 
         // Get the thread info
-        var ret = NativeMethods.NtQueryInformationThread(threadHandle, 0, ref info, MarshalType<ThreadBasicInformation>.Size, IntPtr.Zero);
+        var ret = NativeMethods.NtQueryInformationThread(threadHandle, 0, ref info, MarshalType<ThreadBasicInformation>.Size, nint.Zero);
 
         // If the function succeeded
         if (ret == 0)

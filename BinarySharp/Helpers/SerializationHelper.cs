@@ -32,6 +32,7 @@ public static class SerializationHelper
         // Write the content by calling the method to serialize the object
         file.Write(ExportToXmlString(obj));
     }
+
     /// <summary>
     /// Serializes the specified object and writes the XML document to the specified path using <see cref="Encoding.UTF8"/> encoding.
     /// </summary>
@@ -39,7 +40,6 @@ public static class SerializationHelper
     /// <param name="obj">The object to serialize.</param>
     /// <param name="path">The path where the file is saved.</param>
     public static void ExportToXmlFile<T>(T obj, string path) => ExportToXmlFile(obj, path, Encoding.UTF8);
-
     #endregion
 
     #region ExportToXmlString
@@ -76,6 +76,7 @@ public static class SerializationHelper
         // Read the content of the file and call the method to deserialize the object
         return ImportFromXmlString<T>(file.ReadToEnd());
     }
+
     /// <summary>
     /// Deserializes the specified file into an object using <see cref="Encoding.UTF8"/> encoding.
     /// </summary>
@@ -83,7 +84,6 @@ public static class SerializationHelper
     /// <param name="path">The path where the object is read.</param>
     /// <returns>The deserialized object.</returns>
     public static T? ImportFromXmlFile<T>(string path) => ImportFromXmlFile<T>(path, Encoding.UTF8);
-
     #endregion
 
     #region ImportFromXmlString

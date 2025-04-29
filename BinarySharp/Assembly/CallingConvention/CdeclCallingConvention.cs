@@ -31,7 +31,7 @@ public class CdeclCallingConvention : ICallingConvention
     /// </summary>
     /// <param name="parameters">An array of parameters.</param>
     /// <returns>The mnemonics to pass the parameters.</returns>
-    public string FormatParameters(IntPtr[] parameters)
+    public string FormatParameters(nint[] parameters)
     {
         // Declare a var to store the mnemonics
         var ret = new StringBuilder();
@@ -47,7 +47,7 @@ public class CdeclCallingConvention : ICallingConvention
     /// </summary>
     /// <param name="function">The function to call.</param>
     /// <returns>The mnemonics to call the function.</returns>
-    public string FormatCalling(IntPtr function) => $"call {function}";
+    public string FormatCalling(nint function) => $"call {function}";
 
     /// <summary>
     /// Formats the cleaning of a given number of parameters.

@@ -59,7 +59,7 @@ public class AssemblyFactory : IFactory
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <param name="autoExecute">Indicates whether the assembly code is executed once the object is disposed.</param>
     /// <returns>The return value is a new transaction.</returns>
-    public AssemblyTransaction BeginTransaction(IntPtr address, bool autoExecute = true) => new(MemorySharp, address, autoExecute);
+    public AssemblyTransaction BeginTransaction(nint address, bool autoExecute = true) => new(MemorySharp, address, autoExecute);
 
     /// <summary>
     /// Begins a new transaction to inject and execute assembly code into the process.
@@ -85,7 +85,7 @@ public class AssemblyFactory : IFactory
     /// </summary>
     /// <param name="address">The address where the assembly code is located.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public T? Execute<T>(IntPtr address)
+    public T? Execute<T>(nint address)
     {
         // Execute and join the code in a new thread
         var thread = MemorySharp.Threads.CreateAndJoin(address);
@@ -98,7 +98,7 @@ public class AssemblyFactory : IFactory
     /// </summary>
     /// <param name="address">The address where the assembly code is located.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public IntPtr Execute(IntPtr address) => Execute<IntPtr>(address);
+    public nint Execute(nint address) => Execute<nint>(address);
 
     /// <summary>
     /// Executes the assembly code located in the remote process at the specified address.
@@ -106,7 +106,7 @@ public class AssemblyFactory : IFactory
     /// <param name="address">The address where the assembly code is located.</param>
     /// <param name="parameter">The parameter used to execute the assembly code.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public T? Execute<T>(IntPtr address, dynamic parameter)
+    public T? Execute<T>(nint address, dynamic parameter)
     {
         // Execute and join the code in a new thread
         RemoteThread thread = MemorySharp.Threads.CreateAndJoin(address, parameter);
@@ -120,7 +120,7 @@ public class AssemblyFactory : IFactory
     /// <param name="address">The address where the assembly code is located.</param>
     /// <param name="parameter">The parameter used to execute the assembly code.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public IntPtr Execute(IntPtr address, dynamic parameter) => Execute<IntPtr>(address, parameter);
+    public nint Execute(nint address, dynamic parameter) => Execute<nint>(address, parameter);
 
     /// <summary>
     /// Executes the assembly code located in the remote process at the specified address.
@@ -129,7 +129,7 @@ public class AssemblyFactory : IFactory
     /// <param name="callingConvention">The calling convention used to execute the assembly code with the parameters.</param>
     /// <param name="parameters">An array of parameters used to execute the assembly code.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public T? Execute<T>(IntPtr address, CallingConventions callingConvention, params dynamic[] parameters)
+    public T? Execute<T>(nint address, CallingConventions callingConvention, params dynamic[] parameters)
     {
         // Marshal the parameters
         var marshalledParameters = parameters.Select(p => MarshalValue.Marshal(MemorySharp, p)).Cast<IMarshalledValue>().ToArray();
@@ -165,7 +165,7 @@ public class AssemblyFactory : IFactory
     /// <param name="callingConvention">The calling convention used to execute the assembly code with the parameters.</param>
     /// <param name="parameters">An array of parameters used to execute the assembly code.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public IntPtr Execute(IntPtr address, CallingConventions callingConvention, params dynamic[] parameters) => Execute<IntPtr>(address, callingConvention, parameters);
+    public nint Execute(nint address, CallingConventions callingConvention, params dynamic[] parameters) => Execute<nint>(address, callingConvention, parameters);
 
     #endregion
     #region ExecuteAsync
@@ -174,22 +174,14 @@ public class AssemblyFactory : IFactory
     /// </summary>
     /// <param name="address">The address where the assembly code is located.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<T?> ExecuteAsync<T>(IntPtr address) => Task.Run(() => Execute<T>(address));
+    public Task<T?> ExecuteAsync<T>(nint address) => Task.Run(() => Execute<T>(address));
 
     /// <summary>
     /// Executes asynchronously the assembly code located in the remote process at the specified address.
     /// </summary>
     /// <param name="address">The address where the assembly code is located.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<IntPtr> ExecuteAsync(IntPtr address) => ExecuteAsync<IntPtr>(address);
-
-    /// <summary>
-    /// Executes asynchronously the assembly code located in the remote process at the specified address.
-    /// </summary>
-    /// <param name="address">The address where the assembly code is located.</param>
-    /// <param name="parameter">The parameter used to execute the assembly code.</param>
-    /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<T> ExecuteAsync<T>(IntPtr address, dynamic parameter) => Task.Run(() => (Task<T>)Execute<T>(address, parameter));
+    public Task<nint> ExecuteAsync(nint address) => ExecuteAsync<nint>(address);
 
     /// <summary>
     /// Executes asynchronously the assembly code located in the remote process at the specified address.
@@ -197,7 +189,15 @@ public class AssemblyFactory : IFactory
     /// <param name="address">The address where the assembly code is located.</param>
     /// <param name="parameter">The parameter used to execute the assembly code.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<IntPtr> ExecuteAsync(IntPtr address, dynamic parameter) => ExecuteAsync<IntPtr>(address, parameter);
+    public Task<T> ExecuteAsync<T>(nint address, dynamic parameter) => Task.Run(() => (Task<T>)Execute<T>(address, parameter));
+
+    /// <summary>
+    /// Executes asynchronously the assembly code located in the remote process at the specified address.
+    /// </summary>
+    /// <param name="address">The address where the assembly code is located.</param>
+    /// <param name="parameter">The parameter used to execute the assembly code.</param>
+    /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
+    public Task<nint> ExecuteAsync(nint address, dynamic parameter) => ExecuteAsync<nint>(address, parameter);
 
     /// <summary>
     /// Executes asynchronously the assembly code located in the remote process at the specified address.
@@ -206,7 +206,7 @@ public class AssemblyFactory : IFactory
     /// <param name="callingConvention">The calling convention used to execute the assembly code with the parameters.</param>
     /// <param name="parameters">An array of parameters used to execute the assembly code.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<T?> ExecuteAsync<T>(IntPtr address, CallingConventions callingConvention, params dynamic[] parameters) => Task.Run(() => Execute<T>(address, callingConvention, parameters));
+    public Task<T?> ExecuteAsync<T>(nint address, CallingConventions callingConvention, params dynamic[] parameters) => Task.Run(() => Execute<T>(address, callingConvention, parameters));
 
     /// <summary>
     /// Executes asynchronously the assembly code located in the remote process at the specified address.
@@ -215,7 +215,7 @@ public class AssemblyFactory : IFactory
     /// <param name="callingConvention">The calling convention used to execute the assembly code with the parameters.</param>
     /// <param name="parameters">An array of parameters used to execute the assembly code.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<IntPtr> ExecuteAsync(IntPtr address, CallingConventions callingConvention, params dynamic[] parameters) => ExecuteAsync<IntPtr>(address, callingConvention, parameters);
+    public Task<nint> ExecuteAsync(nint address, CallingConventions callingConvention, params dynamic[] parameters) => ExecuteAsync<nint>(address, callingConvention, parameters);
 
     #endregion
     #region Inject
@@ -224,14 +224,14 @@ public class AssemblyFactory : IFactory
     /// </summary>
     /// <param name="asm">The mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
-    public void Inject(string asm, IntPtr address) => MemorySharp.Write(address, Assembler.Assemble(asm, address), false);
+    public void Inject(string asm, nint address) => MemorySharp.Write(address, Assembler.Assemble(asm, address), false);
 
     /// <summary>
     /// Assembles mnemonics and injects the corresponding assembly code into the remote process at the specified address.
     /// </summary>
     /// <param name="asm">An array containing the mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
-    public void Inject(string[] asm, IntPtr address) => Inject(string.Join("\n", asm), address);
+    public void Inject(string[] asm, nint address) => Inject(string.Join("\n", asm), address);
 
     /// <summary>
     /// Assembles mnemonics and injects the corresponding assembly code into the remote process.
@@ -265,7 +265,7 @@ public class AssemblyFactory : IFactory
     /// <param name="asm">The mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public T? InjectAndExecute<T>(string asm, IntPtr address)
+    public T? InjectAndExecute<T>(string asm, nint address)
     {
         // Inject the assembly code
         Inject(asm, address);
@@ -279,7 +279,7 @@ public class AssemblyFactory : IFactory
     /// <param name="asm">The mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public IntPtr InjectAndExecute(string asm, IntPtr address) => InjectAndExecute<IntPtr>(asm, address);
+    public nint InjectAndExecute(string asm, nint address) => InjectAndExecute<nint>(asm, address);
 
     /// <summary>
     /// Assembles, injects and executes the mnemonics into the remote process at the specified address.
@@ -287,7 +287,7 @@ public class AssemblyFactory : IFactory
     /// <param name="asm">An array containing the mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public T? InjectAndExecute<T>(string[] asm, IntPtr address) => InjectAndExecute<T>(string.Join("\n", asm), address);
+    public T? InjectAndExecute<T>(string[] asm, nint address) => InjectAndExecute<T>(string.Join("\n", asm), address);
 
     /// <summary>
     /// Assembles, injects and executes the mnemonics into the remote process at the specified address.
@@ -295,7 +295,7 @@ public class AssemblyFactory : IFactory
     /// <param name="asm">An array containing the mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public IntPtr InjectAndExecute(string[] asm, IntPtr address) => InjectAndExecute<IntPtr>(asm, address);
+    public nint InjectAndExecute(string[] asm, nint address) => InjectAndExecute<nint>(asm, address);
 
     /// <summary>
     /// Assembles, injects and executes the mnemonics into the remote process.
@@ -315,7 +315,7 @@ public class AssemblyFactory : IFactory
     /// </summary>
     /// <param name="asm">The mnemonics to inject.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public IntPtr InjectAndExecute(string asm) => InjectAndExecute<IntPtr>(asm);
+    public nint InjectAndExecute(string asm) => InjectAndExecute<nint>(asm);
 
     /// <summary>
     /// Assembles, injects and executes the mnemonics into the remote process.
@@ -329,7 +329,7 @@ public class AssemblyFactory : IFactory
     /// </summary>
     /// <param name="asm">An array containing the mnemonics to inject.</param>
     /// <returns>The return value is the exit code of the thread created to execute the assembly code.</returns>
-    public IntPtr InjectAndExecute(string[] asm) => InjectAndExecute<IntPtr>(asm);
+    public nint InjectAndExecute(string[] asm) => InjectAndExecute<nint>(asm);
 
     #endregion
     #region InjectAndExecuteAsync
@@ -339,7 +339,7 @@ public class AssemblyFactory : IFactory
     /// <param name="asm">The mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<T?> InjectAndExecuteAsync<T>(string asm, IntPtr address) => Task.Run(() => InjectAndExecute<T>(asm, address));
+    public Task<T?> InjectAndExecuteAsync<T>(string asm, nint address) => Task.Run(() => InjectAndExecute<T>(asm, address));
 
     /// <summary>
     /// Assembles, injects and executes asynchronously the mnemonics into the remote process at the specified address.
@@ -347,7 +347,7 @@ public class AssemblyFactory : IFactory
     /// <param name="asm">The mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<IntPtr> InjectAndExecuteAsync(string asm, IntPtr address) => InjectAndExecuteAsync<IntPtr>(asm, address);
+    public Task<nint> InjectAndExecuteAsync(string asm, nint address) => InjectAndExecuteAsync<nint>(asm, address);
 
     /// <summary>
     /// Assembles, injects and executes asynchronously the mnemonics into the remote process at the specified address.
@@ -355,7 +355,7 @@ public class AssemblyFactory : IFactory
     /// <param name="asm">An array containing the mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<T?> InjectAndExecuteAsync<T>(string[] asm, IntPtr address) => Task.Run(() => InjectAndExecute<T>(asm, address));
+    public Task<T?> InjectAndExecuteAsync<T>(string[] asm, nint address) => Task.Run(() => InjectAndExecute<T>(asm, address));
 
     /// <summary>
     /// Assembles, injects and executes asynchronously the mnemonics into the remote process at the specified address.
@@ -363,7 +363,7 @@ public class AssemblyFactory : IFactory
     /// <param name="asm">An array containing the mnemonics to inject.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<IntPtr> InjectAndExecuteAsync(string[] asm, IntPtr address) => InjectAndExecuteAsync<IntPtr>(asm, address);
+    public Task<nint> InjectAndExecuteAsync(string[] asm, nint address) => InjectAndExecuteAsync<nint>(asm, address);
 
     /// <summary>
     /// Assembles, injects and executes asynchronously the mnemonics into the remote process.
@@ -377,7 +377,7 @@ public class AssemblyFactory : IFactory
     /// </summary>
     /// <param name="asm">The mnemonics to inject.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<IntPtr> InjectAndExecuteAsync(string asm) => InjectAndExecuteAsync<IntPtr>(asm);
+    public Task<nint> InjectAndExecuteAsync(string asm) => InjectAndExecuteAsync<nint>(asm);
 
     /// <summary>
     /// Assembles, injects and executes asynchronously the mnemonics into the remote process.
@@ -391,7 +391,7 @@ public class AssemblyFactory : IFactory
     /// </summary>
     /// <param name="asm">An array containing the mnemonics to inject.</param>
     /// <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
-    public Task<IntPtr> InjectAndExecuteAsync(string[] asm) => InjectAndExecuteAsync<IntPtr>(asm);
+    public Task<nint> InjectAndExecuteAsync(string[] asm) => InjectAndExecuteAsync<nint>(asm);
 
     #endregion
     #endregion

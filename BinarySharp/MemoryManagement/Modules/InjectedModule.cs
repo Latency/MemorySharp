@@ -24,6 +24,7 @@ public class InjectedModule : RemoteModule, IDisposableState
     /// </summary>
     public bool IsDisposed { get; private set; }
     #endregion
+
     #region MustBeDisposed (implementation of IDisposableState)
     /// <summary>
     /// Gets a value indicating whether the element must be disposed when the Garbage Collector collects the object.
@@ -69,6 +70,7 @@ public class InjectedModule : RemoteModule, IDisposableState
             IsDisposed = true;
             // Eject the module
             MemorySharp.Modules.Eject(this);
+
             // Avoid the finalizer 
             GC.SuppressFinalize(this);
         }
@@ -87,7 +89,7 @@ public class InjectedModule : RemoteModule, IDisposableState
         // Call LoadLibraryA remotely
         var thread = memorySharp.Threads.CreateAndJoin(memorySharp["kernel32"]["LoadLibraryA"].BaseAddress, path);
         // Get the inject module
-        return thread.GetExitCode<IntPtr>() != IntPtr.Zero ? new InjectedModule(memorySharp, memorySharp.Modules.NativeModules.First(m => m.BaseAddress == thread.GetExitCode<IntPtr>())) : null;
+        return thread.GetExitCode<nint>() != nint.Zero ? new InjectedModule(memorySharp, memorySharp.Modules.NativeModules.First(m => m.BaseAddress == thread.GetExitCode<nint>())) : null;
     }
     #endregion
     #endregion

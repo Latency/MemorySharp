@@ -20,7 +20,7 @@ public class Fasm32Assembler : IAssembler
     /// </summary>
     /// <param name="asm">The assembly code.</param>
     /// <returns>An array of bytes containing the assembly code.</returns>
-    public byte[] Assemble(string asm) => Assemble(asm, IntPtr.Zero);
+    public byte[] Assemble(string asm) => Assemble(asm, nint.Zero);
 
     /// <summary>
     /// Assemble the specified assembly code at a base address.
@@ -28,10 +28,10 @@ public class Fasm32Assembler : IAssembler
     /// <param name="asm">The assembly code.</param>
     /// <param name="baseAddress">The address where the code is rebased.</param>
     /// <returns>An array of bytes containing the assembly code.</returns>
-    public byte[] Assemble(string asm, IntPtr baseAddress)
+    public byte[] Assemble(string asm, nint baseAddress)
     {
         // Rebase the code
-        asm = $"use32\norg 0x{baseAddress.ToInt64():X8}\n{asm}";
+        asm = $"user32{Environment.NewLine}org 0x{baseAddress.ToInt64():X8}{Environment.NewLine}{asm}";
         // Assemble and return the code
         return Assemble(asm);
     }

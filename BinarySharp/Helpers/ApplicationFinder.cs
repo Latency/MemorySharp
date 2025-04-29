@@ -21,7 +21,7 @@ public static class ApplicationFinder
     /// <summary>
     /// Gets all top-level windows on the screen.
     /// </summary>
-    public static IEnumerable<IntPtr> TopLevelWindows => WindowCore.EnumTopLevelWindows();
+    public static IEnumerable<nint> TopLevelWindows => WindowCore.EnumTopLevelWindows();
 
     #endregion
 
@@ -29,7 +29,7 @@ public static class ApplicationFinder
     /// <summary>
     /// Gets all the windows on the screen.
     /// </summary>
-    public static IEnumerable<IntPtr> Windows => WindowCore.EnumAllWindows();
+    public static IEnumerable<nint> Windows => WindowCore.EnumAllWindows();
 
     #endregion
 
@@ -69,7 +69,7 @@ public static class ApplicationFinder
     /// </summary>
     /// <param name="windowHandle">A handle to the window.</param>
     /// <returns>A <see cref="Process"/>A <see cref="Process"/> component that is associated with the specified window handle.</returns>
-    public static Process FromWindowHandle(IntPtr windowHandle) => FromProcessId(WindowCore.GetWindowProcessId(windowHandle));
+    public static Process FromWindowHandle(nint windowHandle) => FromProcessId(WindowCore.GetWindowProcessId(windowHandle));
 
     #endregion
 

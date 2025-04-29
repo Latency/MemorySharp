@@ -61,6 +61,7 @@ public class LocalUnmanagedMemory : IDisposable
         GC.SuppressFinalize(this);
     }
     #endregion
+
     #region Read
     /// <summary>
     /// Reads data from the unmanaged block of memory.

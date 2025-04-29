@@ -26,5 +26,5 @@ public interface IAssembler
     /// <param name="asm">The assembly code.</param>
     /// <param name="baseAddress">The address where the code is rebased.</param>
     /// <returns>An array of bytes containing the assembly code.</returns>
-    byte[] Assemble(string asm, IntPtr baseAddress);
+    byte[] Assemble(string asm, nint baseAddress);
 }

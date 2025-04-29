@@ -74,8 +74,7 @@ public class RemoteRegion : RemotePointer, IEquatable<RemoteRegion>
     public bool Equals(RemoteRegion? other)
     {
         if (ReferenceEquals(null, other)) return false;
-        return ReferenceEquals(this, other) || BaseAddress.Equals(other.BaseAddress) && MemorySharp.Equals(other.MemorySharp) &&
-                                                Information.RegionSize.Equals(other.Information.RegionSize);
+        return ReferenceEquals(this, other) || BaseAddress.Equals(other.BaseAddress) && MemorySharp.Equals(other.MemorySharp) && Information.RegionSize.Equals(other.Information.RegionSize);
     }
     #endregion
 

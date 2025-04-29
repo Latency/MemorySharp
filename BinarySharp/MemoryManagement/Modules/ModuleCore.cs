@@ -25,13 +25,13 @@ public static class ModuleCore
     /// <param name="module">The module.</param>
     /// <param name="functionName">The function or variable name, or the function's ordinal value.</param>
     /// <returns>The address of the exported function.</returns>
-    public static IntPtr GetProcAddress(ProcessModule module, string functionName)
+    public static nint GetProcAddress(ProcessModule module, string functionName)
     {
         // Get the function address
         var ret = NativeMethods.GetProcAddress(module.BaseAddress, functionName);
 
         // Check whether the function was found
-        if (ret != IntPtr.Zero)
+        if (ret != nint.Zero)
             return ret;
 
         // Else the function was not found, throws an exception
@@ -79,7 +79,7 @@ public static class ModuleCore
             throw new FileNotFoundException($"Couldn't load the library {libraryPath} because the file doesn't exist.");
             
         // Load the library
-        if(NativeMethods.LoadLibrary(libraryPath) == IntPtr.Zero)
+        if(NativeMethods.LoadLibrary(libraryPath) == nint.Zero)
             throw new Win32Exception($"Couldn't load the library {libraryPath}.");
 
         // Enumerate the loaded modules and return the one newly added

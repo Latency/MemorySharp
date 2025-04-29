@@ -51,8 +51,9 @@ public class RemoteModule : RemoteRegion
     /// <summary>
     /// The native <see cref="ProcessModule"/> object corresponding to this module.
     /// </summary>
-    public ProcessModule Native { get; private set; }
+    public ProcessModule Native { get; }
     #endregion
+
     #region Path
     /// <summary>
     /// The full path of the module.
@@ -98,7 +99,7 @@ public class RemoteModule : RemoteRegion
         // Eject the module
         MemorySharp.Modules.Eject(this);
         // Remove the pointer
-        BaseAddress = IntPtr.Zero;
+        BaseAddress = nint.Zero;
     }
     #endregion
 
@@ -120,15 +121,11 @@ public class RemoteModule : RemoteRegion
         if (CachedFunctions.TryGetValue(tuple, out var findFunction))
             return findFunction;
 
-        // If the function is not cached
-        // Check if the local process has this module loaded
-        var localModule      = Native;
-
         // Get the offset of the function
-        var offset = ModuleCore.GetProcAddress(localModule, functionName).ToInt64() - localModule.BaseAddress.ToInt64();
+        var offset = ModuleCore.GetProcAddress(Native, functionName).ToInt64() - Native.BaseAddress.ToInt64();
 
         // Rebase the function with the remote module
-        var function = new RemoteFunction(MemorySharp, new IntPtr(Native.BaseAddress.ToInt64() + offset), functionName);
+        var function = new RemoteFunction(MemorySharp, new nint(Native.BaseAddress.ToInt64() + offset), functionName);
 
         // Store the function in the cache
         CachedFunctions.Add(tuple, function);

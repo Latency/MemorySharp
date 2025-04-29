@@ -28,7 +28,7 @@ public static class WindowCore
     /// </summary>
     /// <param name="windowHandle">A handle to the window and, indirectly, the class to which the window belongs.</param>
     /// <returns>The return values is the class name string.</returns>
-    public static string GetClassName(IntPtr windowHandle)
+    public static string GetClassName(nint windowHandle)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -46,8 +46,8 @@ public static class WindowCore
     /// <summary>
     /// Retrieves a handle to the foreground window (the window with which the user is currently working).
     /// </summary>
-    /// <returns>A handle to the foreground window. The foreground window can be <c>IntPtr.Zero</c> in certain circumstances, such as when a window is losing activation.</returns>
-    public static IntPtr GetForegroundWindow() => NativeMethods.GetForegroundWindow();
+    /// <returns>A handle to the foreground window. The foreground window can be <c>nint.Zero</c> in certain circumstances, such as when a window is losing activation.</returns>
+    public static nint GetForegroundWindow() => NativeMethods.GetForegroundWindow();
 
     #endregion
 
@@ -74,7 +74,7 @@ public static class WindowCore
     /// </summary>
     /// <param name="windowHandle">A handle to the window containing the text.</param>
     /// <returns>The return value is the window's title bar.</returns>
-    public static string GetWindowText(IntPtr windowHandle)
+    public static string GetWindowText(nint windowHandle)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -100,7 +100,7 @@ public static class WindowCore
     /// </summary>
     /// <param name="windowHandle">A handle to the window.</param>
     /// <returns>The return value is a <see cref="WindowPlacement"/> structure that receives the show state and position information.</returns>
-    public static WindowPlacement GetWindowPlacement(IntPtr windowHandle)
+    public static WindowPlacement GetWindowPlacement(nint windowHandle)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -123,7 +123,7 @@ public static class WindowCore
     /// </summary>
     /// <param name="windowHandle">A handle to the window.</param>
     /// <returns>The return value is the identifier of the process that created the window.</returns>
-    public static int GetWindowProcessId(IntPtr windowHandle)
+    public static int GetWindowProcessId(nint windowHandle)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -141,7 +141,7 @@ public static class WindowCore
     /// </summary>
     /// <param name="windowHandle">A handle to the window.</param>
     /// <returns>The return value is the identifier of the thread that created the window.</returns>
-    public static int GetWindowThreadId(IntPtr windowHandle)
+    public static int GetWindowThreadId(nint windowHandle)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -157,10 +157,10 @@ public static class WindowCore
     /// Enumerates all the windows on the screen.
     /// </summary>
     /// <returns>A collection of handles of all the windows.</returns>
-    public static IEnumerable<IntPtr> EnumAllWindows()
+    public static IEnumerable<nint> EnumAllWindows()
     {
         // Create the list of windows
-        var list = new List<IntPtr>();
+        var list = new List<nint>();
 
         // For each top-level windows
         foreach (var topWindow in EnumTopLevelWindows())
@@ -183,19 +183,19 @@ public static class WindowCore
     /// </summary>
     /// <param name="parentHandle">The parent window handle.</param>
     /// <returns>A collection of handles of the child windows.</returns>
-    public static IEnumerable<IntPtr> EnumChildWindows(IntPtr parentHandle)
+    public static IEnumerable<nint> EnumChildWindows(nint parentHandle)
     {
         // Create the list of windows
-        var list = new List<IntPtr>();
+        var list = new List<nint>();
 
         // Enumerate all windows
-        NativeMethods.EnumChildWindows(parentHandle, Callback, IntPtr.Zero);
+        NativeMethods.EnumChildWindows(parentHandle, Callback, nint.Zero);
 
         // Returns the list of the windows
         return list.ToArray();
 
         // Create the callback
-        bool Callback(IntPtr windowHandle, IntPtr lParam)
+        bool Callback(nint windowHandle, nint lParam)
         {
             list.Add(windowHandle);
             return true;
@@ -208,24 +208,24 @@ public static class WindowCore
     /// Enumerates all top-level windows on the screen. This function does not search child windows. 
     /// </summary>
     /// <returns>A collection of handles of top-level windows.</returns>
-    public static IEnumerable<IntPtr> EnumTopLevelWindows()
+    public static IEnumerable<nint> EnumTopLevelWindows()
     {
         // When passing a null pointer, this function is equivalent to EnumWindows
-        return EnumChildWindows(IntPtr.Zero);
+        return EnumChildWindows(nint.Zero);
     }
     #endregion
 
     #region FlashWindow
     /// <summary>
     /// Flashes the specified window one time. It does not change the active state of the window.
-    /// To flash the window a specified number of times, use the <see cref="FlashWindowEx(IntPtr, FlashWindowFlags, uint, TimeSpan)"/> function.
+    /// To flash the window a specified number of times, use the <see cref="FlashWindowEx(nint, FlashWindowFlags, uint, TimeSpan)"/> function.
     /// </summary>
     /// <param name="windowHandle">A handle to the window to be flashed. The window can be either open or minimized.</param>
     /// <returns>
     /// The return value specifies the window's state before the call to the <see cref="FlashWindow"/> function. 
     /// If the window caption was drawn as active before the call, the return value is nonzero. Otherwise, the return value is zero.
     /// </returns>
-    public static bool FlashWindow(IntPtr windowHandle)
+    public static bool FlashWindow(nint windowHandle)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -243,7 +243,7 @@ public static class WindowCore
     /// <param name="flags">The flash status.</param>
     /// <param name="count">The number of times to flash the window.</param>
     /// <param name="timeout">The rate at which the window is to be flashed.</param>
-    public static void FlashWindowEx(IntPtr windowHandle, FlashWindowFlags flags, uint count, TimeSpan timeout)
+    public static void FlashWindowEx(nint windowHandle, FlashWindowFlags flags, uint count, TimeSpan timeout)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -268,7 +268,7 @@ public static class WindowCore
     /// <param name="windowHandle">A handle to the window to be flashed. The window can be either opened or minimized.</param>
     /// <param name="flags">The flash status.</param>
     /// <param name="count">The number of times to flash the window.</param>
-    public static void FlashWindowEx(IntPtr windowHandle, FlashWindowFlags flags, uint count)
+    public static void FlashWindowEx(nint windowHandle, FlashWindowFlags flags, uint count)
     {
         FlashWindowEx(windowHandle, flags, count, TimeSpan.FromMilliseconds(0));
     }
@@ -278,7 +278,7 @@ public static class WindowCore
     /// </summary>
     /// <param name="windowHandle">A handle to the window to be flashed. The window can be either opened or minimized.</param>
     /// <param name="flags">The flash status.</param>
-    public static void FlashWindowEx(IntPtr windowHandle, FlashWindowFlags flags) => FlashWindowEx(windowHandle, flags, 0);
+    public static void FlashWindowEx(nint windowHandle, FlashWindowFlags flags) => FlashWindowEx(windowHandle, flags, 0);
 
     #endregion
 
@@ -325,7 +325,7 @@ public static class WindowCore
     /// <param name="message">The message to be posted.</param>
     /// <param name="wParam">Additional message-specific information.</param>
     /// <param name="lParam">Additional message-specific information.</param>
-    public static void PostMessage(IntPtr windowHandle, uint message, UIntPtr wParam, UIntPtr lParam)
+    public static void PostMessage(nint windowHandle, uint message, nint wParam, nint lParam)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -342,7 +342,7 @@ public static class WindowCore
     /// <param name="message">The message to be posted.</param>
     /// <param name="wParam">Additional message-specific information.</param>
     /// <param name="lParam">Additional message-specific information.</param>
-    public static void PostMessage(IntPtr windowHandle, WindowsMessages message, UIntPtr wParam, UIntPtr lParam) => PostMessage(windowHandle, (uint)message, wParam, lParam);
+    public static void PostMessage(nint windowHandle, WindowsMessages message, nint wParam, nint lParam) => PostMessage(windowHandle, (uint)message, wParam, lParam);
 
     #endregion
 
@@ -383,7 +383,7 @@ public static class WindowCore
     /// <param name="wParam">Additional message-specific information.</param>
     /// <param name="lParam">Additional message-specific information.</param>
     /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
-    public static IntPtr SendMessage(IntPtr windowHandle, uint message, UIntPtr wParam, IntPtr lParam)
+    public static nint SendMessage(nint windowHandle, uint message, nint wParam, nint lParam)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -401,7 +401,7 @@ public static class WindowCore
     /// <param name="wParam">Additional message-specific information.</param>
     /// <param name="lParam">Additional message-specific information.</param>
     /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
-    public static IntPtr SendMessage(IntPtr windowHandle, WindowsMessages message, UIntPtr wParam, IntPtr lParam) => SendMessage(windowHandle, (uint)message, wParam, lParam);
+    public static nint SendMessage(nint windowHandle, WindowsMessages message, nint wParam, nint lParam) => SendMessage(windowHandle, (uint)message, wParam, lParam);
 
     #endregion
 
@@ -414,7 +414,7 @@ public static class WindowCore
     /// <returns>
     /// If the window was brought to the foreground, the return value is <c>true</c>, otherwise the return value is <c>false</c>.
     /// </returns>
-    public static void SetForegroundWindow(IntPtr windowHandle)
+    public static void SetForegroundWindow(nint windowHandle)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -441,7 +441,7 @@ public static class WindowCore
     /// <param name="top">The y-coordinate of the upper-left corner of the window.</param>
     /// <param name="height">The height of the window.</param>
     /// <param name="width">The width of the window.</param>
-    public static void SetWindowPlacement(IntPtr windowHandle, int left, int top, int height, int width)
+    public static void SetWindowPlacement(nint windowHandle, int left, int top, int height, int width)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -464,7 +464,7 @@ public static class WindowCore
     /// </summary>
     /// <param name="windowHandle">A handle to the window.</param>
     /// <param name="placement">A pointer to the <see cref="WindowPlacement"/> structure that specifies the new show state and window positions.</param>
-    public static void SetWindowPlacement(IntPtr windowHandle, WindowPlacement placement)
+    public static void SetWindowPlacement(nint windowHandle, WindowPlacement placement)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -485,7 +485,7 @@ public static class WindowCore
     /// </summary>
     /// <param name="windowHandle">A handle to the window whose text is to be changed.</param>
     /// <param name="title">The new title text.</param>
-    public static void SetWindowText(IntPtr windowHandle, string title)
+    public static void SetWindowText(nint windowHandle, string title)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
@@ -503,7 +503,7 @@ public static class WindowCore
     /// <param name="windowHandle">A handle to the window.</param>
     /// <param name="state">Controls how the window is to be shown.</param>
     /// <returns>If the window was previously visible, the return value is <c>true</c>, otherwise the return value is <c>false</c>.</returns>
-    public static bool ShowWindow(IntPtr windowHandle, WindowStates state)
+    public static bool ShowWindow(nint windowHandle, WindowStates state)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");

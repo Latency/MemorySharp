@@ -18,7 +18,7 @@ public abstract class Manager<T> where T : INamedElement
     /// <summary>
     /// The collection of the elements (writable).
     /// </summary>
-    protected Dictionary<string, T> InternalItems = new Dictionary<string, T>();
+    protected Dictionary<string, T> InternalItems = new();
     #endregion
 
     #region Properties
@@ -26,7 +26,6 @@ public abstract class Manager<T> where T : INamedElement
     /// The collection of the elements.
     /// </summary>
     public IReadOnlyDictionary<string, T> Items => InternalItems;
-
     #endregion
 
     #region Methods
@@ -40,6 +39,7 @@ public abstract class Manager<T> where T : INamedElement
             item.Value.Disable();
     }
     #endregion
+
     #region EnableAll
     /// <summary>
     /// Enables all items in the manager.
@@ -50,6 +50,7 @@ public abstract class Manager<T> where T : INamedElement
             item.Value.Enable();
     }
     #endregion
+
     #region Remove
     /// <summary>
     /// Removes an element by its name in the manager.
@@ -58,7 +59,7 @@ public abstract class Manager<T> where T : INamedElement
     public void Remove(string name)
     {
         // Check if the element exists in the dictionary
-        if (InternalItems.ContainsKey(name))
+        if (InternalItems.TryGetValue(name, out _))
         {
             try
             {
@@ -72,13 +73,14 @@ public abstract class Manager<T> where T : INamedElement
             }
         }
     }
+
     /// <summary>
     /// Remove a given element.
     /// </summary>
     /// <param name="item">The element to remove.</param>
     public void Remove(T item) => Remove(item.Name);
-
     #endregion
+
     #region RemoveAll
     /// <summary>
     /// Removes all the elements in the manager.

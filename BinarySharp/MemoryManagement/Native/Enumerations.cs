@@ -661,13 +661,13 @@ public enum PebStructure
     ImageSubsystemMinorVersion = 0xBC,
     ImageProcessAffinityMask   = 0xC0,
     /// <summary>
-    /// Length: 0x88 bytes (0x22 * sizeof(IntPtr)).
+    /// Length: 0x88 bytes (0x22 * sizeof(nint)).
     /// </summary>
     GdiHandleBuffer = 0xC4,
     PostProcessInitRoutine = 0x14C,
     TlsExpansionBitmap     = 0x150,
     /// <summary>
-    /// Length: 0x80 bytes (0x20 * sizeof(IntPtr))
+    /// Length: 0x80 bytes (0x20 * sizeof(nint))
     /// </summary>
     TlsExpansionBitmapBits = 0x154,
     SessionId = 0x1D4,

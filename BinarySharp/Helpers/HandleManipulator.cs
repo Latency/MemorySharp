@@ -23,7 +23,7 @@ public static class HandleManipulator
     /// Closes an open object handle.
     /// </summary>
     /// <param name="handle">A valid handle to an open object.</param>
-    public static void CloseHandle(IntPtr handle)
+    public static void CloseHandle(nint handle)
     {
         // Check if the handle is valid
         ValidateAsArgument(handle, "handle");
@@ -43,7 +43,6 @@ public static class HandleManipulator
     public static Process HandleToProcess(SafeMemoryHandle processHandle) =>
         // Search the process by iterating the processes list
         Process.GetProcesses().First(p => p.Id == HandleToProcessId(processHandle));
-
     #endregion
 
     #region HandleToProcessId
@@ -119,14 +118,14 @@ public static class HandleManipulator
     /// </summary>
     /// <param name="handle">A handle to validate.</param>
     /// <param name="argumentName">The name of the argument that represents the handle in its original function.</param>
-    public static void ValidateAsArgument(IntPtr? handle, string argumentName)
+    public static void ValidateAsArgument(nint? handle, string argumentName)
     {
         // Check if the handle is not null
         if(handle == null)
             throw new ArgumentNullException(argumentName);
 
         // Check if the handle is valid
-        if(handle == IntPtr.Zero)
+        if(handle == nint.Zero)
             throw new ArgumentException("The handle is not valid.", argumentName);
     }
 

@@ -39,7 +39,7 @@ public class WindowFactory : IFactory
     /// <summary>
     /// Gets all the child window handles that belong to the application.
     /// </summary>
-    internal IEnumerable<IntPtr> ChildWindowHandles => WindowCore.EnumChildWindows(_memorySharp.Native.MainWindowHandle);
+    internal IEnumerable<nint> ChildWindowHandles => WindowCore.EnumChildWindows(_memorySharp.Native.MainWindowHandle);
 
     #endregion
     #region MainWindow
@@ -53,7 +53,7 @@ public class WindowFactory : IFactory
     /// <summary>
     /// Gets the main window handle of the application.
     /// </summary>
-    public IntPtr MainWindowHandle => _memorySharp.Native.MainWindowHandle;
+    public nint MainWindowHandle => _memorySharp.Native.MainWindowHandle;
 
     #endregion
     #region This
@@ -78,7 +78,7 @@ public class WindowFactory : IFactory
     /// <summary>
     /// Gets all the window handles that belong to the application.
     /// </summary>
-    internal IEnumerable<IntPtr> WindowHandles => new List<IntPtr>(ChildWindowHandles) {MainWindowHandle};
+    internal IEnumerable<nint> WindowHandles => new List<nint>(ChildWindowHandles) {MainWindowHandle};
 
     #endregion
     #endregion

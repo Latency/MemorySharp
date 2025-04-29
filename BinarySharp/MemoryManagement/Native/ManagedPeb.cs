@@ -37,54 +37,54 @@ public class ManagedPeb : RemotePointer
         get => Read<byte>(PebStructure.SpareBool);
         set => Write(PebStructure.SpareBool, value);
     }
-    public IntPtr Mutant
+    public nint Mutant
     {
-        get => Read<IntPtr>(PebStructure.Mutant);
+        get => Read<nint>(PebStructure.Mutant);
         set => Write(PebStructure.Mutant, value);
     }
-    public IntPtr Ldr
+    public nint Ldr
     {
-        get => Read<IntPtr>(PebStructure.Ldr);
+        get => Read<nint>(PebStructure.Ldr);
         set => Write(PebStructure.Ldr, value);
     }
-    public IntPtr ProcessParameters
+    public nint ProcessParameters
     {
-        get => Read<IntPtr>(PebStructure.ProcessParameters);
+        get => Read<nint>(PebStructure.ProcessParameters);
         set => Write(PebStructure.ProcessParameters, value);
     }
-    public IntPtr SubSystemData
+    public nint SubSystemData
     {
-        get => Read<IntPtr>(PebStructure.SubSystemData);
+        get => Read<nint>(PebStructure.SubSystemData);
         set => Write(PebStructure.SubSystemData, value);
     }
-    public IntPtr ProcessHeap
+    public nint ProcessHeap
     {
-        get => Read<IntPtr>(PebStructure.ProcessHeap);
+        get => Read<nint>(PebStructure.ProcessHeap);
         set => Write(PebStructure.ProcessHeap, value);
     }
-    public IntPtr FastPebLock
+    public nint FastPebLock
     {
-        get => Read<IntPtr>(PebStructure.FastPebLock);
+        get => Read<nint>(PebStructure.FastPebLock);
         set => Write(PebStructure.FastPebLock, value);
     }
-    public IntPtr FastPebLockRoutine
+    public nint FastPebLockRoutine
     {
-        get => Read<IntPtr>(PebStructure.FastPebLockRoutine);
+        get => Read<nint>(PebStructure.FastPebLockRoutine);
         set => Write(PebStructure.FastPebLockRoutine, value);
     }
-    public IntPtr FastPebUnlockRoutine
+    public nint FastPebUnlockRoutine
     {
-        get => Read<IntPtr>(PebStructure.FastPebUnlockRoutine);
+        get => Read<nint>(PebStructure.FastPebUnlockRoutine);
         set => Write(PebStructure.FastPebUnlockRoutine, value);
     }
-    public IntPtr EnvironmentUpdateCount
+    public nint EnvironmentUpdateCount
     {
-        get => Read<IntPtr>(PebStructure.EnvironmentUpdateCount);
+        get => Read<nint>(PebStructure.EnvironmentUpdateCount);
         set => Write(PebStructure.EnvironmentUpdateCount, value);
     }
-    public IntPtr KernelCallbackTable
+    public nint KernelCallbackTable
     {
-        get => Read<IntPtr>(PebStructure.KernelCallbackTable);
+        get => Read<nint>(PebStructure.KernelCallbackTable);
         set => Write(PebStructure.KernelCallbackTable, value);
     }
     public int SystemReserved
@@ -97,19 +97,19 @@ public class ManagedPeb : RemotePointer
         get => Read<int>(PebStructure.AtlThunkSListPtr32);
         set => Write(PebStructure.AtlThunkSListPtr32, value);
     }
-    public IntPtr FreeList
+    public nint FreeList
     {
-        get => Read<IntPtr>(PebStructure.FreeList);
+        get => Read<nint>(PebStructure.FreeList);
         set => Write(PebStructure.FreeList, value);
     }
-    public IntPtr TlsExpansionCounter
+    public nint TlsExpansionCounter
     {
-        get => Read<IntPtr>(PebStructure.TlsExpansionCounter);
+        get => Read<nint>(PebStructure.TlsExpansionCounter);
         set => Write(PebStructure.TlsExpansionCounter, value);
     }
-    public IntPtr TlsBitmap
+    public nint TlsBitmap
     {
-        get => Read<IntPtr>(PebStructure.TlsBitmap);
+        get => Read<nint>(PebStructure.TlsBitmap);
         set => Write(PebStructure.TlsBitmap, value);
     }
     public long TlsBitmapBits
@@ -117,34 +117,34 @@ public class ManagedPeb : RemotePointer
         get => Read<long>(PebStructure.TlsBitmapBits);
         set => Write(PebStructure.TlsBitmapBits, value);
     }
-    public IntPtr ReadOnlySharedMemoryBase
+    public nint ReadOnlySharedMemoryBase
     {
-        get => Read<IntPtr>(PebStructure.ReadOnlySharedMemoryBase);
+        get => Read<nint>(PebStructure.ReadOnlySharedMemoryBase);
         set => Write(PebStructure.ReadOnlySharedMemoryBase, value);
     }
-    public IntPtr ReadOnlySharedMemoryHeap
+    public nint ReadOnlySharedMemoryHeap
     {
-        get => Read<IntPtr>(PebStructure.ReadOnlySharedMemoryHeap);
+        get => Read<nint>(PebStructure.ReadOnlySharedMemoryHeap);
         set => Write(PebStructure.ReadOnlySharedMemoryHeap, value);
     }
-    public IntPtr ReadOnlyStaticServerData
+    public nint ReadOnlyStaticServerData
     {
-        get => Read<IntPtr>(PebStructure.ReadOnlyStaticServerData);
+        get => Read<nint>(PebStructure.ReadOnlyStaticServerData);
         set => Write(PebStructure.ReadOnlyStaticServerData, value);
     }
-    public IntPtr AnsiCodePageData
+    public nint AnsiCodePageData
     {
-        get => Read<IntPtr>(PebStructure.AnsiCodePageData);
+        get => Read<nint>(PebStructure.AnsiCodePageData);
         set => Write(PebStructure.AnsiCodePageData, value);
     }
-    public IntPtr OemCodePageData
+    public nint OemCodePageData
     {
-        get => Read<IntPtr>(PebStructure.OemCodePageData);
+        get => Read<nint>(PebStructure.OemCodePageData);
         set => Write(PebStructure.OemCodePageData, value);
     }
-    public IntPtr UnicodeCaseTableData
+    public nint UnicodeCaseTableData
     {
-        get => Read<IntPtr>(PebStructure.UnicodeCaseTableData);
+        get => Read<nint>(PebStructure.UnicodeCaseTableData);
         set => Write(PebStructure.UnicodeCaseTableData, value);
     }
     public int NumberOfProcessors
@@ -162,24 +162,24 @@ public class ManagedPeb : RemotePointer
         get => Read<long>(PebStructure.CriticalSectionTimeout);
         set => Write(PebStructure.CriticalSectionTimeout, value);
     }
-    public IntPtr HeapSegmentReserve
+    public nint HeapSegmentReserve
     {
-        get => Read<IntPtr>(PebStructure.HeapSegmentReserve);
+        get => Read<nint>(PebStructure.HeapSegmentReserve);
         set => Write(PebStructure.HeapSegmentReserve, value);
     }
-    public IntPtr HeapSegmentCommit
+    public nint HeapSegmentCommit
     {
-        get => Read<IntPtr>(PebStructure.HeapSegmentCommit);
+        get => Read<nint>(PebStructure.HeapSegmentCommit);
         set => Write(PebStructure.HeapSegmentCommit, value);
     }
-    public IntPtr HeapDeCommitTotalFreeThreshold
+    public nint HeapDeCommitTotalFreeThreshold
     {
-        get => Read<IntPtr>(PebStructure.HeapDeCommitTotalFreeThreshold);
+        get => Read<nint>(PebStructure.HeapDeCommitTotalFreeThreshold);
         set => Write(PebStructure.HeapDeCommitTotalFreeThreshold, value);
     }
-    public IntPtr HeapDeCommitFreeBlockThreshold
+    public nint HeapDeCommitFreeBlockThreshold
     {
-        get => Read<IntPtr>(PebStructure.HeapDeCommitFreeBlockThreshold);
+        get => Read<nint>(PebStructure.HeapDeCommitFreeBlockThreshold);
         set => Write(PebStructure.HeapDeCommitFreeBlockThreshold, value);
     }
     public int NumberOfHeaps
@@ -192,29 +192,29 @@ public class ManagedPeb : RemotePointer
         get => Read<int>(PebStructure.MaximumNumberOfHeaps);
         set => Write(PebStructure.MaximumNumberOfHeaps, value);
     }
-    public IntPtr ProcessHeaps
+    public nint ProcessHeaps
     {
-        get => Read<IntPtr>(PebStructure.ProcessHeaps);
+        get => Read<nint>(PebStructure.ProcessHeaps);
         set => Write(PebStructure.ProcessHeaps, value);
     }
-    public IntPtr GdiSharedHandleTable
+    public nint GdiSharedHandleTable
     {
-        get => Read<IntPtr>(PebStructure.GdiSharedHandleTable);
+        get => Read<nint>(PebStructure.GdiSharedHandleTable);
         set => Write(PebStructure.GdiSharedHandleTable, value);
     }
-    public IntPtr ProcessStarterHelper
+    public nint ProcessStarterHelper
     {
-        get => Read<IntPtr>(PebStructure.ProcessStarterHelper);
+        get => Read<nint>(PebStructure.ProcessStarterHelper);
         set => Write(PebStructure.ProcessStarterHelper, value);
     }
-    public IntPtr GdiDcAttributeList
+    public nint GdiDcAttributeList
     {
-        get => Read<IntPtr>(PebStructure.GdiDcAttributeList);
+        get => Read<nint>(PebStructure.GdiDcAttributeList);
         set => Write(PebStructure.GdiDcAttributeList, value);
     }
-    public IntPtr LoaderLock
+    public nint LoaderLock
     {
-        get => Read<IntPtr>(PebStructure.LoaderLock);
+        get => Read<nint>(PebStructure.LoaderLock);
         set => Write(PebStructure.LoaderLock, value);
     }
     public int OsMajorVersion
@@ -252,39 +252,39 @@ public class ManagedPeb : RemotePointer
         get => Read<int>(PebStructure.ImageSubsystemMajorVersion);
         set => Write(PebStructure.ImageSubsystemMajorVersion, value);
     }
-    public IntPtr ImageSubsystemMinorVersion
+    public nint ImageSubsystemMinorVersion
     {
-        get => Read<IntPtr>(PebStructure.ImageSubsystemMinorVersion);
+        get => Read<nint>(PebStructure.ImageSubsystemMinorVersion);
         set => Write(PebStructure.ImageSubsystemMinorVersion, value);
     }
-    public IntPtr ImageProcessAffinityMask
+    public nint ImageProcessAffinityMask
     {
-        get => Read<IntPtr>(PebStructure.ImageProcessAffinityMask);
+        get => Read<nint>(PebStructure.ImageProcessAffinityMask);
         set => Write(PebStructure.ImageProcessAffinityMask, value);
     }
-    public IntPtr[] GdiHandleBuffer
+    public nint[] GdiHandleBuffer
     {
-        get => Read<IntPtr>(PebStructure.GdiHandleBuffer, 0x22);
+        get => Read<nint>(PebStructure.GdiHandleBuffer, 0x22);
         set => Write(PebStructure.GdiHandleBuffer, value);
     }
-    public IntPtr PostProcessInitRoutine
+    public nint PostProcessInitRoutine
     {
-        get => Read<IntPtr>(PebStructure.PostProcessInitRoutine);
+        get => Read<nint>(PebStructure.PostProcessInitRoutine);
         set => Write(PebStructure.PostProcessInitRoutine, value);
     }
-    public IntPtr TlsExpansionBitmap
+    public nint TlsExpansionBitmap
     {
-        get => Read<IntPtr>(PebStructure.TlsExpansionBitmap);
+        get => Read<nint>(PebStructure.TlsExpansionBitmap);
         set => Write(PebStructure.TlsExpansionBitmap, value);
     }
-    public IntPtr[] TlsExpansionBitmapBits
+    public nint[] TlsExpansionBitmapBits
     {
-        get => Read<IntPtr>(PebStructure.TlsExpansionBitmapBits, 0x20);
+        get => Read<nint>(PebStructure.TlsExpansionBitmapBits, 0x20);
         set => Write(PebStructure.TlsExpansionBitmapBits, value);
     }
-    public IntPtr SessionId
+    public nint SessionId
     {
-        get => Read<IntPtr>(PebStructure.SessionId);
+        get => Read<nint>(PebStructure.SessionId);
         set => Write(PebStructure.SessionId, value);
     }
     public long AppCompatFlags
@@ -297,14 +297,14 @@ public class ManagedPeb : RemotePointer
         get => Read<long>(PebStructure.AppCompatFlagsUser);
         set => Write(PebStructure.AppCompatFlagsUser, value);
     }
-    public IntPtr ShimData
+    public nint ShimData
     {
-        get => Read<IntPtr>(PebStructure.ShimData);
+        get => Read<nint>(PebStructure.ShimData);
         set => Write(PebStructure.ShimData, value);
     }
-    public IntPtr AppCompatInfo
+    public nint AppCompatInfo
     {
-        get => Read<IntPtr>(PebStructure.AppCompatInfo);
+        get => Read<nint>(PebStructure.AppCompatInfo);
         set => Write(PebStructure.AppCompatInfo, value);
     }
     public long CsdVersion
@@ -312,29 +312,29 @@ public class ManagedPeb : RemotePointer
         get => Read<long>(PebStructure.CsdVersion);
         set => Write(PebStructure.CsdVersion, value);
     }
-    public IntPtr ActivationContextData
+    public nint ActivationContextData
     {
-        get => Read<IntPtr>(PebStructure.ActivationContextData);
+        get => Read<nint>(PebStructure.ActivationContextData);
         set => Write(PebStructure.ActivationContextData, value);
     }
-    public IntPtr ProcessAssemblyStorageMap
+    public nint ProcessAssemblyStorageMap
     {
-        get => Read<IntPtr>(PebStructure.ProcessAssemblyStorageMap);
+        get => Read<nint>(PebStructure.ProcessAssemblyStorageMap);
         set => Write(PebStructure.ProcessAssemblyStorageMap, value);
     }
-    public IntPtr SystemDefaultActivationContextData
+    public nint SystemDefaultActivationContextData
     {
-        get => Read<IntPtr>(PebStructure.SystemDefaultActivationContextData);
+        get => Read<nint>(PebStructure.SystemDefaultActivationContextData);
         set => Write(PebStructure.SystemDefaultActivationContextData, value);
     }
-    public IntPtr SystemAssemblyStorageMap
+    public nint SystemAssemblyStorageMap
     {
-        get => Read<IntPtr>(PebStructure.SystemAssemblyStorageMap);
+        get => Read<nint>(PebStructure.SystemAssemblyStorageMap);
         set => Write(PebStructure.SystemAssemblyStorageMap, value);
     }
-    public IntPtr MinimumStackCommit
+    public nint MinimumStackCommit
     {
-        get => Read<IntPtr>(PebStructure.MinimumStackCommit);
+        get => Read<nint>(PebStructure.MinimumStackCommit);
         set => Write(PebStructure.MinimumStackCommit, value);
     }
     #endregion
@@ -345,7 +345,7 @@ public class ManagedPeb : RemotePointer
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     /// <param name="address">The location of the peb.</param>
-    internal ManagedPeb(MemorySharp memorySharp, IntPtr address) : base(memorySharp, address)
+    internal ManagedPeb(MemorySharp memorySharp, nint address) : base(memorySharp, address)
     {}
     #endregion
 
@@ -354,8 +354,8 @@ public class ManagedPeb : RemotePointer
     /// Finds the Process Environment Block address of a specified process.
     /// </summary>
     /// <param name="processHandle">A handle of the process.</param>
-    /// <returns>A <see cref="IntPtr"/> pointer of the PEB.</returns>
-    public static IntPtr FindPeb(SafeMemoryHandle processHandle) => MemoryCore.NtQueryInformationProcess(processHandle).PebBaseAddress;
+    /// <returns>A <see cref="nint"/> pointer of the PEB.</returns>
+    public static nint FindPeb(SafeMemoryHandle processHandle) => MemoryCore.NtQueryInformationProcess(processHandle).PebBaseAddress;
 
     #endregion
 }

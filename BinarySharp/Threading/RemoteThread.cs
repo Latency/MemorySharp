@@ -35,7 +35,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// <summary>
     /// The task involved in cleaning the parameter memory when the <see cref="RemoteThread"/> object is collected.
     /// </summary>
-    private readonly Task? _parameterCleaner;
+    private readonly Task _parameterCleaner;
     #endregion
 
     #region Properties
@@ -59,8 +59,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
                     if (!isSuspended)
                         Suspend();
                     // Get the context
-                    return ThreadCore.GetThreadContext(Handle, ThreadContextFlags.All            | ThreadContextFlags.FloatingPoint |
-                                                               ThreadContextFlags.DebugRegisters | ThreadContextFlags.ExtendedRegisters);
+                    return ThreadCore.GetThreadContext(Handle, ThreadContextFlags.All | ThreadContextFlags.FloatingPoint | ThreadContextFlags.DebugRegisters | ThreadContextFlags.ExtendedRegisters);
 
                 }
                 finally
@@ -101,14 +100,14 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// <summary>
     /// The remote thread handle opened with all rights.
     /// </summary>
-    public SafeMemoryHandle Handle { get; private set; }
+    public SafeMemoryHandle Handle { get; }
     #endregion
 
     #region Id
     /// <summary>
     /// Gets the unique identifier of the thread.
     /// </summary>
-    public int Id { get; private set; }
+    public int Id { get; }
     #endregion
 
     #region IsAlive
@@ -176,7 +175,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
     /// <param name="thread">The native <see cref="ProcessThread"/> object.</param>
-    internal RemoteThread(MemorySharp memorySharp, ProcessThread? thread)
+    internal RemoteThread(MemorySharp memorySharp, ProcessThread thread)
     {
         // Save the parameters
         MemorySharp = memorySharp;
@@ -195,7 +194,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// <param name="memorySharp">The reference of the <see cref="Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
     /// <param name="thread">The native <see cref="ProcessThread"/> object.</param>
     /// <param name="parameter">The parameter passed to the thread when it was created.</param>
-    internal RemoteThread(MemorySharp memorySharp, ProcessThread? thread, IMarshalledValue? parameter = null) : this(memorySharp, thread)
+    internal RemoteThread(MemorySharp memorySharp, ProcessThread thread, IMarshalledValue? parameter = null) : this(memorySharp, thread)
     {
         // Save the parameter
         _parameter = parameter;
@@ -203,7 +202,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
         _parameterCleaner = new Task(() =>
         {
             Join();
-            _parameter.Dispose();
+            _parameter?.Dispose();
         });
     }
     /// <summary>
@@ -222,6 +221,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     {
         // Close the thread handle
         Handle.Close();
+
         // Avoid the finalizer
         GC.SuppressFinalize(this);
     }
@@ -241,11 +241,8 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// <summary>
     /// Returns a value indicating whether this instance is equal to a specified object.
     /// </summary>
-    public bool Equals(RemoteThread? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        return ReferenceEquals(this, other) || (Id == other.Id && MemorySharp.Equals(other.MemorySharp));
-    }
+    public bool Equals(RemoteThread? other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || (Id == other.Id && MemorySharp.Equals(other.MemorySharp)));
+
     #endregion
 
     #region GetExitCode
@@ -273,8 +270,8 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// Gets the linear address of a specified segment.
     /// </summary>
     /// <param name="segment">The segment to get.</param>
-    /// <returns>A <see cref="IntPtr"/> pointer corresponding to the linear address of the segment.</returns>
-    public IntPtr GetRealSegmentAddress(SegmentRegisters segment)
+    /// <returns>A <see cref="nint"/> pointer corresponding to the linear address of the segment.</returns>
+    public nint GetRealSegmentAddress(SegmentRegisters segment)
     {
         // Get a selector entry for the segment
         var entry = segment switch
@@ -288,7 +285,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
             _                   => throw new InvalidEnumArgumentException("segment")
         };
         // Compute the linear address
-        return new IntPtr(entry.BaseLow | (entry.BaseMid << 16) | (entry.BaseHi << 24));
+        return new nint(entry.BaseLow | (entry.BaseMid << 16) | (entry.BaseHi << 24));
     }
     #endregion
     #region Operator (override)
@@ -351,12 +348,14 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// <returns>A new instance of the <see cref="FrozenThread"/> class. If this object is disposed, the thread is resumed.</returns>
     public FrozenThread? Suspend()
     {
-        if (IsAlive)
+        switch (IsAlive)
         {
-            ThreadCore.SuspendThread(Handle);
-            return new FrozenThread(this);
+            case true:
+                ThreadCore.SuspendThread(Handle);
+                return new FrozenThread(this);
+            default:
+                return null;
         }
-        return null;
     }
     #endregion
 

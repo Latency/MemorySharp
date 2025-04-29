@@ -31,7 +31,7 @@ public class AssemblyTransaction : IDisposable
     /// <summary>
     /// The exit code of the thread created to execute the assembly code.
     /// </summary>
-    protected IntPtr ExitCode;
+    protected nint ExitCode;
     #endregion
 
     #region Properties
@@ -39,7 +39,7 @@ public class AssemblyTransaction : IDisposable
     /// <summary>
     /// The address where to assembly code is assembled.
     /// </summary>
-    public IntPtr Address { get; private set; }
+    public nint Address { get; private set; }
     #endregion
     #region IsAutoExecuted
     /// <summary>
@@ -56,7 +56,7 @@ public class AssemblyTransaction : IDisposable
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     /// <param name="address">The address where the assembly code is injected.</param>
     /// <param name="autoExecute">Indicates whether the assembly code is executed once the object is disposed.</param>
-    public AssemblyTransaction(MemorySharp memorySharp, IntPtr address, bool autoExecute)
+    public AssemblyTransaction(MemorySharp memorySharp, nint address, bool autoExecute)
     {
         // Save the parameters
         MemorySharp    = memorySharp;
@@ -71,7 +71,7 @@ public class AssemblyTransaction : IDisposable
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     /// <param name="autoExecute">Indicates whether the assembly code is executed once the object is disposed.</param>
-    public AssemblyTransaction(MemorySharp memorySharp, bool autoExecute) : this(memorySharp, IntPtr.Zero, autoExecute)
+    public AssemblyTransaction(MemorySharp memorySharp, bool autoExecute) : this(memorySharp, nint.Zero, autoExecute)
     {
     }
     #endregion
@@ -108,19 +108,19 @@ public class AssemblyTransaction : IDisposable
     public virtual void Dispose()
     {
         // If a pointer was specified
-        if (Address != IntPtr.Zero)
+        if (Address != nint.Zero)
         {
             // If the assembly code must be executed
             if (IsAutoExecuted)
-                ExitCode = MemorySharp.Assembly.InjectAndExecute<IntPtr>(Mnemonics.ToString(), Address);
+                ExitCode = MemorySharp.Assembly.InjectAndExecute<nint>(Mnemonics.ToString(), Address);
             // Else the assembly code is just injected
             else
                 MemorySharp.Assembly.Inject(Mnemonics.ToString(), Address);
         }
 
         // If no pointer was specified and the code assembly code must be executed
-        if (Address == IntPtr.Zero && IsAutoExecuted)
-            ExitCode = MemorySharp.Assembly.InjectAndExecute<IntPtr>(Mnemonics.ToString());
+        if (Address == nint.Zero && IsAutoExecuted)
+            ExitCode = MemorySharp.Assembly.InjectAndExecute<nint>(Mnemonics.ToString());
     }
     #endregion
     #region GetExitCode

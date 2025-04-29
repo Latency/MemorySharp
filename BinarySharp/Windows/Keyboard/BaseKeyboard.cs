@@ -24,7 +24,7 @@ public abstract class BaseKeyboard
     /// <summary>
     /// The collection storing the current pressed keys.
     /// </summary>
-    protected static readonly List<Tuple<IntPtr, Keys>> PressedKeys = [];
+    protected static readonly List<Tuple<nint, Keys>> PressedKeys = [];
     #endregion
 
     #region Constructor

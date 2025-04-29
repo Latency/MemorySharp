@@ -23,5 +23,5 @@ public interface IMarshalledValue : IDisposable
     /// <summary>
     /// The reference of the value. It can be directly the value or a pointer.
     /// </summary>
-    IntPtr Reference { get; }
+    nint Reference { get; }
 }

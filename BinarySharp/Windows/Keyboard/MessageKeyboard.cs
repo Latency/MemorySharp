@@ -24,7 +24,7 @@ public class MessageKeyboard(RemoteWindow window) : BaseKeyboard(window)
     /// <param name="key">The virtual key to press.</param>
     public override void Press(Keys key)
     {
-        Window.PostMessage(WindowsMessages.KeyDown, new UIntPtr((uint)key), MakeKeyParameter(key, false));
+        Window.PostMessage(WindowsMessages.KeyDown, new nint((uint)key), MakeKeyParameter(key, false));
     }
     #endregion
 
@@ -37,7 +37,7 @@ public class MessageKeyboard(RemoteWindow window) : BaseKeyboard(window)
     {
         // Call the base function
         base.Release(key);
-        Window.PostMessage(WindowsMessages.KeyUp, new UIntPtr((uint)key), MakeKeyParameter(key, true));
+        Window.PostMessage(WindowsMessages.KeyUp, new nint((uint)key), MakeKeyParameter(key, true));
     }
     #endregion
 
@@ -48,7 +48,7 @@ public class MessageKeyboard(RemoteWindow window) : BaseKeyboard(window)
     /// <param name="character">The character to write.</param>
     public override void Write(char character)
     {
-        Window.PostMessage(WindowsMessages.Char, new UIntPtr(character), UIntPtr.Zero);
+        Window.PostMessage(WindowsMessages.Char, new nint(character), nint.Zero);
     }
     #endregion
     #endregion
@@ -89,7 +89,7 @@ public class MessageKeyboard(RemoteWindow window) : BaseKeyboard(window)
     /// KeyDown resources: http://msdn.microsoft.com/en-us/library/windows/desktop/ms646280%28v=vs.85%29.aspx
     /// KeyUp resources:  http://msdn.microsoft.com/en-us/library/windows/desktop/ms646281%28v=vs.85%29.aspx
     /// </remarks>
-    private UIntPtr MakeKeyParameter(Keys key, bool keyUp, bool fRepeat, uint cRepeat, bool altDown, bool fExtended)
+    private nint MakeKeyParameter(Keys key, bool keyUp, bool fRepeat, uint cRepeat, bool altDown, bool fExtended)
     {
         // Create the result and assign it with the repeat count
         var result = cRepeat;
@@ -108,7 +108,7 @@ public class MessageKeyboard(RemoteWindow window) : BaseKeyboard(window)
         if (keyUp)
             result |= 0x80000000;
 
-        return new UIntPtr(result);
+        return new nint(result);
     }
 
     /// <summary>
@@ -121,7 +121,7 @@ public class MessageKeyboard(RemoteWindow window) : BaseKeyboard(window)
     /// The value is always 1 for a <see cref="WindowsMessages.KeyUp"/> message.
     /// </param>
     /// <returns>The return value is the lParam when posting or sending a message regarding key press.</returns>
-    private UIntPtr MakeKeyParameter(Keys key, bool keyUp) => MakeKeyParameter(key, keyUp, keyUp, 1, false, false);
+    private nint MakeKeyParameter(Keys key, bool keyUp) => MakeKeyParameter(key, keyUp, keyUp, 1, false, false);
 
     #endregion
 }

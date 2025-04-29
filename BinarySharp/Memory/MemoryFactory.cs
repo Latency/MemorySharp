@@ -46,7 +46,7 @@ public class MemoryFactory : IFactory
         get
         {
             #if x64
-                var adresseTo = new IntPtr(0x7fffffffffffffff);
+                var adresseTo = new nint(0x7fffffffffffffff);
             #else
             var adresseTo = new nint(0x7fffffff);
             #endif
@@ -122,6 +122,7 @@ public class MemoryFactory : IFactory
         // Release all allocated memories which must be disposed
         foreach (var allocatedMemory in InternalRemoteAllocations.Where(m => m.MustBeDisposed).ToArray())
             allocatedMemory.Dispose();
+
         // Avoid the finalizer
         GC.SuppressFinalize(this);
     }

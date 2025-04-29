@@ -20,7 +20,7 @@ namespace Binarysharp.MemoryManagement.Native;
 public struct FlashInfo
 {
     public int              Size;
-    public IntPtr           Hwnd;
+    public nint           Hwnd;
     public FlashWindowFlags Flags;
     public uint             Count;
     public int              Timeout;
@@ -115,7 +115,7 @@ public struct KeyboardInput
     /// <summary>
     /// An additional value associated with the keystroke. Use the GetMessageExtraInfo function to obtain this information.
     /// </summary>
-    public IntPtr ExtraInfo;
+    public nint ExtraInfo;
 }
 #endregion
 
@@ -164,11 +164,11 @@ public struct MemoryBasicInformation
     /// <summary>
     /// A pointer to the base address of the region of pages.
     /// </summary>
-    public IntPtr BaseAddress;
+    public nint BaseAddress;
     /// <summary>
     /// A pointer to the base address of a range of pages allocated by the VirtualAlloc function. The page pointed to by the BaseAddress member is contained within this allocation range.
     /// </summary>
-    public IntPtr AllocationBase;
+    public nint AllocationBase;
     /// <summary>
     /// The memory protection option when the region was initially allocated. This member can be one of the memory protection constants or 0 if the caller does not have access.
     /// </summary>
@@ -245,7 +245,7 @@ public struct MouseInput
     /// <summary>
     /// An additional value associated with the mouse event. An application calls GetMessageExtraInfo to obtain this extra information. 
     /// </summary>
-    public IntPtr ExtraInfo;
+    public nint ExtraInfo;
 }
 #endregion
 
@@ -287,7 +287,7 @@ public struct ProcessBasicInformation
     /// <summary>
     /// The base address of Process Environment Block.
     /// </summary>
-    public IntPtr PebBaseAddress;
+    public nint PebBaseAddress;
     /// <summary>
     /// The affinity mask.
     /// </summary>
@@ -325,7 +325,7 @@ public struct ThreadBasicInformation
     /// <summary>
     /// The base address of Thread Environment Block.
     /// </summary>
-    public IntPtr TebBaseAdress;
+    public nint TebBaseAdress;
     /// <summary>
     /// The process id which owns the thread.
     /// </summary>

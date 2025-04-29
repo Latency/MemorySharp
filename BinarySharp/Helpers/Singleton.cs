@@ -14,8 +14,10 @@ namespace Binarysharp.Helpers;
 /// <typeparam name="T">The type to create or get a singleton.</typeparam>
 public static class Singleton<T> where T : new()
 {
+    private static readonly Lazy<T> SingletonInstance = new(() => new T());
+
     /// <summary>
     /// Gets the singleton of the given type.
     /// </summary>
-    public static readonly T Instance = new T();
+    public static T Instance => SingletonInstance.Value;
 }

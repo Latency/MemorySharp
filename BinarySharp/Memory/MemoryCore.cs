@@ -30,8 +30,7 @@ public static class MemoryCore
     /// <param name="protectionFlags">The memory protection for the region of pages to be allocated.</param>
     /// <param name="allocationFlags">The type of memory allocation.</param>
     /// <returns>The base address of the allocated region.</returns>
-    public static nint Allocate(SafeMemoryHandle      processHandle, int size, MemoryProtectionFlags protectionFlags = MemoryProtectionFlags.ExecuteReadWrite,
-                                  MemoryAllocationFlags allocationFlags = MemoryAllocationFlags.Commit)
+    public static nint Allocate(SafeMemoryHandle processHandle, int size, MemoryProtectionFlags protectionFlags = MemoryProtectionFlags.ExecuteReadWrite, MemoryAllocationFlags allocationFlags = MemoryAllocationFlags.Commit)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
@@ -79,7 +78,7 @@ public static class MemoryCore
         // Free the memory
         if (!NativeMethods.VirtualFreeEx(processHandle, address, 0, MemoryReleaseFlags.Release))
             // If the memory wasn't correctly freed, throws an exception
-            throw new Win32Exception($"The memory page 0x{address.ToString("X")} cannot be freed.");
+            throw new Win32Exception($"The memory page 0x{address:X} cannot be freed.");
     }
     #endregion
 
@@ -184,7 +183,7 @@ public static class MemoryCore
     /// </summary>
     /// <param name="processHandle">A handle to the process whose memory information is queried.</param>
     /// <param name="baseAddress">A pointer to the base address of the region of pages to be queried.</param>
-    /// <returns>A <see cref="Native.MemoryBasicInformation"/> structures in which information about the specified page range is returned.</returns>
+    /// <returns>A <see cref="MemoryBasicInformation"/> structures in which information about the specified page range is returned.</returns>
     public static MemoryBasicInformation Query(SafeMemoryHandle processHandle, nint baseAddress)
     {
         // Query the memory region
@@ -200,7 +199,7 @@ public static class MemoryCore
     /// <param name="processHandle">A handle to the process whose memory information is queried.</param>
     /// <param name="addressFrom">A pointer to the starting address of the region of pages to be queried.</param>
     /// <param name="addressTo">A pointer to the ending address of the region of pages to be queried.</param>
-    /// <returns>A collection of <see cref="Native.MemoryBasicInformation"/> structures.</returns>
+    /// <returns>A collection of <see cref="MemoryBasicInformation"/> structures.</returns>
     public static IEnumerable<MemoryBasicInformation> Query(SafeMemoryHandle processHandle, nint addressFrom, nint addressTo)
     {
         // Check if the handle is valid

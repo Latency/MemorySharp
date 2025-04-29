@@ -49,6 +49,7 @@ public enum CallingConventions
     Thiscall
 }
 
+
 /// <summary>
 /// A list of type of clean-up available in calling conventions.
 /// </summary>

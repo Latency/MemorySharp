@@ -24,7 +24,7 @@ public class RemotePointer : IEquatable<RemotePointer>
     /// <summary>
     /// The address of the pointer in the remote process.
     /// </summary>
-    public nint BaseAddress { get; protected set; }
+    public nint BaseAddress { get; private protected set; }
     #endregion
 
     #region IsValid
@@ -36,9 +36,9 @@ public class RemotePointer : IEquatable<RemotePointer>
     #endregion
     #region MemorySharp
     /// <summary>
-    /// The reference of the <see cref="MemorySharp.MemorySharp"/> object.
+    /// The reference of the <see cref="MemoryManagement.MemorySharp"/> object.
     /// </summary>
-    public MemorySharp MemorySharp { get; protected set; }
+    public MemorySharp MemorySharp { get; }
     #endregion
     #endregion
 
@@ -46,7 +46,7 @@ public class RemotePointer : IEquatable<RemotePointer>
     /// <summary>
     /// Initializes a new instance of the <see cref="RemotePointer"/> class.
     /// </summary>
-    /// <param name="memorySharp">The reference of the <see cref="MemorySharp.MemorySharp"/> object.</param>
+    /// <param name="memorySharp">The reference of the <see cref="MemoryManagement.MemorySharp"/> object.</param>
     /// <param name="address">The location where the pointer points in the remote process.</param>
     public RemotePointer(MemorySharp memorySharp, nint address)
     {

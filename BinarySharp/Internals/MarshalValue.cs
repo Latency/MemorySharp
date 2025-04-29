@@ -53,7 +53,7 @@ public class MarshalledValue<T> : IMarshalledValue
     /// <summary>
     /// The reference of the value. It can be directly the value or a pointer.
     /// </summary>
-    public IntPtr Reference { get; private set; }
+    public nint Reference { get; private set; }
 
     /// <summary>
     /// The initial value.
@@ -75,6 +75,7 @@ public class MarshalledValue<T> : IMarshalledValue
         // Marshal the value
         Marshal();
     }
+
     /// <summary>
     /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
     /// </summary>
@@ -93,7 +94,7 @@ public class MarshalledValue<T> : IMarshalledValue
         if(Allocated != null)
             Allocated.Dispose();
         // Set the pointer to zero
-        Reference = IntPtr.Zero;
+        Reference = nint.Zero;
         // Avoid the finalizer
         GC.SuppressFinalize(this);
     }
@@ -126,7 +127,7 @@ public class MarshalledValue<T> : IMarshalledValue
             if (MarshalType<T>.CanBeStoredInRegisters)
             {
                 // Convert the byte array into a pointer
-                Reference = MarshalType<IntPtr>.ByteArrayToObject(byteArray);
+                Reference = MarshalType<nint>.ByteArrayToObject(byteArray);
             }
             else
             {

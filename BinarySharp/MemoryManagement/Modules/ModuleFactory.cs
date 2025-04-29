@@ -66,7 +66,7 @@ public class ModuleFactory : IFactory
     /// </summary>
     /// <param name="address">The address of the pointer.</param>
     /// <returns>A new instance of a <see cref="RemotePointer"/> class.</returns>
-    public RemotePointer this[IntPtr address] => new(MemorySharp, address);
+    public RemotePointer this[nint address] => new(MemorySharp, address);
 
     /// <summary>
     /// Gets the specified module in the remote process.
@@ -193,12 +193,13 @@ public class ModuleFactory : IFactory
     /// <param name="path">The path of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).</param>
     /// <param name="mustBeDisposed">The module will be ejected when the finalizer collects the object.</param>
     /// <returns>A new instance of the <see cref="InjectedModule"/>class.</returns>
-    public InjectedModule Inject(string path, bool mustBeDisposed = true)
+    public InjectedModule? Inject(string path, bool mustBeDisposed = true)
     {
         // Injects the module
         var module = InjectedModule.InternalInject(MemorySharp, path);
-        // Add the module in the list
-        InternalInjectedModules.Add(module);
+        if (module is not null)
+            InternalInjectedModules.Add(module); // Add the module in the list
+
         // Return the module
         return module;
     }

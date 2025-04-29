@@ -67,7 +67,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <summary>
     /// The remote process handle opened with all rights.
     /// </summary>
-    public SafeMemoryHandle Handle { get; private set; }
+    public SafeMemoryHandle Handle { get; }
     #endregion
     #region Memory
     /// <summary>
@@ -85,13 +85,13 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <summary>
     /// Provide access to the opened process.
     /// </summary>
-    public Process Native { get; private set; }
+    public Process Native { get; }
     #endregion
     #region Peb
     /// <summary>
     /// The Process Environment Block of the process.
     /// </summary>
-    public ManagedPeb Peb { get; private set; }
+    public ManagedPeb Peb { get; }
     #endregion
     #region Pid
     /// <summary>
@@ -145,7 +145,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         Handle = MemoryCore.OpenProcess(ProcessAccessFlags.AllAccess, process.Id);
 
         // Initialize the PEB
-        Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
+        //Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
 
         // Create instances of the factories
         Factories = [];
