@@ -11,7 +11,7 @@ using System.Text;
 using Binarysharp.Internals;
 using Binarysharp.MemoryManagement;
 
-namespace Binarysharp.Assembly;
+namespace Binarysharp.Assembly.Assembler;
 
 /// <summary>
 /// Class representing a transaction where the user can insert mnemonics.
@@ -109,14 +109,12 @@ public class AssemblyTransaction : IDisposable
     {
         // If a pointer was specified
         if (Address != nint.Zero)
-        {
             // If the assembly code must be executed
             if (IsAutoExecuted)
                 ExitCode = MemorySharp.Assembly.InjectAndExecute<nint>(Mnemonics.ToString(), Address);
             // Else the assembly code is just injected
             else
                 MemorySharp.Assembly.Inject(Mnemonics.ToString(), Address);
-        }
 
         // If no pointer was specified and the code assembly code must be executed
         if (Address == nint.Zero && IsAutoExecuted)

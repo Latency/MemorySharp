@@ -22,7 +22,6 @@ namespace Binarysharp.Windows;
 /// </summary>
 public static class WindowCore
 {
-    #region GetClassName
     /// <summary>
     /// Retrieves the name of the class to which the specified window belongs.
     /// </summary>
@@ -40,18 +39,13 @@ public static class WindowCore
 
         return stringBuilder.ToString();
     }
-    #endregion
 
-    #region GetForegroundWindow
     /// <summary>
     /// Retrieves a handle to the foreground window (the window with which the user is currently working).
     /// </summary>
     /// <returns>A handle to the foreground window. The foreground window can be <c>nint.Zero</c> in certain circumstances, such as when a window is losing activation.</returns>
     public static nint GetForegroundWindow() => NativeMethods.GetForegroundWindow();
 
-    #endregion
-
-    #region GetSystemMetrics
     /// <summary>
     /// Retrieves the specified system metric or system configuration setting.
     /// </summary>
@@ -66,9 +60,7 @@ public static class WindowCore
 
         throw new Win32Exception("The call of GetSystemMetrics failed. Unfortunately, GetLastError code doesn't provide more information.");
     }
-    #endregion
 
-    #region GetWindowText
     /// <summary>
     /// Gets the text of the specified window's title bar.
     /// </summary>
@@ -92,9 +84,7 @@ public static class WindowCore
 
         return stringBuilder.ToString();
     }
-    #endregion
 
-    #region GetWindowPlacement
     /// <summary>
     /// Retrieves the show state and the restored, minimized, and maximized positions of the specified window.
     /// </summary>
@@ -115,9 +105,7 @@ public static class WindowCore
 
         return placement;
     }
-    #endregion
 
-    #region GetWindowProcessId
     /// <summary>
     /// Retrieves the identifier of the process that created the window. 
     /// </summary>
@@ -133,9 +121,7 @@ public static class WindowCore
 
         return processId;
     }
-    #endregion
 
-    #region GetWindowThreadId
     /// <summary>
     /// Retrieves the identifier of the thread that created the specified window.
     /// </summary>
@@ -150,9 +136,7 @@ public static class WindowCore
         int trash;
         return NativeMethods.GetWindowThreadProcessId(windowHandle, out trash);
     }
-    #endregion
 
-    #region EnumAllWindows
     /// <summary>
     /// Enumerates all the windows on the screen.
     /// </summary>
@@ -175,9 +159,7 @@ public static class WindowCore
         // Return the list of windows
         return list;
     }
-    #endregion
 
-    #region EnumChildWindows
     /// <summary>
     /// Enumerates recursively all the child windows that belong to the specified parent window.
     /// </summary>
@@ -201,21 +183,13 @@ public static class WindowCore
             return true;
         }
     }
-    #endregion
 
-    #region EnumTopLevelWindows
     /// <summary>
     /// Enumerates all top-level windows on the screen. This function does not search child windows. 
     /// </summary>
     /// <returns>A collection of handles of top-level windows.</returns>
-    public static IEnumerable<nint> EnumTopLevelWindows()
-    {
-        // When passing a null pointer, this function is equivalent to EnumWindows
-        return EnumChildWindows(nint.Zero);
-    }
-    #endregion
+    public static IEnumerable<nint> EnumTopLevelWindows() => EnumChildWindows(nint.Zero);
 
-    #region FlashWindow
     /// <summary>
     /// Flashes the specified window one time. It does not change the active state of the window.
     /// To flash the window a specified number of times, use the <see cref="FlashWindowEx(nint, FlashWindowFlags, uint, TimeSpan)"/> function.
@@ -233,9 +207,7 @@ public static class WindowCore
         // Flash the window
         return NativeMethods.FlashWindow(windowHandle, true);
     }
-    #endregion
 
-    #region FlashWindowEx
     /// <summary>
     /// Flashes the specified window. It does not change the active state of the window.
     /// </summary>
@@ -268,10 +240,7 @@ public static class WindowCore
     /// <param name="windowHandle">A handle to the window to be flashed. The window can be either opened or minimized.</param>
     /// <param name="flags">The flash status.</param>
     /// <param name="count">The number of times to flash the window.</param>
-    public static void FlashWindowEx(nint windowHandle, FlashWindowFlags flags, uint count)
-    {
-        FlashWindowEx(windowHandle, flags, count, TimeSpan.FromMilliseconds(0));
-    }
+    public static void FlashWindowEx(nint windowHandle, FlashWindowFlags flags, uint count) => FlashWindowEx(windowHandle, flags, count, TimeSpan.FromMilliseconds(0));
 
     /// <summary>
     /// Flashes the specified window. It does not change the active state of the window. The function uses the default cursor blink rate.
@@ -280,9 +249,6 @@ public static class WindowCore
     /// <param name="flags">The flash status.</param>
     public static void FlashWindowEx(nint windowHandle, FlashWindowFlags flags) => FlashWindowEx(windowHandle, flags, 0);
 
-    #endregion
-
-    #region MapVirtualKey
     /// <summary>
     /// Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code into a virtual-key code.
     /// To specify a handle to the keyboard layout to use for translating the specified code, use the MapVirtualKeyEx function.
@@ -315,9 +281,6 @@ public static class WindowCore
     /// </returns>
     public static uint MapVirtualKey(Keys key, TranslationTypes translation) => MapVirtualKey((uint)key, translation);
 
-    #endregion
-
-    #region PostMessage
     /// <summary>
     /// Places (posts) a message in the message queue associated with the thread that created the specified window and returns without waiting for the thread to process the message.
     /// </summary>
@@ -344,14 +307,11 @@ public static class WindowCore
     /// <param name="lParam">Additional message-specific information.</param>
     public static void PostMessage(nint windowHandle, WindowsMessages message, nint wParam, nint lParam) => PostMessage(windowHandle, (uint)message, wParam, lParam);
 
-    #endregion
-
-    #region SendInput
     /// <summary>
     /// Synthesizes keystrokes, mouse motions, and button clicks.
     /// </summary>
     /// <param name="inputs">An array of <see cref="Input"/> structures. Each structure represents an event to be inserted into the keyboard or mouse input stream.</param>
-    public static void SendInput(Input[] inputs)
+    public static void SendInput(Input[]? inputs)
     {
         // Check if the array passed in parameter is not empty
         if (inputs != null && inputs.Length != 0)
@@ -360,9 +320,7 @@ public static class WindowCore
                 throw new Win32Exception("Couldn't send the inputs.");
         }
         else
-        {
             throw new ArgumentException("The parameter cannot be null or empty.", "inputs");
-        }
     }
 
     /// <summary>
@@ -371,9 +329,6 @@ public static class WindowCore
     /// <param name="input">A structure represents an event to be inserted into the keyboard or mouse input stream.</param>
     public static void SendInput(Input input) => SendInput([input]);
 
-    #endregion
-
-    #region SendMessage
     /// <summary>
     /// Sends the specified message to a window or windows.
     /// The SendMessage function calls the window procedure for the specified window and does not return until the window procedure has processed the message.
@@ -403,9 +358,6 @@ public static class WindowCore
     /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
     public static nint SendMessage(nint windowHandle, WindowsMessages message, nint wParam, nint lParam) => SendMessage(windowHandle, (uint)message, wParam, lParam);
 
-    #endregion
-
-    #region SetForegroundWindow
     /// <summary>
     /// Brings the thread that created the specified window into the foreground and activates the window. 
     /// The window is restored if minimized. Performs no action if the window is already activated.
@@ -430,9 +382,7 @@ public static class WindowCore
         if(!NativeMethods.SetForegroundWindow(windowHandle))
             throw new ApplicationException("Couldn't set the window to foreground.");
     }
-    #endregion
 
-    #region SetWindowPlacement
     /// <summary>
     /// Sets the current position and size of the specified window.
     /// </summary>
@@ -477,9 +427,7 @@ public static class WindowCore
         if (!NativeMethods.SetWindowPlacement(windowHandle, ref placement))
             throw new Win32Exception("Couldn't set the window placement.");
     }
-    #endregion
 
-    #region SetWindowText
     /// <summary>
     /// Sets the text of the specified window's title bar.
     /// </summary>
@@ -494,9 +442,7 @@ public static class WindowCore
         if (!NativeMethods.SetWindowText(windowHandle, title))
             throw new Win32Exception("Couldn't set the text of the window's title bar.");
     }
-    #endregion
 
-    #region ShowWindow
     /// <summary>
     /// Sets the specified window's show state.
     /// </summary>
@@ -511,5 +457,4 @@ public static class WindowCore
         // Change the state of the window
         return NativeMethods.ShowWindow(windowHandle, state);
     }
-    #endregion
 }

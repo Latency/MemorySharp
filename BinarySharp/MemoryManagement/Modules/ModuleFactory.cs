@@ -93,7 +93,7 @@ public class ModuleFactory : IFactory
         InternalInjectedModules = [];
 
         // Save a reference of the main module (the main module is required for a lot of operations, cached for speed reasons)
-        MainModule = FetchModule(MemorySharp.Native.MainModule);
+        MainModule = FetchModule(MemorySharp.Native.MainModule ?? throw new ArgumentNullException());
     }
 
     /// <summary>
@@ -183,7 +183,7 @@ public class ModuleFactory : IFactory
     /// </summary>
     /// <param name="module">A module in the remote process.</param>
     /// <returns>A new instance of a <see cref="RemoteModule"/> class.</returns>
-    private RemoteModule FetchModule(ProcessModule? module) => FetchModule(module.ModuleName);
+    private RemoteModule FetchModule(ProcessModule module) => FetchModule(module.ModuleName);
     #endregion
 
     #region Inject

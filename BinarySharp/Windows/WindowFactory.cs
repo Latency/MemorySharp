@@ -17,83 +17,54 @@ namespace Binarysharp.Windows;
 /// </summary>
 public class WindowFactory : IFactory
 {
-    #region Fields
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
-    private readonly MemorySharp? _memorySharp;
-    #endregion
+    private readonly MemorySharp _memorySharp;
 
-    #region Properties
-    #region ChildWindows
     /// <summary>
     /// Gets all the child windows that belong to the application.
     /// </summary>
-    public IEnumerable<RemoteWindow> ChildWindows
-    {
-        get { return ChildWindowHandles.Select(handle => new RemoteWindow(_memorySharp, handle)); }
-    }
-    #endregion
+    public IEnumerable<RemoteWindow> ChildWindows => ChildWindowHandles.Select(handle => new RemoteWindow(_memorySharp, handle));
 
-    #region ChildWindowHandles (internal)
     /// <summary>
     /// Gets all the child window handles that belong to the application.
     /// </summary>
     internal IEnumerable<nint> ChildWindowHandles => WindowCore.EnumChildWindows(_memorySharp.Native.MainWindowHandle);
 
-    #endregion
-    #region MainWindow
     /// <summary>
     /// Gets the main window of the application.
     /// </summary>
     public RemoteWindow MainWindow => new(_memorySharp, MainWindowHandle);
 
-    #endregion
-    #region MainWindowHandle (internal)
     /// <summary>
     /// Gets the main window handle of the application.
     /// </summary>
     public nint MainWindowHandle => _memorySharp.Native.MainWindowHandle;
 
-    #endregion
-    #region This
     /// <summary>
     /// Gets all the windows that have the same specified title.
     /// </summary>
     /// <param name="windowTitle">The window title string.</param>
     /// <returns>A collection of <see cref="RemoteWindow"/>.</returns>
     public IEnumerable<RemoteWindow> this[string windowTitle] => GetWindowsByTitle(windowTitle);
-    #endregion
 
-    #region Windows
     /// <summary>
     /// Gets all the windows that belong to the application.
     /// </summary>
-    public IEnumerable<RemoteWindow> RemoteWindows
-    {
-        get { return WindowHandles.Select(handle => new RemoteWindow(_memorySharp, handle)); }
-    }
-    #endregion
-    #region WindowHandles (internal)
+    public IEnumerable<RemoteWindow> RemoteWindows => WindowHandles.Select(handle => new RemoteWindow(_memorySharp, handle));
+
     /// <summary>
     /// Gets all the window handles that belong to the application.
     /// </summary>
     internal IEnumerable<nint> WindowHandles => new List<nint>(ChildWindowHandles) {MainWindowHandle};
 
-    #endregion
-    #endregion
-
-    #region Constructor
     /// <summary>
     /// Initializes a new instance of the <see cref="WindowFactory"/> class.
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
-    internal WindowFactory(MemorySharp? memorySharp) => _memorySharp = memorySharp;
+    internal WindowFactory(MemorySharp memorySharp) => _memorySharp = memorySharp;
 
-    #endregion
-
-    #region Methods
-    #region Dispose (implementation of IFactory)
     /// <summary>
     /// Releases all resources used by the <see cref="WindowFactory"/> object.
     /// </summary>
@@ -101,9 +72,7 @@ public class WindowFactory : IFactory
     {
         // Nothing to dispose... yet
     }
-    #endregion
 
-    #region GetWindowsByClassName
     /// <summary>
     /// Gets all the windows that have the specified class name.
     /// </summary>
@@ -113,9 +82,6 @@ public class WindowFactory : IFactory
                                                                                 .Where(handle => WindowCore.GetClassName(handle) == className)
                                                                                 .Select(handle => new RemoteWindow(_memorySharp, handle));
 
-    #endregion
-
-    #region GetWindowsByTitle
     /// <summary>
     /// Gets all the windows that have the same specified title.
     /// </summary>
@@ -125,9 +91,6 @@ public class WindowFactory : IFactory
                                                                               .Where(handle => WindowCore.GetWindowText(handle) == windowTitle)
                                                                               .Select(handle => new RemoteWindow(_memorySharp, handle));
 
-    #endregion
-
-    #region GetWindowsByTitleContains
     /// <summary>
     /// Gets all the windows that contain the specified title.
     /// </summary>
@@ -136,7 +99,4 @@ public class WindowFactory : IFactory
     public IEnumerable<RemoteWindow> GetWindowsByTitleContains(string windowTitle) => WindowHandles
                                                                                       .Where(handle => WindowCore.GetWindowText(handle).Contains(windowTitle))
                                                                                       .Select(handle => new RemoteWindow(_memorySharp, handle));
-
-    #endregion
-    #endregion
 }

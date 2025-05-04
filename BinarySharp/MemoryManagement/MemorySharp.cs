@@ -8,8 +8,8 @@
 */
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Binarysharp.Assembly;
 using Binarysharp.Helpers;
 using Binarysharp.Internals;
 using Binarysharp.Memory;
@@ -25,28 +25,16 @@ namespace Binarysharp.MemoryManagement;
 /// </summary>
 public class MemorySharp : IDisposable, IEquatable<MemorySharp>
 {
-    #region Events
     /// <summary>
     /// Raises when the <see cref="MemorySharp"/> object is disposed.
     /// </summary>
     public event EventHandler? OnDispose;
-    #endregion
 
-    #region Fields
     /// <summary>
     /// The factories embedded inside the library.
     /// </summary>
     protected List<IFactory> Factories;
-    #endregion
 
-    #region Properties
-    #region Assembly
-    /// <summary>
-    /// Factory for generating assembly code.
-    /// </summary>
-    public AssemblyFactory Assembly { get; protected set; }
-    #endregion
-    #region IsDebugged
     /// <summary>
     /// Gets whether the process is being debugged.
     /// </summary>
@@ -55,52 +43,42 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         get => Peb.BeingDebugged;
         set => Peb.BeingDebugged = value;
     }
-    #endregion
-    #region IsRunning
+
     /// <summary>
     /// State if the process is running.
     /// </summary>
     public bool IsRunning => Handle is { IsInvalid: false, IsClosed: false } && !Native.HasExited;
 
-    #endregion
-    #region Handle
     /// <summary>
     /// The remote process handle opened with all rights.
     /// </summary>
     public SafeMemoryHandle Handle { get; }
-    #endregion
-    #region Memory
+
     /// <summary>
     /// Factory for manipulating memory space.
     /// </summary>
     public MemoryFactory Memory { get; protected set; }
-    #endregion
-    #region Modules
+
     /// <summary>
     /// Factory for manipulating modules and libraries.
     /// </summary>
     public ModuleFactory Modules { get; protected set; }
-    #endregion
-    #region Native
+
     /// <summary>
     /// Provide access to the opened process.
     /// </summary>
     public Process Native { get; }
-    #endregion
-    #region Peb
+
     /// <summary>
     /// The Process Environment Block of the process.
     /// </summary>
     public ManagedPeb Peb { get; }
-    #endregion
-    #region Pid
+
     /// <summary>
     /// Gets the unique identifier for the remote process.
     /// </summary>
     public int Pid => Native.Id;
 
-    #endregion
-    #region This
     /// <summary>
     /// Gets the specified module in the remote process.
     /// </summary>
@@ -116,22 +94,16 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <returns>A new instance of a <see cref="RemotePointer"/> class.</returns>
     public RemotePointer this[nint address, bool isRelative = true] => new(this, isRelative ? MakeAbsolute(address) : address);
 
-    #endregion
-    #region Threads
     /// <summary>
     /// Factory for manipulating threads.
     /// </summary>
     public ThreadFactory Threads { get; protected set; }
-    #endregion
-    #region Windows
+
     /// <summary>
     /// Factory for manipulating windows.
     /// </summary>
     public WindowFactory Windows { get; protected set; }
-    #endregion
-    #endregion
 
-    #region Constructors/Destructor
     /// <summary>
     /// Initializes a new instance of the <see cref="MemorySharp"/> class.
     /// </summary>
@@ -150,13 +122,13 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         // Create instances of the factories
         Factories = [];
         Factories.AddRange([
-            Assembly = new AssemblyFactory(this),
             Memory   = new MemoryFactory(this),
             Modules  = new ModuleFactory(this),
             Threads  = new ThreadFactory(this),
             Windows  = new WindowFactory(this)
         ]);
     }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="MemorySharp"/> class.
     /// </summary>
@@ -164,15 +136,12 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     public MemorySharp(int processId)
         : this(ApplicationFinder.FromProcessId(processId))
     { }
+
     /// <summary>
     /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection. 
     /// </summary>
     ~MemorySharp() => Dispose();
 
-    #endregion
-
-    #region Methods
-    #region Dispose (implementation of IDisposable)
     /// <summary>
     /// Releases all resources used by the <see cref="MemorySharp"/> object.
     /// </summary>
@@ -190,8 +159,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         // Avoid the finalizer
         GC.SuppressFinalize(this);
     }
-    #endregion
-    #region Equals (override)
+
     /// <summary>
     /// Determines whether the specified object is equal to the current object.
     /// </summary>
@@ -207,15 +175,11 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// </summary>
     public bool Equals(MemorySharp? other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Handle.Equals(other.Handle));
 
-    #endregion
-    #region GetHashCode (override)
     /// <summary>
     /// Serves as a hash function for a particular type. 
     /// </summary>
     public override int GetHashCode() => Handle.GetHashCode();
 
-    #endregion
-    #region MakeAbsolute
     /// <summary>
     /// Makes an absolute address from a relative one based on the main module.
     /// </summary>
@@ -229,9 +193,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         // Compute the absolute address
         return new nint(Modules.MainModule.BaseAddress.ToInt64() + address.ToInt64());
     }
-    #endregion
 
-    #region MakeRelative
     /// <summary>
     /// Makes a relative address from an absolute one based on the main module.
     /// </summary>
@@ -245,14 +207,11 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         // Compute the relative address
         return new nint(address.ToInt64() - Modules.MainModule.BaseAddress.ToInt64());
     }
-    #endregion
-    #region Operator (override)
+
     public static bool operator ==(MemorySharp left, MemorySharp right) => Equals(left, right);
 
     public static bool operator !=(MemorySharp? left, MemorySharp? right) => !Equals(left, right);
 
-    #endregion
-    #region Read
     /// <summary>
     /// Reads the value of a specified type in the remote process.
     /// </summary>
@@ -296,6 +255,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
 
         return array;
     }
+
     /// <summary>
     /// Reads an array of a specified type in the remote process.
     /// </summary>
@@ -306,8 +266,6 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <returns>An array.</returns>
     public T?[] Read<T>(Enum address, int count, bool isRelative = true) => Read<T>(new nint(Convert.ToInt64(address)), count, isRelative);
 
-    #endregion
-    #region ReadBytes (protected)
     /// <summary>
     /// Reads an array of bytes in the remote process.
     /// </summary>
@@ -317,8 +275,6 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <returns>The array of bytes.</returns>
     protected byte[] ReadBytes(nint address, int count, bool isRelative = true) => MemoryCore.ReadBytes(Handle, isRelative ? MakeAbsolute(address) : address, count);
 
-    #endregion
-    #region ReadString
     /// <summary>
     /// Reads a string with a specified encoding in the remote process.
     /// </summary>
@@ -338,6 +294,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         // Crop the string with this end if found, return the string otherwise
         return endOfStringPosition == -1 ? data : data[..endOfStringPosition];
     }
+
     /// <summary>
     /// Reads a string with a specified encoding in the remote process.
     /// </summary>
@@ -366,8 +323,6 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <returns>The string.</returns>
     public string ReadString(Enum address, bool isRelative = true, int maxLength = 512) => ReadString(new nint(Convert.ToInt64(address)), isRelative, maxLength);
 
-    #endregion
-    #region Write
     /// <summary>
     /// Writes the values of a specified type in the remote process.
     /// </summary>
@@ -375,7 +330,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <param name="address">The address where the value is written.</param>
     /// <param name="value">The value to write.</param>
     /// <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
-    public void Write<T>(nint address, T value, bool isRelative = true) => WriteBytes(address, MarshalType<T>.ObjectToByteArray(value), isRelative);
+    public void Write<T>(nint address, [DisallowNull] T value, bool isRelative = true) => WriteBytes(address, MarshalType<T>.ObjectToByteArray(value), isRelative);
 
     /// <summary>
     /// Writes the values of a specified type in the remote process.
@@ -384,7 +339,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <param name="address">The address where the value is written.</param>
     /// <param name="value">The value to write.</param>
     /// <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
-    public void Write<T>(Enum address, T value, bool isRelative = true) => Write(new nint(Convert.ToInt64(address)), value, isRelative);
+    public void Write<T>(Enum address, [DisallowNull] T value, bool isRelative = true) => Write(new nint(Convert.ToInt64(address)), value, isRelative);
 
     /// <summary>
     /// Writes an array of a specified type in the remote process.
@@ -402,11 +357,16 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         for (var i = 0; i < array.Length; i++)
         {
             var offsetInArray = MarshalType<T>.Size * i;
-            Buffer.BlockCopy(MarshalType<T>.ObjectToByteArray(array[i]), 0, valuesInBytes, offsetInArray, MarshalType<T>.Size);
+            var elmt          = array[i];
+            if (elmt is null)
+                throw new ArgumentNullException();
+
+            Buffer.BlockCopy(MarshalType<T>.ObjectToByteArray(elmt), 0, valuesInBytes, offsetInArray, MarshalType<T>.Size);
         }
 
         WriteBytes(address, valuesInBytes, isRelative);
     }
+
     /// <summary>
     /// Writes an array of a specified type in the remote process.
     /// </summary>
@@ -416,8 +376,6 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
     public void Write<T>(Enum address, T[] array, bool isRelative = true) => Write(new nint(Convert.ToInt64(address)), array, isRelative);
 
-    #endregion
-    #region WriteBytes (protected)
     /// <summary>
     /// Write an array of bytes in the remote process.
     /// </summary>
@@ -431,8 +389,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
             // Write the byte array
             MemoryCore.WriteBytes(Handle, isRelative ? MakeAbsolute(address) : address, byteArray);
     }
-    #endregion
-    #region WriteString
+
     /// <summary>
     /// Writes a string with a specified encoding in the remote process.
     /// </summary>
@@ -466,7 +423,4 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <param name="text">The text to write.</param>
     /// <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
     public void WriteString(Enum address, string text, bool isRelative = true) => WriteString(new nint(Convert.ToInt64(address)), text, isRelative);
-
-    #endregion
-    #endregion
 }

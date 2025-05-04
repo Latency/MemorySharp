@@ -9,6 +9,7 @@
 
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.Versioning;
 using Binarysharp.Internals;
 using Binarysharp.MemoryManagement;
 using Binarysharp.MemoryManagement.Native;
@@ -21,7 +22,6 @@ namespace Binarysharp.Threading;
 /// </summary>
 public class RemoteThread : IDisposable, IEquatable<RemoteThread>
 {
-    #region Fields
     /// <summary>
     /// The reference of the <see cref="Binarysharp.MemoryManagement.MemorySharp"/> object.
     /// </summary>
@@ -35,11 +35,8 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// <summary>
     /// The task involved in cleaning the parameter memory when the <see cref="RemoteThread"/> object is collected.
     /// </summary>
-    private readonly Task _parameterCleaner;
-    #endregion
+    private readonly Task _parameterCleaner = null!;
 
-    #region Properties
-    #region Context
     /// <summary>
     /// Gets or sets the full context of the thread.
     /// If the thread is not already suspended, performs a <see cref="Suspend"/> and <see cref="Resume"/> call on the thread.
@@ -95,36 +92,29 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
             }
         }
     }
-    #endregion
-    #region Handle
+
     /// <summary>
     /// The remote thread handle opened with all rights.
     /// </summary>
     public SafeMemoryHandle Handle { get; }
-    #endregion
 
-    #region Id
     /// <summary>
     /// Gets the unique identifier of the thread.
     /// </summary>
     public int Id { get; }
-    #endregion
 
-    #region IsAlive
     /// <summary>
     /// Gets if the thread is alive.
     /// </summary>
     public bool IsAlive => !IsTerminated;
 
-    #endregion
-    #region IsMainThread
     /// <summary>
     /// Gets if the thread is the main one in the remote process.
     /// </summary>
+    [SupportedOSPlatform("Windows")]
+    [SupportedOSPlatform("Linux")]
     public bool IsMainThread => this == MemorySharp.Threads.MainThread;
 
-    #endregion
-    #region IsSuspended
     /// <summary>
     /// Gets if the thread is suspended.
     /// </summary>
@@ -138,9 +128,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
             return Native is { ThreadState: ThreadState.Wait, WaitReason: ThreadWaitReason.Suspended };
         }
     }
-    #endregion
 
-    #region IsTerminated
     /// <summary>
     /// Gets if the thread is terminated.
     /// </summary>
@@ -154,22 +142,17 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
             return Native == null;
         }
     }
-    #endregion
-    #region Native
+
     /// <summary>
     /// The native <see cref="ProcessThread"/> object corresponding to this thread.
     /// </summary>
     public ProcessThread? Native { get; private set; }
-    #endregion
-    #region Teb
+
     /// <summary>
     /// The Thread Environment Block of the thread.
     /// </summary>
     public ManagedTeb Teb { get; private set; }
-    #endregion
-    #endregion
 
-    #region Constructor/Destructor
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoteThread"/> class.
     /// </summary>
@@ -210,10 +193,6 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// </summary>
     ~RemoteThread() => Dispose();
 
-    #endregion
-
-    #region Methods
-    #region Dispose (implementation of IDisposable)
     /// <summary>
     /// Releases all resources used by the <see cref="RemoteThread"/> object.
     /// </summary>
@@ -225,9 +204,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
         // Avoid the finalizer
         GC.SuppressFinalize(this);
     }
-    #endregion
 
-    #region Equals (override)
     /// <summary>
     /// Determines whether the specified object is equal to the current object.
     /// </summary>
@@ -243,9 +220,6 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// </summary>
     public bool Equals(RemoteThread? other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || (Id == other.Id && MemorySharp.Equals(other.MemorySharp)));
 
-    #endregion
-
-    #region GetExitCode
     /// <summary>
     /// Gets the termination status of the thread.
     /// </summary>
@@ -256,16 +230,12 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
         // Return the exit code or the default value of T if there's no exit code
         return ret.HasValue ? MarshalType<T>.PtrToObject(MemorySharp, ret.Value) : default(T);
     }
-    #endregion
 
-    #region GetHashCode (override)
     /// <summary>
     /// Serves as a hash function for a particular type. 
     /// </summary>
     public override int GetHashCode() => Id.GetHashCode() ^ MemorySharp.GetHashCode();
 
-    #endregion
-    #region GetRealSegmentAddress
     /// <summary>
     /// Gets the linear address of a specified segment.
     /// </summary>
@@ -287,14 +257,11 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
         // Compute the linear address
         return new nint(entry.BaseLow | (entry.BaseMid << 16) | (entry.BaseHi << 24));
     }
-    #endregion
-    #region Operator (override)
+
     public static bool operator ==(RemoteThread left, RemoteThread right) => Equals(left, right);
 
     public static bool operator !=(RemoteThread left, RemoteThread right) => !Equals(left, right);
 
-    #endregion
-    #region Refresh
     /// <summary>
     /// Discards any information about this thread that has been cached inside the process component.
     /// </summary>
@@ -307,9 +274,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
         // Get new info about the thread
         Native = MemorySharp.Threads.NativeThreads.FirstOrDefault(t => t.Id == Native.Id);
     }
-    #endregion
 
-    #region Join
     /// <summary>
     /// Blocks the calling thread until the thread terminates.
     /// </summary>
@@ -322,8 +287,6 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// <returns>The return value is a flag that indicates if the thread terminated or if the time elapsed.</returns>
     public WaitValues Join(TimeSpan time) => ThreadCore.WaitForSingleObject(Handle, time);
 
-    #endregion
-    #region Resume
     /// <summary>
     /// Resumes a thread that has been suspended.
     /// </summary>
@@ -339,9 +302,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
         if(_parameter != null && !_parameterCleaner.IsCompleted)
             _parameterCleaner.Start();
     }
-    #endregion
 
-    #region Suspend
     /// <summary>
     /// Either suspends the thread, or if the thread is already suspended, has no effect.
     /// </summary>
@@ -357,9 +318,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
                 return null;
         }
     }
-    #endregion
 
-    #region Terminate
     /// <summary>
     /// Terminates the thread.
     /// </summary>
@@ -369,14 +328,11 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
         if(IsAlive)
             ThreadCore.TerminateThread(Handle, exitCode);
     }
-    #endregion
 
-    #region ToString (override)
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>
+    [SupportedOSPlatform("Windows")]
+    [SupportedOSPlatform("Linux")]
     public override string ToString() => $"Id = {Id} IsAlive = {IsAlive} IsMainThread = {IsMainThread}";
-
-    #endregion
-    #endregion
 }

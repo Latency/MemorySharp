@@ -8,6 +8,7 @@
 */
 
 using System.Diagnostics;
+using System.Runtime.Versioning;
 using Binarysharp.Internals;
 using Binarysharp.MemoryManagement;
 using Binarysharp.MemoryManagement.Native;
@@ -19,26 +20,22 @@ namespace Binarysharp.Threading;
 /// </summary>
 public class ThreadFactory : IFactory
 {
-    #region Fields
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
     protected readonly MemorySharp MemorySharp;
-    #endregion
 
-    #region Properties
-    #region MainThread
     /// <summary>
     /// Gets the main thread of the remote process.
     /// </summary>
+    [SupportedOSPlatform("Windows")]
+    [SupportedOSPlatform("Linux")]
     public RemoteThread MainThread => new(MemorySharp, NativeThreads.Aggregate((current, next) => next.StartTime < current.StartTime ? next : current));
 
-    #endregion
-    #region NativeThreads (internal)
     /// <summary>
     /// Gets the native threads from the remote process.
     /// </summary>
-    internal IEnumerable<ProcessThread?> NativeThreads
+    internal IEnumerable<ProcessThread> NativeThreads
     {
         get
         {
@@ -48,15 +45,12 @@ public class ThreadFactory : IFactory
             return MemorySharp.Native.Threads.Cast<ProcessThread>();
         }
     }
-    #endregion
-    #region RemoteThreads
+
     /// <summary>
     /// Gets the threads from the remote process.
     /// </summary>
     public IEnumerable<RemoteThread> RemoteThreads => NativeThreads.Select(t => new RemoteThread(MemorySharp, t));
 
-    #endregion
-    #region This
     /// <summary>
     /// Gets the thread corresponding to an id.
     /// </summary>
@@ -64,19 +58,12 @@ public class ThreadFactory : IFactory
     /// <returns>A new instance of a <see cref="RemoteThread"/> class.</returns>
     public RemoteThread this[int threadId] => new(MemorySharp, NativeThreads.First(t => t.Id == threadId));
 
-    #endregion
-    #endregion
-
-    #region Constructor
     /// <summary>
     /// Initializes a new instance of the <see cref="ThreadFactory"/> class.
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     internal ThreadFactory(MemorySharp memorySharp) => MemorySharp = memorySharp;
-    #endregion
 
-    #region Method
-    #region Create
     /// <summary>
     /// Creates a thread that runs in the remote process.
     /// </summary>
@@ -143,9 +130,7 @@ public class ThreadFactory : IFactory
             result.Resume();
         return result;
     }
-    #endregion
 
-    #region CreateAndJoin
     /// <summary>
     /// Creates a thread in the remote process and blocks the calling thread until the thread terminates.
     /// </summary>
@@ -182,9 +167,7 @@ public class ThreadFactory : IFactory
         // Return the thread
         return ret;
     }
-    #endregion
 
-    #region Dispose (implementation of IFactory)
     /// <summary>
     /// Releases all resources used by the <see cref="ThreadFactory"/> object.
     /// </summary>
@@ -192,18 +175,14 @@ public class ThreadFactory : IFactory
     {
         // Nothing to dispose... yet
     }
-    #endregion
 
-    #region GetThreadById
     /// <summary>
     /// Gets a thread by its id in the remote process.
     /// </summary>
     /// <param name="id">The id of the thread.</param>
     /// <returns>A new instance of the <see cref="RemoteThread"/> class.</returns>
     public RemoteThread GetThreadById(int id) => new(MemorySharp, NativeThreads.First(t => t.Id == id));
-    #endregion
 
-    #region ResumeAll
     /// <summary>
     /// Resumes all threads.
     /// </summary>
@@ -212,9 +191,7 @@ public class ThreadFactory : IFactory
         foreach (var thread in RemoteThreads)
             thread.Resume();
     }
-    #endregion
 
-    #region SuspendAll
     /// <summary>
     /// Suspends all threads.
     /// </summary>
@@ -223,6 +200,4 @@ public class ThreadFactory : IFactory
         foreach (var thread in RemoteThreads)
             thread.Suspend();
     }
-    #endregion
-    #endregion
 }

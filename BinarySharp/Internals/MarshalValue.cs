@@ -7,6 +7,7 @@
  * See the file LICENSE for more information.
 */
 
+using System.Diagnostics.CodeAnalysis;
 using Binarysharp.Memory;
 using Binarysharp.MemoryManagement;
 
@@ -28,7 +29,7 @@ public static class MarshalValue
     /// <param name="memorySharp">The concerned process.</param>
     /// <param name="value">The value to marshal.</param>
     /// <returns>The return value is an new instance of the <see cref="MarshalledValue{T}"/> class.</returns>
-    public static MarshalledValue<T> Marshal<T>(MemorySharp memorySharp, T value) => new(memorySharp, value);
+    public static MarshalledValue<T> Marshal<T>(MemorySharp memorySharp, [DisallowNull] T value) => new(memorySharp, value);
 }
 
 /// <summary>
@@ -37,14 +38,11 @@ public static class MarshalValue
 /// <typeparam name="T">The type of the value. It can be a primitive or reference data type.</typeparam>
 public class MarshalledValue<T> : IMarshalledValue
 {
-    #region Fields
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
     protected readonly MemorySharp MemorySharp;
-    #endregion
 
-    #region Properties
     /// <summary>
     /// The memory allocated where the value is fully written if needed. It can be unused.
     /// </summary>
@@ -58,16 +56,15 @@ public class MarshalledValue<T> : IMarshalledValue
     /// <summary>
     /// The initial value.
     /// </summary>
-    public T? Value { get; private set; }
-    #endregion
+    [NotNull]
+    public T Value { get; }
 
-    #region Constructor/Destructor
     /// <summary>
     /// Initializes a new instance of the <see cref="MarshalledValue{T}"/> class.
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     /// <param name="value">The value to marshal.</param>
-    public MarshalledValue(MemorySharp memorySharp, T value)
+    public MarshalledValue(MemorySharp memorySharp, [DisallowNull] T value = default!)
     {
         // Save the parameters
         MemorySharp = memorySharp;
@@ -81,10 +78,6 @@ public class MarshalledValue<T> : IMarshalledValue
     /// </summary>
     ~MarshalledValue() => Dispose();
 
-    #endregion
-
-    #region Methods
-    #region Dispose (implementation of IDisposable)
     /// <summary>
     /// Releases all resources used by the <see cref="RemoteAllocation"/> object.
     /// </summary>
@@ -98,9 +91,7 @@ public class MarshalledValue<T> : IMarshalledValue
         // Avoid the finalizer
         GC.SuppressFinalize(this);
     }
-    #endregion
 
-    #region Marshal (private)
     /// <summary>
     /// Marshals the value into the remote process.
     /// </summary>
@@ -111,9 +102,9 @@ public class MarshalledValue<T> : IMarshalledValue
         {
             var text = Value?.ToString();
             // Allocate memory in the remote process (string + '\0')
-            Allocated = MemorySharp.Memory.Allocate(text.Length + 1);
+            Allocated = MemorySharp.Memory.Allocate(text?.Length + 1 ?? 0);
             // Write the value
-            Allocated.WriteString(0, text);
+            Allocated.WriteString(0, text ?? string.Empty);
             // Get the pointer
             Reference = Allocated.BaseAddress;
         }
@@ -143,6 +134,4 @@ public class MarshalledValue<T> : IMarshalledValue
             }
         }
     }
-    #endregion
-    #endregion
 }

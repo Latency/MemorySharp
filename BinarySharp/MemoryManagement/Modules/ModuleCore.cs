@@ -62,7 +62,7 @@ public static class ModuleCore
     /// Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
     /// </summary>
     /// <param name="module">The <see cref="ProcessModule"/> object corresponding to the library to free.</param>
-    public static void FreeLibrary(ProcessModule? module) => FreeLibrary(module.ModuleName);
+    public static void FreeLibrary(ProcessModule module) => FreeLibrary(module.ModuleName);
 
     #endregion
 

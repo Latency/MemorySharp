@@ -7,6 +7,7 @@
  * See the file LICENSE for more information.
 */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Binarysharp.Memory;
@@ -16,7 +17,6 @@ namespace Binarysharp.Memory;
 /// </summary>
 public class LocalUnmanagedMemory : IDisposable
 {
-    #region Properties
     /// <summary>
     /// The address where the data is allocated.
     /// </summary>
@@ -24,10 +24,8 @@ public class LocalUnmanagedMemory : IDisposable
     /// <summary>
     /// The size of the allocated memory.
     /// </summary>
-    public int Size { get; private set; }
-    #endregion
+    public int Size { get; }
 
-    #region Constructor/Destructor
     /// <summary>
     /// Initializes a new instance of the <see cref="LocalUnmanagedMemory"/> class, allocating a block of memory in the local process.
     /// </summary>
@@ -44,10 +42,6 @@ public class LocalUnmanagedMemory : IDisposable
     /// </summary>
     ~LocalUnmanagedMemory() => Dispose();
 
-    #endregion
-
-    #region Methods
-    #region Dispose (implementation of IDisposable)
     /// <summary>
     /// Releases the memory held by the <see cref="LocalUnmanagedMemory"/> object.
     /// </summary>
@@ -60,17 +54,13 @@ public class LocalUnmanagedMemory : IDisposable
         // Avoid the finalizer
         GC.SuppressFinalize(this);
     }
-    #endregion
 
-    #region Read
     /// <summary>
     /// Reads data from the unmanaged block of memory.
     /// </summary>
     /// <typeparam name="T">The type of data to return.</typeparam>
     /// <returns>The return value is the block of memory casted in the specified type.</returns>
-    public T? Read<T>() =>
-        // Marshal data from the block of memory to a new allocated managed object
-        (T?)Marshal.PtrToStructure(Address, typeof(T));
+    public T? Read<T>() => (T?) Marshal.PtrToStructure(Address, typeof(T));
 
     /// <summary>
     /// Reads an array of bytes from the unmanaged block of memory.
@@ -85,34 +75,23 @@ public class LocalUnmanagedMemory : IDisposable
         // Return the array
         return bytes;
     }
-    #endregion
 
-    #region ToString (override)
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>
     public override string ToString() => $"Size = {Size:X}";
 
-    #endregion
-    #region Write
     /// <summary>
     /// Writes an array of bytes to the unmanaged block of memory.
     /// </summary>
     /// <param name="byteArray">The array of bytes to write.</param>
     /// <param name="index">The start position to copy bytes from.</param>
-    public void Write(byte[] byteArray, int index = 0) =>
-        // Copy the array of bytes into the block of memory
-        Marshal.Copy(byteArray, index, Address, Size);
+    public void Write(byte[] byteArray, int index = 0) => Marshal.Copy(byteArray, index, Address, Size);
 
     /// <summary>
     /// Write data to the unmanaged block of memory.
     /// </summary>
     /// <typeparam name="T">The type of data to write.</typeparam>
     /// <param name="data">The data to write.</param>
-    public void Write<T>(T? data) =>
-        // Marshal data from the managed object to the block of memory
-        Marshal.StructureToPtr(data, Address, false);
-
-    #endregion
-    #endregion
+    public void Write<T>([DisallowNull] T data) => Marshal.StructureToPtr(data, Address, false);
 }

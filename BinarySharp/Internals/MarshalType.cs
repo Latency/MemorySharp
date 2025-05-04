@@ -5,12 +5,15 @@
  * Copyright (C) 2012-2016 Jämes Ménétrey (a.k.a. ZenLulz).
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
-*/
+ */
+// ReSharper disable StaticMemberInGenericType
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 using Binarysharp.Memory;
 using Binarysharp.MemoryManagement;
+
 
 namespace Binarysharp.Internals;
 
@@ -20,30 +23,31 @@ namespace Binarysharp.Internals;
 /// <typeparam name="T">Type to analyze.</typeparam>
 public static class MarshalType<T>
 {
-    #region Properties
     /// <summary>
     /// Gets if the type can be stored in a registers (for example ACX, ECX, ...).
     /// </summary>
-    public static bool CanBeStoredInRegisters { get; private set; }
+    public static bool CanBeStoredInRegisters { get; }
+
     /// <summary>
     /// State if the type is <see cref="nint"/>.
     /// </summary>
-    public static bool Isnint { get; private set; }
+    public static bool Isnint { get; }
+
     /// <summary>
     /// The real type.
     /// </summary>
-    public static Type RealType { get; private set; }
+    public static Type RealType { get; }
+
     /// <summary>
     /// The size of the type.
     /// </summary>
-    public static int Size { get; private set; }
+    public static int Size { get; }
+
     /// <summary>
     /// The typecode of the type.
     /// </summary>
-    public static TypeCode TypeCode { get; private set; }
-    #endregion
+    public static TypeCode TypeCode { get; }
 
-    #region Constructor
     /// <summary>
     /// Initializes static information related to the specified type.
     /// </summary>
@@ -72,16 +76,13 @@ public static class MarshalType<T>
             TypeCode == TypeCode.UInt16  ||
             TypeCode == TypeCode.UInt32;
     }
-    #endregion
 
-    #region Methods
-    #region ObjectToByteArray
     /// <summary>
     /// Marshals a managed object to an array of bytes.
     /// </summary>
     /// <param name="obj">The object to marshal.</param>
     /// <returns>A array of bytes corresponding to the managed object.</returns>
-    public static byte[] ObjectToByteArray(T? obj)
+    public static byte[] ObjectToByteArray([DisallowNull] T obj)
     {
         // We'll tried to avoid marshalling as it really slows the process
         // First, check if the type can be converted without marhsalling
@@ -131,8 +132,6 @@ public static class MarshalType<T>
         // Return the content of the block of unmanaged memory
         return unmanaged.Read();
     }
-    #endregion
-    #region ByteArrayToObject
 
     /// <summary>
     /// Marshals an array of byte to a managed object.
@@ -196,8 +195,7 @@ public static class MarshalType<T>
         // Return a managed object created from the block of unmanaged memory
         return unmanaged.Read<T>();
     }
-    #endregion
-    #region PtrToObject
+
     /// <summary>
     /// Converts a pointer to a given type. This function converts the value of the pointer or the pointed value,
     /// according if the data type is primitive or reference.
@@ -205,12 +203,7 @@ public static class MarshalType<T>
     /// <param name="memorySharp">The concerned process.</param>
     /// <param name="pointer">The pointer to convert.</param>
     /// <returns>The return value is the pointer converted to the given data type.</returns>
-    public static T? PtrToObject(MemorySharp memorySharp, nint pointer)
-    {
-        return ByteArrayToObject(CanBeStoredInRegisters
-                                     ? BitConverter.GetBytes(pointer.ToInt64())
-                                     : memorySharp.Read<byte>(pointer, Size, false));
-    }
-    #endregion
-    #endregion
+    public static T? PtrToObject(MemorySharp memorySharp, nint pointer) => ByteArrayToObject(CanBeStoredInRegisters
+                                                                                                 ? BitConverter.GetBytes(pointer.ToInt64())
+                                                                                                 : memorySharp.Read<byte>(pointer, Size, false));
 }

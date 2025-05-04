@@ -20,36 +20,26 @@ namespace Binarysharp.Windows;
 /// </summary>
 public class RemoteWindow : IEquatable<RemoteWindow>
 {
-    #region Fields
     /// <summary>
-    /// The reference of the <see cref="MemorySharp.MemorySharp"/> object.
+    /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
-    protected readonly MemorySharp? MemorySharp;
-    #endregion
+    protected readonly MemorySharp MemorySharp;
 
-    #region Properties
-    #region Children
     /// <summary>
     /// Gets all the child windows of this window.
     /// </summary>
     public IEnumerable<RemoteWindow> Children => ChildrenHandles.Select(handle => new RemoteWindow(MemorySharp, handle));
 
-    #endregion
-    #region ChildHandles (protected)
     /// <summary>
     /// Gets all the child window handles of this window.
     /// </summary>
     protected IEnumerable<nint> ChildrenHandles => WindowCore.EnumChildWindows(Handle);
 
-    #endregion
-    #region ClassName
     /// <summary>
     /// Gets the class name of the window.
     /// </summary>
     public string ClassName => WindowCore.GetClassName(Handle);
 
-    #endregion
-    #region Handle
     /// <summary>
     /// The handle of the window.
     /// </summary>
@@ -57,10 +47,8 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// The type here is not <see cref="SafeMemoryHandle"/> because a window cannot be closed by calling <see cref="NativeMethods.CloseHandle"/>.
     /// For more information, see: http://stackoverflow.com/questions/8507307/why-cant-i-close-the-window-handle-in-my-code.
     /// </remarks>
-    public nint Handle { get; private set; }
-    #endregion
+    public nint Handle { get; }
 
-    #region Height
     /// <summary>
     /// Gets or sets the height of the element.
     /// </summary>
@@ -74,34 +62,27 @@ public class RemoteWindow : IEquatable<RemoteWindow>
             Placement               = p;
         }
     }
-    #endregion
-    #region IsActivated
+
     /// <summary>
     /// Gets if the window is currently activated.
     /// </summary>
     public bool IsActivated => WindowCore.GetForegroundWindow() == Handle;
 
-    #endregion
-    #region IsMainWindow
     /// <summary>
     /// Gets if this is the main window.
     /// </summary>
     public bool IsMainWindow => MemorySharp.Windows.MainWindow == this;
 
-    #endregion
-    #region Keyboard
     /// <summary>
     /// Tools for managing a virtual keyboard in the window.
     /// </summary>
     public BaseKeyboard Keyboard { get; set; }
-    #endregion
-    #region Mouse
+
     /// <summary>
     /// Tools for managing a virtual mouse in the window.
     /// </summary>
     public BaseMouse Mouse { get; set; }
-    #endregion
-    #region Placement (internal)
+
     /// <summary>
     /// Gets or sets the placement of the window.
     /// </summary>
@@ -110,9 +91,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
         get => WindowCore.GetWindowPlacement(Handle);
         set => WindowCore.SetWindowPlacement(Handle, value);
     }
-    #endregion
 
-    #region State
     /// <summary>
     /// Gets or sets the specified window's show state.
     /// </summary>
@@ -121,9 +100,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
         get => Placement.ShowCmd;
         set => WindowCore.ShowWindow(Handle, value);
     }
-    #endregion
 
-    #region Title
     /// <summary>
     /// Gets or sets the title of the window.
     /// </summary>
@@ -132,16 +109,12 @@ public class RemoteWindow : IEquatable<RemoteWindow>
         get => WindowCore.GetWindowText(Handle);
         set => WindowCore.SetWindowText(Handle, value);
     }
-    #endregion
 
-    #region Thread
     /// <summary>
     /// Gets the thread of the window.
     /// </summary>
     public RemoteThread? Thread => MemorySharp?.Threads.GetThreadById(WindowCore.GetWindowThreadId(Handle));
-    #endregion
 
-    #region Width
     /// <summary>
     /// Gets or sets the width of the element.
     /// </summary>
@@ -155,9 +128,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
             Placement              = p;
         }
     }
-    #endregion
 
-    #region X
     /// <summary>
     /// Gets or sets the x-coordinate of the window.
     /// </summary>
@@ -172,9 +143,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
             Placement              = p;
         }
     }
-    #endregion
 
-    #region Y
     /// <summary>
     /// Gets or sets the y-coordinate of the window.
     /// </summary>
@@ -189,16 +158,13 @@ public class RemoteWindow : IEquatable<RemoteWindow>
             Placement               = p;
         }
     }
-    #endregion
-    #endregion
 
-    #region Constructor
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoteWindow"/> class.
     /// </summary>
-    /// <param name="memorySharp">The reference of the <see cref="MemorySharp.MemorySharp"/> object.</param>
+    /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     /// <param name="handle">The handle of a window.</param>
-    internal RemoteWindow(MemorySharp? memorySharp, nint handle)
+    internal RemoteWindow(MemorySharp memorySharp, nint handle)
     {
         // Save the parameters
         MemorySharp = memorySharp;
@@ -207,24 +173,17 @@ public class RemoteWindow : IEquatable<RemoteWindow>
         Keyboard = new MessageKeyboard(this);
         Mouse    = new SendInputMouse(this);
     }
-    #endregion
 
-    #region Methods
-    #region Activate
     /// <summary>
     /// Activates the window.
     /// </summary>
     public void Activate() => WindowCore.SetForegroundWindow(Handle);
-    #endregion
 
-    #region Close
     /// <summary>
     /// Closes the window.
     /// </summary>
     public void Close() => PostMessage(WindowsMessages.Close, nint.Zero, nint.Zero);
-    #endregion
 
-    #region Equals (override)
     /// <summary>
     /// Determines whether the specified object is equal to the current object.
     /// </summary>
@@ -245,9 +204,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
         if (ReferenceEquals(this, other)) return true;
         return Equals(MemorySharp, other.MemorySharp) && Handle.Equals(other.Handle);
     }
-    #endregion
 
-    #region Flash
     /// <summary>
     /// Flashes the window one time. It does not change the active state of the window.
     /// </summary>
@@ -260,9 +217,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <param name="timeout">The rate at which the window is to be flashed.</param>
     /// <param name="flags">The flash status.</param>
     public void Flash(uint count, TimeSpan timeout, FlashWindowFlags flags = FlashWindowFlags.All) => WindowCore.FlashWindowEx(Handle, flags, count, timeout);
-    #endregion
 
-    #region GetHashCode (override)
     /// <summary>
     /// Serves as a hash function for a particular type. 
     /// </summary>
@@ -270,19 +225,15 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     {
         unchecked
         {
-            var hashCode = (MemorySharp != null ? MemorySharp.GetHashCode() : 0);
+            var hashCode = MemorySharp.GetHashCode();
             hashCode = (hashCode * 397) ^ Handle.GetHashCode();
             return hashCode;
         }
     }
-    #endregion
 
-    #region Operator (override)
     public static bool operator ==(RemoteWindow left, RemoteWindow right) => Equals(left, right);
     public static bool operator !=(RemoteWindow left, RemoteWindow right) => !Equals(left, right);
 
-    #endregion
-    #region PostMessage
     /// <summary>
     /// Places (posts) a message in the message queue associated with the thread that created the window and returns without waiting for the thread to process the message.
     /// </summary>
@@ -299,8 +250,6 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <param name="lParam">Additional message-specific information.</param>
     public void PostMessage(uint message, nint wParam, nint lParam) => WindowCore.PostMessage(Handle, message, wParam, lParam);
 
-    #endregion
-    #region SendMessage
     /// <summary>
     /// Sends the specified message to a window or windows.
     /// The SendMessage function calls the window procedure for the specified window and does not return until the window procedure has processed the message.
@@ -321,13 +270,8 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
     public nint SendMessage(uint message, nint wParam, nint lParam) => WindowCore.SendMessage(Handle, message, wParam, lParam);
 
-    #endregion
-    #region ToString (override)
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>
     public override string ToString() => $"Title = {Title} ClassName = {ClassName}";
-
-    #endregion
-    #endregion
 }

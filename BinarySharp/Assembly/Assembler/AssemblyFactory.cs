@@ -7,14 +7,13 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.Assembly.Assembler;
 using Binarysharp.Assembly.CallingConvention;
 using Binarysharp.Internals;
 using Binarysharp.Memory;
 using Binarysharp.MemoryManagement;
 using Binarysharp.Threading;
 
-namespace Binarysharp.Assembly;
+namespace Binarysharp.Assembly.Assembler;
 
 /// <summary>
 /// Class providing tools for manipulating assembly code.
