@@ -7,6 +7,7 @@
  * See the file LICENSE for more information.
 */
 
+using System.Diagnostics;
 using Microsoft.Win32.SafeHandles;
 
 namespace Binarysharp.MemoryManagement.Native;
@@ -34,4 +35,11 @@ public sealed class SafeMemoryHandle : SafeHandleZeroOrMinusOneIsInvalid
     protected override bool ReleaseHandle() =>
         // Check whether the handle is set AND whether the handle has been successfully closed
         handle != nint.Zero && NativeMethods.CloseHandle(handle);
+
+    /// <summary>
+    /// Displays the handle value.
+    /// </summary>
+    /// <returns>Hexadecimal address</returns>
+    [DebuggerStepThrough]
+    public override string ToString() => $"0x{handle:X}";
 }

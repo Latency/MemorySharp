@@ -9,7 +9,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Binarysharp.Assembly.CallingConvention;
 using Binarysharp.MemoryManagement;
 using Binarysharp.MemoryManagement.Native;
 

@@ -9,7 +9,6 @@
 
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Text;
 using Microsoft.Win32.SafeHandles;
 
 namespace Binarysharp.MemoryManagement.Native;
@@ -19,7 +18,6 @@ namespace Binarysharp.MemoryManagement.Native;
 /// </summary>
 public static partial class NativeMethods
 {
-    #region CloseHandle
     /// <summary>
     /// Closes an open object handle.
     /// </summary>
@@ -28,12 +26,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero. 
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
+    [LibraryImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool CloseHandle(nint hObject);
-    #endregion
+    internal static partial bool CloseHandle(nint hObject);
 
-    #region CreateRemoteThread
     /// <summary>
     /// Creates a thread that runs in the virtual address space of another process.
     /// Use the CreateRemoteThreadEx function to create a thread that runs in the virtual address space of another processor and optionally specify extended attributes.
@@ -62,12 +58,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is a handle to the new thread. 
     /// If the function fails, the return value is NULL. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern SafeMemoryHandle CreateRemoteThread(SafeMemoryHandle hProcess,    nint              lpThreadAttributes, uint    dwStackSize, nint lpStartAddress,
-                                                             nint           lpParameter, ThreadCreationFlags dwCreationFlags,    out int lpThreadId);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial SafeMemoryHandle CreateRemoteThread(SafeMemoryHandle hProcess, nint lpThreadAttributes, uint dwStackSize, nint lpStartAddress, nint lpParameter, ThreadCreationFlags dwCreationFlags, out int lpThreadId);
 
-    #region FreeLibrary
     /// <summary>
     /// Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count. 
     /// When the reference count reaches zero, the module is unloaded from the address space of the calling process and the handle is no longer valid.
@@ -77,12 +70,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero. 
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
+    [LibraryImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool FreeLibrary(nint hModule);
-    #endregion
+    internal static partial bool FreeLibrary(nint hModule);
 
-    #region GetClassName
     /// <summary>
     /// Retrieves the name of the class to which the specified window belongs.
     /// </summary>
@@ -96,21 +87,17 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is the number of characters copied to the buffer, not including the terminating null character.
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>. 
     /// </returns>
-    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-    public static extern int GetClassName(nint hWnd, StringBuilder lpClassName, int nMaxCount);
-    #endregion
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+    internal static extern int GetClassName(nint hWnd, [Out] char[] lpClassName, int nMaxCount);
 
-    #region GetForegroundWindow
     /// <summary>
     /// Retrieves a handle to the foreground window (the window with which the user is currently working). 
     /// The system assigns a slightly higher priority to the thread that creates the foreground window than it does to other threads. 
     /// </summary>
     /// <returns>The return value is a handle to the foreground window. The foreground window can be NULL in certain circumstances, such as when a window is losing activation.</returns>
-    [DllImport("user32.dll")]
-    public static extern nint GetForegroundWindow();
-    #endregion
+    [LibraryImport("user32.dll", SetLastError = true)]
+    internal static partial nint GetForegroundWindow();
 
-    #region GetExitCodeThread
     /// <summary>
     /// Retrieves the termination status of the specified thread.
     /// </summary>
@@ -124,11 +111,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero.
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool GetExitCodeThread(SafeMemoryHandle hThread, out nint lpExitCode);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool GetExitCodeThread(SafeMemoryHandle hThread, out nint lpExitCode);
 
-    #region GetProcAddress
     /// <summary>
     /// Retrieves the address of an exported function or variable from the specified dynamic-link library (DLL).
     /// </summary>
@@ -144,11 +130,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is the address of the exported function or variable. 
     /// If the function fails, the return value is NULL. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]
-    public static extern nint GetProcAddress(nint hModule, string procName);
-    #endregion
+    [LibraryImport("kernel32", SetLastError = true)]
+    internal static partial nint GetProcAddress(nint hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
 
-    #region GetProcessId
     /// <summary>
     /// Retrieves the process identifier of the specified process.
     /// </summary>
@@ -160,11 +144,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is a process id to the specified handle. 
     /// If the function fails, the return value is NULL. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern int GetProcessId(SafeMemoryHandle hProcess);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial int GetProcessId(SafeMemoryHandle hProcess);
 
-    #region GetSystemMetrics
     /// <summary>
     /// Retrieves the specified system metric or system configuration setting.
     /// Note that all dimensions retrieved by <see cref="GetSystemMetrics"/> are in pixels.
@@ -174,11 +156,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is the requested system metric or configuration setting.
     /// If the function fails, the return value is 0. <see cref="Marshal.GetLastWin32Error"/> does not provide extended error information. 
     /// </returns>
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern int GetSystemMetrics(SystemMetrics metric);
-    #endregion
+    [LibraryImport("user32.dll", SetLastError = true)]
+    internal static partial int GetSystemMetrics(SystemMetrics metric);
 
-    #region GetThreadContext
     /// <summary>
     /// Retrieves the context of the specified thread. A 64-bit application can retrieve the context of a WOW64 thread using the Wow64GetThreadContext function.
     /// </summary>
@@ -198,11 +178,31 @@ public static partial class NativeMethods
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
     [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool GetThreadContext(SafeMemoryHandle hThread, ref ThreadContext lpContext);
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool GetThreadContext(IntPtr hThread, [MarshalAs(UnmanagedType.LPStruct)] ref CONTEXT lpContext);
 
-    #endregion
+    /// <summary>
+    /// Retrieves the context of the specified thread. A 64-bit application can retrieve the context of a WOW64 thread using the Wow64GetThreadContext function.
+    /// </summary>
+    /// <param name="hThread">
+    /// A handle to the thread whose context is to be retrieved. The handle must have <see cref="ThreadAccessFlags.GetContext"/> access to the thread. 
+    /// For more information, see Thread Security and Access Rights.
+    /// WOW64: The handle must also have <see cref="ThreadAccessFlags.QueryInformation"/> access.
+    /// </param>
+    /// <param name="lpContext">
+    /// [Ref] A pointer to a <see cref="ThreadContext"/> structure that receives the appropriate context of the specified thread. 
+    /// The value of the ContextFlags member of this structure specifies which portions of a thread's context are retrieved. 
+    /// The <see cref="ThreadContext"/> structure is highly processor specific.
+    /// Refer to the WinNT.h header file for processor-specific definitions of this structures and any alignment requirements.
+    /// </param>
+    /// <returns>
+    /// If the function succeeds, the return value is nonzero.
+    /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
+    /// </returns>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool GetThreadContext(IntPtr hThread, [MarshalAs(UnmanagedType.LPStruct)] ref CONTEXT64 lpContext);
 
-    #region GetThreadSelectorEntry
     /// <summary>
     /// Retrieves a descriptor table entry for the specified selector and thread.
     /// </summary>
@@ -221,11 +221,10 @@ public static partial class NativeMethods
     /// In that case, the structure pointed to by the lpSelectorEntry parameter receives a copy of the specified descriptor table entry.
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool GetThreadSelectorEntry(SafeMemoryHandle hThread, uint dwSelector, out LdtEntry lpSelectorEntry);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool GetThreadSelectorEntry(SafeMemoryHandle hThread, uint dwSelector, out LdtEntry lpSelectorEntry);
 
-    #region GetThreadId
     /// <summary>
     /// Retrieves the thread identifier of the specified thread.
     /// </summary>
@@ -237,11 +236,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is a thread id to the specified handle.
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern int GetThreadId(SafeMemoryHandle hThread);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial int GetThreadId(SafeMemoryHandle hThread);
 
-    #region GetWindowPlacement
     /// <summary>
     /// Retrieves the show state and the restored, minimized, and maximized positions of the specified window.
     /// </summary>
@@ -252,12 +249,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero.
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>. 
     /// </returns>
-    [DllImport("user32.dll", SetLastError = true)]
+    [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool GetWindowPlacement(nint hWnd, out WindowPlacement lpwndpl);
-    #endregion
+    internal static partial bool GetWindowPlacement(nint hWnd, out WindowPlacement lpwndpl);
 
-    #region GetWindowText
     /// <summary>
     /// Copies the text of the specified window's title bar (if it has one) into a buffer. If the specified window is a control, the text of the control is copied.
     /// </summary>
@@ -269,11 +264,9 @@ public static partial class NativeMethods
     /// If the window has no title bar or text, if the title bar is empty, or if the window or control handle is invalid, the return value is zero. 
     /// To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>. 
     /// </returns>
-    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-    public static extern int GetWindowText(nint hWnd, StringBuilder lpString, int nMaxCount);
-    #endregion
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+    internal static extern int GetWindowText(nint hWnd, [Out] char[] lpString, int nMaxCount);
 
-    #region GetWindowTextLength
     /// <summary>
     /// Retrieves the length, in characters, of the specified window's title bar text (if the window has a title bar). 
     /// If the specified window is a control, the function retrieves the length of the text within the control.
@@ -284,11 +277,9 @@ public static partial class NativeMethods
     /// Under certain conditions, this value may actually be greater than the length of the text.
     /// If the window has no text, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>. 
     /// </returns>
-    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-    public static extern int GetWindowTextLength(nint hWnd);
-    #endregion
+    [LibraryImport("user32.dll", SetLastError = true)]
+    internal static partial int GetWindowTextLength(nint hWnd);
 
-    #region GetWindowThreadProcessId
     /// <summary>
     /// Retrieves the identifier of the thread that created the specified window and, optionally, the identifier of the process that created the window.
     /// </summary>
@@ -298,11 +289,9 @@ public static partial class NativeMethods
     /// If this parameter is not <c>NULL</c>, <see cref="GetWindowThreadProcessId"/> copies the identifier of the process to the variable; otherwise, it does not.
     /// </param>
     /// <returns>The return value is the identifier of the thread that created the window.</returns>
-    [DllImport("user32.dll")]
-    public static extern int GetWindowThreadProcessId(nint hWnd, out int lpdwProcessId);
-    #endregion
+    [LibraryImport("user32.dll", SetLastError = true)]
+    internal static partial int GetWindowThreadProcessId(nint hWnd, out int lpdwProcessId);
 
-    #region EnumChildWindows
     /// <summary>
     /// Enumerates the child windows that belong to the specified parent window by passing the handle to each child window, in turn, to an application-defined callback function.
     /// EnumChildWindows continues until the last child window is enumerated or the callback function returns <c>False</c>.
@@ -318,12 +307,10 @@ public static partial class NativeMethods
     /// <param name="lParam">An application-defined value to be passed to the callback function.</param>
     /// <returns>The return value is not used.</returns>
     /// <remarks>If a child window has created child windows of its own, <see cref="EnumChildWindows"/> enumerates those windows as well.</remarks>
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool EnumChildWindows(nint hwndParent, EnumWindowsProc lpEnumFunc, nint lParam);
-    #endregion
+    internal static partial bool EnumChildWindows(nint hwndParent, EnumWindowsProc lpEnumFunc, nint lParam);
 
-    #region FlashWindow
     /// <summary>
     /// Flashes the specified window one time. It does not change the active state of the window.
     /// To flash the window a specified number of times, use the <see cref="FlashWindowEx"/> function.
@@ -340,11 +327,10 @@ public static partial class NativeMethods
     /// The return value specifies the window's state before the call to the <see cref="FlashWindow"/> function. 
     /// If the window caption was drawn as active before the call, the return value is nonzero. Otherwise, the return value is zero.
     /// </returns>
-    [DllImport("user32.dll")]
-    public static extern bool FlashWindow(nint hwnd, bool bInvert);
-    #endregion
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool FlashWindow(nint hwnd, [MarshalAs(UnmanagedType.Bool)] bool bInvert);
 
-    #region FlashWindowEx
     /// <summary>
     /// Flashes the specified window. It does not change the active state of the window.
     /// </summary>
@@ -353,12 +339,10 @@ public static partial class NativeMethods
     /// The return value specifies the window's state before the call to the <see cref="FlashWindowEx"/> function. 
     /// If the window caption was drawn as active before the call, the return value is nonzero. Otherwise, the return value is zero.
     /// </returns>
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool FlashWindowEx(ref FlashInfo pwfi);
-    #endregion
+    internal static partial bool FlashWindowEx(ref FlashInfo pwfi);
 
-    #region LoadLibrary
     /// <summary>
     /// Loads the specified module into the address space of the calling process. The specified module may cause other modules to be loaded.
     /// </summary>
@@ -377,11 +361,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is a handle to the module. 
     /// If the function fails, the return value is NULL. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
-    public static extern nint LoadLibrary(string lpFileName);
-    #endregion
+    [LibraryImport("kernel32", SetLastError = true)]
+    internal static partial nint LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
 
-    #region MapVirtualKey
     /// <summary>
     /// Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code into a virtual-key code.
     /// To specify a handle to the keyboard layout to use for translating the specified code, use the MapVirtualKeyEx function.
@@ -396,11 +378,9 @@ public static partial class NativeMethods
     /// The return value is either a scan code, a virtual-key code, or a character value, depending on the value of uCode and uMapType. 
     /// If there is no translation, the return value is zero.
     /// </returns>
-    [DllImport("user32")]
-    public static extern uint MapVirtualKey(uint key, TranslationTypes translation);
-    #endregion
+    [LibraryImport("user32")]
+    internal static partial uint MapVirtualKey(uint key, TranslationTypes translation);
 
-    #region NtQueryInformationProcess
     /// <summary>
     /// Retrieves information about the specified process.
     /// </summary>
@@ -416,10 +396,8 @@ public static partial class NativeMethods
     /// <returns>Returns an NTSTATUS success or error code. (STATUS_SUCCESS = 0x0).</returns>
     [LibraryImport("ntdll.dll",  SetLastError = true)]
     [ResourceExposure(ResourceScope.Machine)]
-    public static partial int NtQueryInformationProcess(SafeProcessHandle processHandle, int infoclass, ProcessBasicInformation processinfo, int size, int[] returnedSize);
-    #endregion
+    internal static partial int NtQueryInformationProcess(SafeProcessHandle processHandle, int infoclass, ProcessBasicInformation processinfo, int size, int[] returnedSize);
 
-    #region NtQueryInformationThread
     /// <summary>
     /// Retrieves information about the specified thread.
     /// </summary>
@@ -447,11 +425,9 @@ public static partial class NativeMethods
     /// but if the buffer was too small, this is the minimum size of buffer required to receive the information successfully.
     /// </param>
     /// <returns>Returns an NTSTATUS success or error code. (STATUS_SUCCESS = 0x0).</returns>
-    [DllImport("ntdll.dll")]
-    public static extern uint NtQueryInformationThread(SafeMemoryHandle hwnd, uint infoclass, ref ThreadBasicInformation threadinfo, int length, nint bytesread); 
-    #endregion
+    [LibraryImport("ntdll.dll", SetLastError = true)]
+    internal static partial int NtQueryInformationThread(SafeMemoryHandle hwnd, uint infoclass, ref ThreadBasicInformation threadinfo, int length, nint bytesread);
 
-    #region OpenProcess
     /// <summary>
     /// Opens an existing local process object.
     /// </summary>
@@ -465,11 +441,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is an open handle to the specified process. 
     /// If the function fails, the return value is NULL. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern SafeMemoryHandle OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial SafeMemoryHandle OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
 
-    #region OpenThread
     /// <summary>
     /// Opens an existing thread object.
     /// </summary>
@@ -483,11 +457,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is an open handle to the specified thread. 
     /// If the function fails, the return value is NULL. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern SafeMemoryHandle OpenThread(ThreadAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwThreadId);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial SafeMemoryHandle OpenThread(ThreadAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwThreadId);
 
-    #region PostMessage
     /// <summary>
     /// Places (posts) a message in the message queue associated with the thread that created the specified window and returns without waiting for the thread to process the message.
     /// To post a message in the message queue associated with a thread, use the PostThreadMessage function.
@@ -501,12 +473,10 @@ public static partial class NativeMethods
     /// If the function fails, the return value is zero. 
     /// To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>. <see cref="Marshal.GetLastWin32Error"/> returns ERROR_NOT_ENOUGH_QUOTA when the limit is hit. 
     /// </returns>
+    [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern bool PostMessage(nint hWnd, uint msg, nint wParam, nint lParam);
-    #endregion
+    internal static partial bool PostMessage(nint hWnd, uint msg, nint wParam, nint lParam);
 
-    #region ReadProcessMemory
     /// <summary>
     /// Reads data from an area of memory in a specified process. The entire area to be read must be accessible or the operation fails.
     /// </summary>
@@ -525,12 +495,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero. 
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
+    [LibraryImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool ReadProcessMemory(SafeMemoryHandle hProcess, nint lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
-    #endregion
+    internal static partial bool ReadProcessMemory(SafeMemoryHandle hProcess, nint lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
 
-    #region ResumeThread
     /// <summary>
     /// Decrements a thread's suspend count. When the suspend count is decremented to zero, the execution of the thread is resumed.
     /// </summary>
@@ -542,11 +510,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is the thread's previous suspend count. 
     /// If the function fails, the return value is (DWORD) -1. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern uint ResumeThread(SafeMemoryHandle hThread);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial uint ResumeThread(SafeMemoryHandle hThread);
 
-    #region SendInput
     /// <summary>
     /// Synthesizes keystrokes, mouse motions, and button clicks.
     /// </summary>
@@ -563,11 +529,9 @@ public static partial class NativeMethods
     /// This function fails when it is blocked by UIPI.
     /// Note that neither <see cref="Marshal.GetLastWin32Error"/> nor the return value will indicate the failure was caused by UIPI blocking.
     /// </returns>
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern int SendInput(int nInputs, Input[] pInputs, int cbSize);
-    #endregion
+    [LibraryImport("user32.dll", SetLastError = true)]
+    internal static partial int SendInput(int nInputs, Input[] pInputs, int cbSize);
 
-    #region SendMessage
     /// <summary>
     /// Sends the specified message to a window or windows.
     /// The SendMessage function calls the window procedure for the specified window and does not return until the window procedure has processed the message.
@@ -577,11 +541,9 @@ public static partial class NativeMethods
     /// <param name="wParam">Additional message-specific information.</param>
     /// <param name="lParam">Additional message-specific information.</param>
     /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern nint SendMessage(nint hWnd, uint msg, nint wParam, nint lParam);
-    #endregion
+    [LibraryImport("user32.dll", SetLastError = true)]
+    internal static partial nint SendMessage(nint hWnd, uint msg, nint wParam, nint lParam);
 
-    #region SetForegroundWindow
     /// <summary>
     /// Brings the thread that created the specified window into the foreground and activates the window. 
     /// Keyboard input is directed to the window, and various visual cues are changed for the user. 
@@ -592,12 +554,10 @@ public static partial class NativeMethods
     /// If the window was brought to the foreground, the return value is nonzero.
     /// If the window was not brought to the foreground, the return value is zero.
     /// </returns>
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool SetForegroundWindow(nint hWnd);
-    #endregion
+    internal static partial bool SetForegroundWindow(nint hWnd);
 
-    #region SetThreadContext
     /// <summary>
     /// Sets the context for the specified thread. A 64-bit application can set the context of a WOW64 thread using the Wow64SetThreadContext function.
     /// </summary>
@@ -616,11 +576,30 @@ public static partial class NativeMethods
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
     [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool SetThreadContext(SafeMemoryHandle hThread, [MarshalAs(UnmanagedType.Struct)] ref ThreadContext lpContext);
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool SetThreadContext(SafeMemoryHandle hThread, [MarshalAs(UnmanagedType.LPStruct)] ref CONTEXT lpContext);
 
-    #endregion
+    /// <summary>
+    /// Sets the context for the specified thread. A 64-bit application can set the context of a WOW64 thread using the Wow64SetThreadContext function.
+    /// </summary>
+    /// <param name="hThread">
+    /// A handle to the thread whose context is to be set. The handle must have the <see cref="ThreadAccessFlags.SetContext"/> access right to the thread. 
+    /// For more information, see Thread Security and Access Rights.</param>
+    /// <param name="lpContext">
+    /// A pointer to a <see cref="ThreadContext"/> structure that contains the context to be set in the specified thread. 
+    /// The value of the ContextFlags member of this structure specifies which portions of a thread's context to set. 
+    /// Some values in the <see cref="ThreadContext"/> structure that cannot be specified are silently set to the correct value. 
+    /// This includes bits in the CPU status register that specify the privileged processor mode, global enabling bits in the debugging register, 
+    /// and other states that must be controlled by the operating system.
+    /// </param>
+    /// <returns>
+    /// If the context was set, the return value is nonzero.
+    /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
+    /// </returns>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool SetThreadContext(SafeMemoryHandle hThread, [MarshalAs(UnmanagedType.LPStruct)] ref CONTEXT64 lpContext);
 
-    #region SetWindowPlacement
     /// <summary>
     /// Sets the show state and the restored, minimized, and maximized positions of the specified window.
     /// </summary>
@@ -630,12 +609,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero.
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>. 
     /// </returns>
-    [DllImport("user32.dll", SetLastError = true)]
+    [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool SetWindowPlacement(nint hWnd, [In] ref WindowPlacement lpwndpl);
-    #endregion
+    internal static partial bool SetWindowPlacement(nint hWnd, ref WindowPlacement lpwndpl);
 
-    #region SetWindowText
     /// <summary>
     /// Changes the text of the specified window's title bar (if it has one). If the specified window is a control, the text of the control is changed.
     /// </summary>
@@ -645,12 +622,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero.
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>. 
     /// </returns>
-    [return: MarshalAs(UnmanagedType.Bool)]
-    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-    public static extern bool SetWindowText(nint hwnd, string lpString);
-    #endregion
+    [LibraryImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(                                              UnmanagedType.Bool)]
+    internal static partial bool SetWindowText(nint hwnd, [MarshalAs(UnmanagedType.LPStr)] string lpString);
 
-    #region ShowWindow
     /// <summary>
     /// Sets the specified window's show state.
     /// </summary>
@@ -665,12 +640,10 @@ public static partial class NativeMethods
     /// If the window was previously visible, the return value is nonzero. 
     /// If the window was previously hidden, the return value is zero. 
     /// </returns>
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool ShowWindow(nint hWnd, WindowStates nCmdShow);
-    #endregion
+    internal static partial bool ShowWindow(nint hWnd, WindowStates nCmdShow);
 
-    #region SuspendThread
     /// <summary>
     /// Suspends the specified thread. A 64-bit application can suspend a WOW64 thread using the Wow64SuspendThread function.
     /// </summary>
@@ -681,11 +654,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is the thread's previous suspend count; otherwise, it is (DWORD) -1. 
     /// To get extended error information, use <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern uint SuspendThread(SafeMemoryHandle hThread);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial uint SuspendThread(SafeMemoryHandle hThread);
 
-    #region TerminateThread
     /// <summary>
     /// Terminates a thread.
     /// </summary>
@@ -698,11 +669,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero. 
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool TerminateThread(SafeMemoryHandle hThread, int dwExitCode);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool TerminateThread(SafeMemoryHandle hThread, int dwExitCode);
 
-    #region VirtualAllocEx
     /// <summary>
     /// Reserves or commits a region of memory within the virtual address space of a specified process. The function initializes the memory it allocates to zero, unless MEM_RESET is used.
     /// To specify the NUMA node for the physical memory, see VirtualAllocExNuma.
@@ -729,11 +699,9 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is the base address of the allocated region of pages. 
     /// If the function fails, the return value is NULL. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern nint VirtualAllocEx(SafeMemoryHandle hProcess, nint lpAddress, int dwSize, MemoryAllocationFlags flAllocationType, MemoryProtectionFlags flProtect);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial nint VirtualAllocEx(SafeMemoryHandle hProcess, nint lpAddress, uint dwSize, MemoryAllocationFlags flAllocationType, MemoryProtectionFlags flProtect);
 
-    #region VirtualFreeEx
     /// <summary>
     /// Releases, decommits, or releases and decommits a region of memory within the virtual address space of a specified process.
     /// </summary>
@@ -758,12 +726,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is a nonzero value. 
     /// If the function fails, the return value is 0 (zero). To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
+    [LibraryImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool VirtualFreeEx(SafeMemoryHandle hProcess, nint lpAddress, int dwSize, MemoryReleaseFlags dwFreeType);
-    #endregion
+    internal static partial bool VirtualFreeEx(SafeMemoryHandle hProcess, nint lpAddress, int dwSize, MemoryReleaseFlags dwFreeType);
 
-    #region VirtualProtectEx
     /// <summary>
     /// Changes the protection on a region of committed pages in the virtual address space of a specified process.
     /// </summary>
@@ -793,11 +759,10 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero. 
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool VirtualProtectEx(SafeMemoryHandle hProcess, nint lpAddress, int dwSize, MemoryProtectionFlags flNewProtect, out MemoryProtectionFlags lpflOldProtect);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool VirtualProtectEx(SafeMemoryHandle hProcess, nint lpAddress, int dwSize, MemoryProtectionFlags flNewProtect, out MemoryProtectionFlags lpflOldProtect);
 
-    #region VirtualQueryEx
     /// <summary>
     /// Retrieves information about a range of pages within the virtual address space of a specified process.
     /// </summary>
@@ -818,11 +783,9 @@ public static partial class NativeMethods
     /// The return value is the actual number of bytes returned in the information buffer. 
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern int VirtualQueryEx(SafeMemoryHandle hProcess, nint lpAddress, out MemoryBasicInformation lpBuffer, int dwLength);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial int VirtualQueryEx(SafeMemoryHandle hProcess, nint lpAddress, out MemoryBasicInformation lpBuffer, int dwLength);
 
-    #region WaitForSingleObject
     /// <summary>
     /// Waits until the specified object is in the signaled state or the time-out interval elapses.
     /// To enter an alertable wait state, use the WaitForSingleObjectEx function. To wait for multiple objects, use the WaitForMultipleObjects.
@@ -838,11 +801,9 @@ public static partial class NativeMethods
     /// If dwMilliseconds is INFINITE, the function will return only when the object is signaled.
     /// </param>
     /// <returns>If the function succeeds, the return value indicates the event that caused the function to return.</returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern WaitValues WaitForSingleObject(SafeMemoryHandle hHandle, uint dwMilliseconds);
-    #endregion
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial WaitValues WaitForSingleObject(SafeMemoryHandle hHandle, uint dwMilliseconds);
 
-    #region WriteProcessMemory
     /// <summary>
     /// Writes data to an area of memory in a specified process. The entire area to be written to must be accessible or the operation fails.
     /// </summary>
@@ -861,13 +822,12 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is nonzero. 
     /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [DllImport("kernel32.dll",SetLastError = true)]
+    [LibraryImport("kernel32.dll",SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool WriteProcessMemory(SafeMemoryHandle hProcess, nint lpBaseAddress, byte[] lpBuffer, int nSize, out int lpNumberOfBytesWritten);
-    #endregion
+    internal static partial bool WriteProcessMemory(SafeMemoryHandle hProcess, nint lpBaseAddress, byte[] lpBuffer, uint nSize, out uint lpNumberOfBytesWritten);
 }
 
-#region Delegate EnumWindowsProc
+
 /// <summary>
 /// An application-defined callback function used with the EnumWindows or <c>EnumDesktopWindows</c> function. It receives top-level window handles. 
 /// The <c>WNDENUMPROC</c> type defines a pointer to this callback function. <see cref="EnumWindowsProc"/> is a placeholder for the application-defined function name. 
@@ -876,4 +836,3 @@ public static partial class NativeMethods
 /// <param name="lParam">The application-defined value given in EnumWindows or EnumDesktopWindows.</param>
 /// <returns>To continue enumeration, the callback function must return <c>True</c>; to stop enumeration, it must return <c>False</c>.</returns>
 public delegate bool EnumWindowsProc(nint hWnd, nint lParam);
-#endregion

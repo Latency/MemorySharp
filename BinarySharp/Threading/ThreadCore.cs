@@ -8,6 +8,7 @@
 */
 
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using Binarysharp.Helpers;
 using Binarysharp.Internals;
 using Binarysharp.MemoryManagement.Native;
@@ -19,7 +20,6 @@ namespace Binarysharp.Threading;
 /// </summary>
 public static class ThreadCore
 {
-    #region CreateRemoteThread
     /// <summary>
     /// Creates a thread that runs in the virtual address space of another process.
     /// </summary>
@@ -28,26 +28,23 @@ public static class ThreadCore
     /// <param name="parameter">A pointer to a variable to be passed to the thread function.</param>
     /// <param name="creationFlags">The flags that control the creation of the thread.</param>
     /// <returns>A handle to the new thread.</returns>
-    public static SafeMemoryHandle CreateRemoteThread(SafeMemoryHandle processHandle, nint startAddress, nint parameter, ThreadCreationFlags creationFlags = ThreadCreationFlags.Run)
+    public static (SafeMemoryHandle, int)  CreateRemoteThread(SafeMemoryHandle processHandle, nint startAddress, nint parameter, ThreadCreationFlags creationFlags = ThreadCreationFlags.Run)
     {
         // Check if the handles are valid
         HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
         HandleManipulator.ValidateAsArgument(startAddress,  "startAddress");
 
         // Create the remote thread
-        int threadId;
-        var ret = NativeMethods.CreateRemoteThread(processHandle, nint.Zero, 0, startAddress, parameter, creationFlags, out threadId);
+        var ret = NativeMethods.CreateRemoteThread(processHandle, nint.Zero, 0, startAddress, parameter, creationFlags, out var threadId);
 
         // If the thread is created
         if (ret is { IsClosed: false, IsInvalid: false })
-            return ret;
+            return (ret, threadId);
 
         // Else couldn't create thread, throws an exception
         throw new Win32Exception($"Couldn't create the thread at 0x{startAddress:X}.");
     }
-    #endregion
 
-    #region GetExitCodeThread
     /// <summary>
     /// Retrieves the termination status of the specified thread.
     /// </summary>
@@ -68,9 +65,7 @@ public static class ThreadCore
 
         return exitCode;
     }
-    #endregion
 
-    #region GetThreadContext
     /// <summary>
     /// Retrieves the context of the specified thread.
     /// </summary>
@@ -82,21 +77,45 @@ public static class ThreadCore
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(threadHandle, "threadHandle");
 
-        // Allocate a thread context structure
-        var context = new ThreadContext {ContextFlags = contextFlags};
-            
-        // Set the context flag
-
-        // Get the thread context
-        if (NativeMethods.GetThreadContext(threadHandle, ref context))
-            return context;
+        switch (RuntimeInformation.ProcessArchitecture)
+        {
+            case Architecture.X86:
+            {
+                CONTEXT context = new();
+                if (NativeMethods.GetThreadContext(threadHandle.DangerousGetHandle(), ref context))
+                {
+                    context.ContextFlags = (uint)contextFlags; // Set the context flag
+                    return new ThreadContext(context);
+                }
+                break;
+            }
+            case Architecture.X64:
+            {
+                CONTEXT64 context = new();
+                if (NativeMethods.GetThreadContext(threadHandle.DangerousGetHandle(), ref context))
+                {
+                    context.ContextFlags = contextFlags; // Set the context flag
+                    return new ThreadContext(context);
+                }
+                break;
+            }
+            case Architecture.Arm:
+            case Architecture.Arm64:
+            case Architecture.Wasm:
+            case Architecture.S390x:
+            case Architecture.LoongArch64:
+            case Architecture.Armv6:
+            case Architecture.Ppc64le:
+            case Architecture.RiscV64:
+                throw new NotSupportedException();
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
 
         // Else couldn't get the thread context, throws an exception
         throw new Win32Exception("Couldn't get the thread context.");
     }
-    #endregion
 
-    #region GetThreadSelectorEntry
     /// <summary>
     /// Retrieves a descriptor table entry for the specified selector and thread.
     /// </summary>
@@ -109,16 +128,13 @@ public static class ThreadCore
         HandleManipulator.ValidateAsArgument(threadHandle, "threadHandle");
 
         // Get the selector entry
-        LdtEntry entry;
-        if (NativeMethods.GetThreadSelectorEntry(threadHandle, selector, out entry))
+        if (NativeMethods.GetThreadSelectorEntry(threadHandle, selector, out var entry))
             return entry;
 
         // Else couldn't get the selector entry, throws an exception
         throw new Win32Exception($"Couldn't get the selector entry for this selector: {selector}.");
     }
-    #endregion
 
-    #region OpenThread
     /// <summary>
     /// Opens an existing thread object.
     /// </summary>
@@ -137,9 +153,7 @@ public static class ThreadCore
         // Else couldn't open the thread, throws an exception
         throw new Win32Exception($"Couldn't open the thread #{threadId}.");
     }
-    #endregion
 
-    #region NtQueryInformationThread
     /// <summary>
     /// Retrieves information about the specified thread.
     /// </summary>
@@ -157,15 +171,13 @@ public static class ThreadCore
         var ret = NativeMethods.NtQueryInformationThread(threadHandle, 0, ref info, MarshalType<ThreadBasicInformation>.Size, nint.Zero);
 
         // If the function succeeded
-        if (ret == 0)
+        //if (ret == 0)
             return info;
 
         // Else, couldn't get the thread info, throws an exception
-        throw new ApplicationException($"Couldn't get the information from the thread, error code '{ret}'.");
+        //throw new ApplicationException($"Couldn't get the information from the thread, error code '{ret}'.");
     }
-    #endregion
 
-    #region ResumeThread
     /// <summary>
     /// Decrements a thread's suspend count. When the suspend count is decremented to zero, the execution of the thread is resumed.
     /// </summary>
@@ -185,9 +197,7 @@ public static class ThreadCore
 
         return ret;
     }
-    #endregion
 
-    #region SetThreadContext
     /// <summary>
     /// Sets the context for the specified thread.
     /// </summary>
@@ -197,14 +207,37 @@ public static class ThreadCore
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(threadHandle, "threadHandle");
-            
-        // Set the thread context
-        if(!NativeMethods.SetThreadContext(threadHandle, ref context))
-            throw new Win32Exception("Couldn't set the thread context.");
-    }
-    #endregion
 
-    #region SuspendThread
+        switch (RuntimeInformation.ProcessArchitecture)
+        {
+            case Architecture.X86:
+            {
+                var c = context.Context32;
+                if (!NativeMethods.SetThreadContext(threadHandle, ref c))
+                    throw new Win32Exception("Couldn't set the thread context.");
+                break;
+            }
+            case Architecture.X64:
+            {
+                var c = context.Context64;
+                if (!NativeMethods.SetThreadContext(threadHandle, ref c))
+                    throw new Win32Exception("Couldn't set the thread context.");
+                break;
+            }
+            case Architecture.Arm:
+            case Architecture.Arm64:
+            case Architecture.Wasm:
+            case Architecture.S390x:
+            case Architecture.LoongArch64:
+            case Architecture.Armv6:
+            case Architecture.Ppc64le:
+            case Architecture.RiscV64:
+                throw new NotSupportedException();
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
     /// <summary>
     /// Suspends the specified thread.
     /// </summary>
@@ -224,9 +257,7 @@ public static class ThreadCore
 
         return ret;
     }
-    #endregion
 
-    #region TerminateThread
     /// <summary>
     /// Terminates a thread.
     /// </summary>
@@ -244,9 +275,7 @@ public static class ThreadCore
         if(!ret)
             throw new Win32Exception("Couldn't terminate the thread.");
     }
-    #endregion
 
-    #region WaitForSingleObject
     /// <summary>
     /// Waits until the specified object is in the signaled state or the time-out interval elapses.
     /// </summary>
@@ -287,5 +316,4 @@ public static class ThreadCore
 
         return ret;
     }
-    #endregion
 }

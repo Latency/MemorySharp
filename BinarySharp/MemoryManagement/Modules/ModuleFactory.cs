@@ -18,7 +18,6 @@ namespace Binarysharp.MemoryManagement.Modules;
 /// </summary>
 public class ModuleFactory : IFactory
 {
-    #region Fields
     /// <summary>
     /// The reference of the <see cref="Binarysharp.MemoryManagement.MemorySharp"/> object.
     /// </summary>
@@ -28,23 +27,17 @@ public class ModuleFactory : IFactory
     /// The list containing all injected modules (writable).
     /// </summary>
     protected readonly List<InjectedModule> InternalInjectedModules; 
-    #endregion
 
-    #region Properties
-    #region InjectedModules
     /// <summary>
     /// A collection containing all injected modules.
     /// </summary>
     public IEnumerable<InjectedModule> InjectedModules => InternalInjectedModules.AsReadOnly();
 
-    #endregion
-    #region MainModule
     /// <summary>
     /// Gets the main module for the remote process.
     /// </summary>
     public RemoteModule MainModule { get; private set; }
-    #endregion
-    #region RemoteModules
+
     /// <summary>
     /// Gets the modules that have been loaded in the remote process.
     /// </summary>
@@ -52,15 +45,11 @@ public class ModuleFactory : IFactory
         // Yield managed modules for ones contained in the target process
         NativeModules.Select(FetchModule);
 
-    #endregion
-    #region NativeModules (internal)
     /// <summary>
     /// Gets the native modules that have been loaded in the remote process.
     /// </summary>
     internal IEnumerable<ProcessModule> NativeModules => MemorySharp.Native.Modules.Cast<ProcessModule>();
 
-    #endregion
-    #region This
     /// <summary>
     /// Gets a pointer from the remote process.
     /// </summary>
@@ -74,11 +63,6 @@ public class ModuleFactory : IFactory
     /// <param name="moduleName">The name of module (not case sensitive).</param>
     /// <returns>A new instance of a <see cref="RemoteModule"/> class.</returns>
     public RemoteModule this[string moduleName] => FetchModule(moduleName);
-
-    #endregion
-    #endregion
-
-    #region Constructor/Destructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModuleFactory"/> class.
@@ -101,10 +85,6 @@ public class ModuleFactory : IFactory
     /// </summary>
     ~ModuleFactory() => Dispose();
 
-    #endregion
-
-    #region Methods
-    #region Dispose (implementation of IFactory)
     /// <summary>
     /// Releases all resources used by the <see cref="ModuleFactory"/> object.
     /// </summary>
@@ -124,9 +104,7 @@ public class ModuleFactory : IFactory
         // Avoid the finalizer
         GC.SuppressFinalize(this);
     }
-    #endregion
 
-    #region Eject
     /// <summary>
     /// Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
     /// </summary>
@@ -157,9 +135,7 @@ public class ModuleFactory : IFactory
         if(module != null)
             RemoteModule.InternalEject(MemorySharp, module);
     }
-    #endregion
 
-    #region FetchModule (protected)
     /// <summary>
     /// Fetches a module from the remote process.
     /// </summary>
@@ -184,9 +160,7 @@ public class ModuleFactory : IFactory
     /// <param name="module">A module in the remote process.</param>
     /// <returns>A new instance of a <see cref="RemoteModule"/> class.</returns>
     private RemoteModule FetchModule(ProcessModule module) => FetchModule(module.ModuleName);
-    #endregion
 
-    #region Inject
     /// <summary>
     /// Injects the specified module into the address space of the remote process.
     /// </summary>
@@ -203,6 +177,4 @@ public class ModuleFactory : IFactory
         // Return the module
         return module;
     }
-    #endregion
-    #endregion
 }

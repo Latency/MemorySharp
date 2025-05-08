@@ -17,23 +17,16 @@ namespace Binarysharp.Helpers;
 /// </summary>
 public static class ApplicationFinder
 {
-    #region Property TopLevelWindows
     /// <summary>
     /// Gets all top-level windows on the screen.
     /// </summary>
     public static IEnumerable<nint> TopLevelWindows => WindowCore.EnumTopLevelWindows();
 
-    #endregion
-
-    #region Property Windows
     /// <summary>
     /// Gets all the windows on the screen.
     /// </summary>
     public static IEnumerable<nint> Windows => WindowCore.EnumAllWindows();
 
-    #endregion
-
-    #region FromProcessId
     /// <summary>
     /// Returns a new <see cref="Process"/> component, given the identifier of a process.
     /// </summary>
@@ -41,9 +34,6 @@ public static class ApplicationFinder
     /// <returns>A <see cref="Process"/> component that is associated with the local process resource identified by the processId parameter.</returns>
     public static Process FromProcessId(int processId) => Process.GetProcessById(processId);
 
-    #endregion
-
-    #region FromProcessName
     /// <summary>
     /// Creates an collection of new <see cref="Process"/> components and associates them with all the process resources that share the specified process name.
     /// </summary>
@@ -51,9 +41,6 @@ public static class ApplicationFinder
     /// <returns>A collection of type <see cref="Process"/> that represents the process resources running the specified application or file.</returns>
     public static IEnumerable<Process> FromProcessName(string processName) => Process.GetProcessesByName(processName);
 
-    #endregion
-
-    #region FromWindowClassName
     /// <summary>
     /// Creates a collection of new <see cref="Process"/> components and associates them with all the process resources that share the specified class name.
     /// </summary>
@@ -61,9 +48,6 @@ public static class ApplicationFinder
     /// <returns>A collection of type <see cref="Process"/> that represents the process resources running the specified application or file.</returns>
     public static IEnumerable<Process> FromWindowClassName(string className) => Windows.Where(window => WindowCore.GetClassName(window) == className).Select(FromWindowHandle);
 
-    #endregion
-
-    #region FromWindowHandle
     /// <summary>
     /// Retrieves a new <see cref="Process"/> component that created the window. 
     /// </summary>
@@ -71,9 +55,6 @@ public static class ApplicationFinder
     /// <returns>A <see cref="Process"/>A <see cref="Process"/> component that is associated with the specified window handle.</returns>
     public static Process FromWindowHandle(nint windowHandle) => FromProcessId(WindowCore.GetWindowProcessId(windowHandle));
 
-    #endregion
-
-    #region FromWindowTitle
     /// <summary>
     /// Creates a collection of new <see cref="Process"/> components and associates them with all the process resources that share the specified window title.
     /// </summary>
@@ -81,15 +62,10 @@ public static class ApplicationFinder
     /// <returns>A collection of type <see cref="Process"/> that represents the process resources running the specified application or file.</returns>
     public static IEnumerable<Process> FromWindowTitle(string windowTitle) => Windows.Where(window => WindowCore.GetWindowText(window) == windowTitle).Select(FromWindowHandle);
 
-    #endregion
-
-    #region FromWindowTitleContains
     /// <summary>
     /// Creates a collection of new <see cref="Process"/> components and associates them with all the process resources that contain the specified window title.
     /// </summary>
     /// <param name="windowTitle">A part a window title string.</param>
     /// <returns>A collection of type <see cref="Process"/> that represents the process resources running the specified application or file.</returns>
     public static IEnumerable<Process> FromWindowTitleContains(string windowTitle) => Windows.Where(window => WindowCore.GetWindowText(window).Contains(windowTitle)).Select(FromWindowHandle);
-
-    #endregion
 }

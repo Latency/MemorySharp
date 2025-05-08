@@ -86,8 +86,10 @@ public class MarshalledValue<T> : IMarshalledValue
         // Free the allocated memory
         if(Allocated != null)
             Allocated.Dispose();
+
         // Set the pointer to zero
         Reference = nint.Zero;
+
         // Avoid the finalizer
         GC.SuppressFinalize(this);
     }
@@ -102,7 +104,7 @@ public class MarshalledValue<T> : IMarshalledValue
         {
             var text = Value?.ToString();
             // Allocate memory in the remote process (string + '\0')
-            Allocated = MemorySharp.Memory.Allocate(text?.Length + 1 ?? 0);
+            Allocated = MemorySharp.Memory.Allocate((uint)(text?.Length + 1 ?? 0));
             // Write the value
             Allocated.WriteString(0, text ?? string.Empty);
             // Get the pointer
@@ -126,7 +128,7 @@ public class MarshalledValue<T> : IMarshalledValue
                 // the remote process to store the value and get its pointer
 
                 // Allocate memory in the remote process
-                Allocated = MemorySharp.Memory.Allocate(MarshalType<T>.Size);
+                Allocated = MemorySharp.Memory.Allocate((uint)MarshalType<T>.Size);
                 // Write the value
                 Allocated.Write(0, Value);
                 // Get the pointer

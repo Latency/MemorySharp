@@ -17,47 +17,36 @@ namespace Binarysharp.Memory;
 /// </summary>
 public class MemoryProtection : IDisposable
 {
-    #region Fields
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
     private readonly MemorySharp _memorySharp;
-    #endregion
 
-    #region Properties
-    #region BaseAddress
     /// <summary>
     /// The base address of the altered memory.
     /// </summary>
     public nint BaseAddress { get; private set; }
-    #endregion
-    #region MustBedisposed
+
     /// <summary>
     /// States if the <see cref="MemoryProtection"/> object nust be disposed when it is collected.
     /// </summary>
     public bool MustBeDisposed { get; set; }
-    #endregion
-    #region NewProtection
+
     /// <summary>
     /// Defines the new protection applied to the memory.
     /// </summary>
     public MemoryProtectionFlags NewProtection { get; private set; }
-    #endregion
-    #region OldProtection
+
     /// <summary>
     /// References the inital protection of the memory.
     /// </summary>
     public MemoryProtectionFlags OldProtection { get; private set; }
-    #endregion
-    #region Size
+
     /// <summary>
     /// The size of the altered memory.
     /// </summary>
     public int Size { get; private set; }
-    #endregion
-    #endregion
 
-    #region Constructor/Destructor
     /// <summary>
     /// Initializes a new instance of the <see cref="MemoryProtection"/> class.
     /// </summary>
@@ -78,18 +67,16 @@ public class MemoryProtection : IDisposable
         // Change the memory protection
         OldProtection = MemoryCore.ChangeProtection(_memorySharp.Handle, baseAddress, size, protection);
     }
+
     /// <summary>
     /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
     /// </summary>
     ~MemoryProtection()
     {
-        if(MustBeDisposed)
+        if (MustBeDisposed)
             Dispose();
     }
-    #endregion
 
-    #region Methods
-    #region Dispose (implementation of IDisposable)
     /// <summary>
     /// Restores the initial protection of the memory.
     /// </summary>
@@ -101,14 +88,9 @@ public class MemoryProtection : IDisposable
         // Avoid the finalizer 
         GC.SuppressFinalize(this);
     }
-    #endregion
 
-    #region ToString (override)
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>
     public override string ToString() => $"BaseAddress = 0x{BaseAddress.ToInt64():X} NewProtection = {NewProtection} OldProtection = {OldProtection}";
-
-    #endregion
-    #endregion
 }

@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Description>MemorySharp is a C# based memory editing library targeting Windows applications, offering various functions to extract and inject data and codes into remote processes to allow interoperability.</Description>
@@ -11,11 +11,11 @@
 		<WarningsAsErrors>$(WarningsAsErrors);NU1605</WarningsAsErrors>
 		<NoWarn>$(NoWarn);NU5104;MSB3270</NoWarn>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
-	  <Compile Remove="Assembly\Assembler\**" />
-	  <EmbeddedResource Remove="Assembly\Assembler\**" />
-	  <None Remove="Assembly\Assembler\**" />
+	  <Compile Remove="Assembly\**" />
+	  <EmbeddedResource Remove="Assembly\**" />
+	  <None Remove="Assembly\**" />
 	</ItemGroup>
 
 </Project>

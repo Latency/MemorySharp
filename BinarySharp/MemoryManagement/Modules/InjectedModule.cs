@@ -17,23 +17,16 @@ namespace Binarysharp.MemoryManagement.Modules;
 /// </summary>
 public class InjectedModule : RemoteModule, IDisposableState
 {
-    #region Properties
-    #region IsDisposed (implementation of IDisposableState)
     /// <summary>
     /// Gets a value indicating whether the element is disposed.
     /// </summary>
     public bool IsDisposed { get; private set; }
-    #endregion
 
-    #region MustBeDisposed (implementation of IDisposableState)
     /// <summary>
     /// Gets a value indicating whether the element must be disposed when the Garbage Collector collects the object.
     /// </summary>
     public bool MustBeDisposed { get; set; }
-    #endregion
-    #endregion
 
-    #region Constructor/Destructor
     /// <summary>
     /// Initializes a new instance of the <see cref="InjectedModule"/> class.
     /// </summary>
@@ -55,10 +48,7 @@ public class InjectedModule : RemoteModule, IDisposableState
         if(MustBeDisposed)
             Dispose();
     }
-    #endregion
 
-    #region Methods
-    #region Dispose (implementation of IDisposableState)
     /// <summary>
     /// Releases all resources used by the <see cref="InjectedModule"/> object.
     /// </summary>
@@ -75,9 +65,7 @@ public class InjectedModule : RemoteModule, IDisposableState
             GC.SuppressFinalize(this);
         }
     }
-    #endregion
 
-    #region InternalInject (internal)
     /// <summary>
     /// Injects the specified module into the address space of the remote process.
     /// </summary>
@@ -91,6 +79,4 @@ public class InjectedModule : RemoteModule, IDisposableState
         // Get the inject module
         return thread.GetExitCode<nint>() != nint.Zero ? new InjectedModule(memorySharp, memorySharp.Modules.NativeModules.First(m => m.BaseAddress == thread.GetExitCode<nint>())) : null;
     }
-    #endregion
-    #endregion
 }

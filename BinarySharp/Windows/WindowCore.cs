@@ -10,7 +10,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 using Binarysharp.Helpers;
 using Binarysharp.Internals;
 using Binarysharp.MemoryManagement.Native;
@@ -33,11 +32,11 @@ public static class WindowCore
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
 
         // Get the window class name
-        var stringBuilder = new StringBuilder(char.MaxValue);
-        if (NativeMethods.GetClassName(windowHandle, stringBuilder, stringBuilder.Capacity) == 0)
+        var buffer = new char[char.MaxValue];
+        if (NativeMethods.GetClassName(windowHandle, buffer, char.MaxValue) == 0)
             throw new Win32Exception("Couldn't get the class name of the window or the window has no class name.");
 
-        return stringBuilder.ToString();
+        return new string(buffer);
     }
 
     /// <summary>
@@ -78,11 +77,12 @@ public static class WindowCore
             return string.Empty;
 
         // Get the text of the window's title bar text
-        var stringBuilder = new StringBuilder(capacity + 1);
-        if (NativeMethods.GetWindowText(windowHandle, stringBuilder, stringBuilder.Capacity) == 0)
+        var len    = capacity + 1;
+        var buffer = new char[len];
+        if (NativeMethods.GetWindowText(windowHandle, buffer, len) == 0)
             throw new Win32Exception("Couldn't get the text of the window's title bar or the window has no title.");
 
-        return stringBuilder.ToString();
+        return new string(buffer);
     }
 
     /// <summary>
@@ -133,8 +133,7 @@ public static class WindowCore
         HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
 
         // Get the thread id
-        int trash;
-        return NativeMethods.GetWindowThreadProcessId(windowHandle, out trash);
+        return NativeMethods.GetWindowThreadProcessId(windowHandle, out _);
     }
 
     /// <summary>
@@ -153,7 +152,6 @@ public static class WindowCore
             list.Add(topWindow);
             // Enumerate and add the children of this window
             list.AddRange(EnumChildWindows(topWindow));
-
         }
 
         // Return the list of windows
@@ -320,7 +318,7 @@ public static class WindowCore
                 throw new Win32Exception("Couldn't send the inputs.");
         }
         else
-            throw new ArgumentException("The parameter cannot be null or empty.", "inputs");
+            throw new ArgumentException("The parameter cannot be null or empty.", nameof(inputs));
     }
 
     /// <summary>

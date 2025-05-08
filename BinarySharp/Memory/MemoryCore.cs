@@ -21,7 +21,6 @@ namespace Binarysharp.Memory;
 /// </summary>
 public static class MemoryCore
 {
-    #region Allocate
     /// <summary>
     /// Reserves a region of memory within the virtual address space of a specified process.
     /// </summary>
@@ -30,7 +29,7 @@ public static class MemoryCore
     /// <param name="protectionFlags">The memory protection for the region of pages to be allocated.</param>
     /// <param name="allocationFlags">The type of memory allocation.</param>
     /// <returns>The base address of the allocated region.</returns>
-    public static nint Allocate(SafeMemoryHandle processHandle, int size, MemoryProtectionFlags protectionFlags = MemoryProtectionFlags.ExecuteReadWrite, MemoryAllocationFlags allocationFlags = MemoryAllocationFlags.Commit)
+    public static nint Allocate(SafeMemoryHandle processHandle, uint size, MemoryProtectionFlags protectionFlags = MemoryProtectionFlags.ExecuteReadWrite, MemoryAllocationFlags allocationFlags = MemoryAllocationFlags.Commit | MemoryAllocationFlags.Reserve)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
@@ -45,9 +44,7 @@ public static class MemoryCore
         // If the pointer isn't valid, throws an exception
         throw new Win32Exception($"Couldn't allocate memory of {size} byte(s).");
     }
-    #endregion
 
-    #region CloseHandle
     /// <summary>
     /// Closes an open object handle.
     /// </summary>
@@ -61,9 +58,7 @@ public static class MemoryCore
         if (!NativeMethods.CloseHandle(handle))
             throw new Win32Exception($"Couldn't close he handle 0x{handle}.");
     }
-    #endregion
 
-    #region Free
     /// <summary>
     /// Releases a region of memory within the virtual address space of a specified process.
     /// </summary>
@@ -80,9 +75,7 @@ public static class MemoryCore
             // If the memory wasn't correctly freed, throws an exception
             throw new Win32Exception($"The memory page 0x{address:X} cannot be freed.");
     }
-    #endregion
 
-    #region NtQueryInformationProcess
     /// <summary>
     /// etrieves information about the specified process.
     /// </summary>
@@ -96,16 +89,14 @@ public static class MemoryCore
         // Create a structure to store process info
         var info = new ProcessBasicInformation();
 
-        var    p = new SafeProcessHandle(processHandle.DangerousGetHandle(), true);
+        var p = new SafeProcessHandle(processHandle.DangerousGetHandle(), true);
         int[] returnedSize = [];
 
         // Get the process info
         var retval = NativeMethods.NtQueryInformationProcess(p, (int)ProcessInformationClass.ProcessBasicInformation, info, info.Size, returnedSize);
         return new ProcessBasicInformation();
     }
-    #endregion
 
-    #region OpenProcess
     /// <summary>
     /// Opens an existing local process object.
     /// </summary>
@@ -124,9 +115,7 @@ public static class MemoryCore
         // Else the handle isn't valid, throws an exception
         throw new Win32Exception($"Couldn't open the process {processId}.");
     }
-    #endregion
 
-    #region ReadBytes
     /// <summary>
     /// Reads an array of bytes in the memory form the target process.
     /// </summary>
@@ -150,9 +139,7 @@ public static class MemoryCore
         // Else the data couldn't be read, throws an exception
         throw new Win32Exception($"Couldn't read {size} byte(s) from 0x{address:X}.");
     }
-    #endregion
 
-    #region ChangeProtection
     /// <summary>
     /// Changes the protection on a region of committed pages in the virtual address space of a specified process.
     /// </summary>
@@ -160,7 +147,7 @@ public static class MemoryCore
     /// <param name="address">A pointer to the base address of the region of pages whose access protection attributes are to be changed.</param>
     /// <param name="size">The size of the region whose access protection attributes are changed, in bytes.</param>
     /// <param name="protection">The memory protection option.</param>
-    /// <returns>The old protection of the region in a <see cref="Native.MemoryBasicInformation"/> structure.</returns>
+    /// <returns>The old protection of the region in a <see cref="MemoryBasicInformation"/> structure.</returns>
     public static MemoryProtectionFlags ChangeProtection(SafeMemoryHandle processHandle, nint address, int size, MemoryProtectionFlags protection)
     {
         // Check if the handles are valid
@@ -175,9 +162,7 @@ public static class MemoryCore
         // Else the protection couldn't be changed, throws an exception
         throw new Win32Exception($"Couldn't change the protection of the memory at 0x{address:X} of {size} byte(s) to {protection}.");
     }
-    #endregion
 
-    #region Query
     /// <summary>
     /// Retrieves information about a range of pages within the virtual address space of a specified process.
     /// </summary>
@@ -193,6 +178,7 @@ public static class MemoryCore
         // Else the information couldn't be got
         throw new Win32Exception($"Couldn't query information about the memory region 0x{baseAddress:X}");
     }
+
     /// <summary>
     /// Retrieves information about a range of pages within the virtual address space of a specified process.
     /// </summary>
@@ -231,9 +217,7 @@ public static class MemoryCore
 
         } while (numberFrom < numberTo && ret != 0);
     }
-    #endregion
 
-    #region WriteBytes
     /// <summary>
     /// Writes data to an area of memory in a specified process.
     /// </summary>
@@ -241,14 +225,14 @@ public static class MemoryCore
     /// <param name="address">A pointer to the base address in the specified process to which data is written.</param>
     /// <param name="byteArray">A buffer that contains data to be written in the address space of the specified process.</param>
     /// <returns>The number of bytes written.</returns>
-    public static int WriteBytes(SafeMemoryHandle processHandle, nint address, byte[] byteArray)
+    public static uint WriteBytes(SafeMemoryHandle processHandle, nint address, byte[] byteArray)
     {
         // Check if the handles are valid
         HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
         HandleManipulator.ValidateAsArgument(address,       "address");
 
         // Write the data to the target process
-        if (NativeMethods.WriteProcessMemory(processHandle, address, byteArray, byteArray.Length, out var nbBytesWritten))
+        if (NativeMethods.WriteProcessMemory(processHandle, address, byteArray, (uint)byteArray.Length, out var nbBytesWritten))
             // Check whether the length of the data written is equal to the inital array
             if (nbBytesWritten == byteArray.Length)
                 return nbBytesWritten;
@@ -256,5 +240,4 @@ public static class MemoryCore
         // Else the data couldn't be written, throws an exception
         throw new Win32Exception($"Couldn't write {byteArray.Length} bytes to 0x{address:X}");
     }
-    #endregion
 }

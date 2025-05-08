@@ -14,7 +14,6 @@ using System.Text;
 using Binarysharp.Memory;
 using Binarysharp.MemoryManagement;
 
-
 namespace Binarysharp.Internals;
 
 /// <summary>

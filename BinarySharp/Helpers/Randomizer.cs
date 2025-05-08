@@ -16,18 +16,16 @@ namespace Binarysharp.Helpers;
 /// </summary>
 public static class Randomizer
 {
-    #region Fields
     /// <summary>
     /// Provides random engine.
     /// </summary>
-    private static readonly Random Random = new Random();
+    private static readonly Random Random = new();
+
     /// <summary>
     /// Allowed characters in random strings.
     /// </summary>
     private static readonly char[] AllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
-    #endregion
 
-    #region GenerateNumber
     /// <summary>
     /// Returns a random number within a specified range.
     /// </summary>
@@ -49,9 +47,6 @@ public static class Randomizer
     /// <returns>A 32-bit signed integer greater than or equal to zero and less than <see cref="int.MaxValue"/>.</returns>
     public static int GenerateNumber() => Random.Next();
 
-    #endregion
-
-    #region GenerateString
     /// <summary>
     /// Returns a random string where its size is within a specified range.
     /// </summary>
@@ -69,14 +64,10 @@ public static class Randomizer
 
         return builder.ToString();
     }
-    #endregion
 
-    #region GenerateGuid
     /// <summary>
     /// Initializes a new instance of the <see cref="Guid"/> structure.
     /// </summary>
     /// <returns>A new <see cref="Guid"/> object.</returns>
     public static Guid GenerateGuid() => Guid.NewGuid();
-
-    #endregion
 }

@@ -36,15 +36,6 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     protected List<IFactory> Factories;
 
     /// <summary>
-    /// Gets whether the process is being debugged.
-    /// </summary>
-    public bool IsDebugged
-    {
-        get => Peb.BeingDebugged;
-        set => Peb.BeingDebugged = value;
-    }
-
-    /// <summary>
     /// State if the process is running.
     /// </summary>
     public bool IsRunning => Handle is { IsInvalid: false, IsClosed: false } && !Native.HasExited;
@@ -117,7 +108,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         Handle = MemoryCore.OpenProcess(ProcessAccessFlags.AllAccess, process.Id);
 
         // Initialize the PEB
-        //Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
+        Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
 
         // Create instances of the factories
         Factories = [];
@@ -169,6 +160,16 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         if (ReferenceEquals(this, obj)) return true;
         return obj.GetType() == GetType() && Equals((MemorySharp)obj);
     }
+
+    /// <summary>
+    /// Suspends the process.
+    /// </summary>
+    public void Suspend() => Native.SuspendProcess();
+
+    /// <summary>
+    /// Resumes the process.
+    /// </summary>
+    public void Resume() => Native.ResumeProcess();
 
     /// <summary>
     /// Returns a value indicating whether this instance is equal to a specified object.
@@ -348,7 +349,8 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <param name="address">The address where the values is written.</param>
     /// <param name="array">The array to write.</param>
     /// <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
-    public void Write<T>(nint address, T[] array, bool isRelative = true)
+    /// <returns>Number of bytes written.</returns>
+    public uint Write<T>(nint address, T[] array, bool isRelative = true)
     {
         // Allocate an array containing the values of the array converted into bytes
         var valuesInBytes = new byte[MarshalType<T>.Size * array.Length];
@@ -364,7 +366,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
             Buffer.BlockCopy(MarshalType<T>.ObjectToByteArray(elmt), 0, valuesInBytes, offsetInArray, MarshalType<T>.Size);
         }
 
-        WriteBytes(address, valuesInBytes, isRelative);
+        return WriteBytes(address, valuesInBytes, isRelative);
     }
 
     /// <summary>
@@ -382,12 +384,12 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     /// <param name="address">The address where the array is written.</param>
     /// <param name="byteArray">The array of bytes to write.</param>
     /// <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
-    protected void WriteBytes(nint address, byte[] byteArray, bool isRelative = true)
+    /// <returns>Number of bytes written</returns>
+    protected uint WriteBytes(nint address, byte[] byteArray, bool isRelative = true)
     {
         // Change the protection of the memory to allow writable
         using (new MemoryProtection(this, isRelative ? MakeAbsolute(address) : address, MarshalType<byte>.Size * byteArray.Length))
-            // Write the byte array
-            MemoryCore.WriteBytes(Handle, isRelative ? MakeAbsolute(address) : address, byteArray);
+            return MemoryCore.WriteBytes(Handle, isRelative ? MakeAbsolute(address) : address, byteArray);
     }
 
     /// <summary>

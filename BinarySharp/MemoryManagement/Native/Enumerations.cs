@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace Binarysharp.MemoryManagement.Native;
 
-#region FlashWindowFlags
 /// <summary>
 /// Flash window flags list.
 /// </summary>
@@ -43,9 +42,7 @@ public enum FlashWindowFlags
     /// </summary>
     Tray = 0x2
 }
-#endregion
 
-#region InputTypes
 /// <summary>
 /// The types used in the function <see cref="NativeMethods.SendInput"/> for input events.
 /// </summary>
@@ -55,9 +52,7 @@ public enum InputTypes
     Keyboard = 1,
     Hardware = 2
 }
-#endregion
 
-#region KeyboardFlags
 /// <summary>
 /// The keyboard flags list.
 /// </summary>
@@ -82,9 +77,7 @@ public enum KeyboardFlags
     /// </summary>
     Unicode = 4
 }
-#endregion
 
-#region Keys
 /// <summary>
 /// The key codes and modifiers list.
 /// </summary>
@@ -286,9 +279,7 @@ public enum Keys
     Z                  = 90,
     Zoom               = 0xfb
 }
-#endregion
 
-#region MemoryAllocationFlags
 /// <summary>
 /// Memory-allocation options list.
 /// </summary>
@@ -348,9 +339,7 @@ public enum MemoryAllocationFlags
     /// </summary>
     TopDown = 0x00100000
 }
-#endregion
 
-#region MemoryProtectionFlags
 /// <summary>
 /// Memory-protection options list.
 /// </summary>
@@ -433,9 +422,7 @@ public enum MemoryProtectionFlags
     /// </summary>
     WriteCombine = 0x400
 }
-#endregion
 
-#region MemoryReleaseFlags
 /// <summary>
 /// Memory-release options list.
 /// </summary>
@@ -460,9 +447,7 @@ public enum MemoryReleaseFlags
     /// </summary>
     Release = 0x8000
 }
-#endregion
 
-#region MemoryStateFlags
 /// <summary>
 /// Memory-state options list.
 /// </summary>
@@ -484,9 +469,7 @@ public enum MemoryStateFlags
     /// </summary>
     Reserve = 0x2000
 }
-#endregion
 
-#region MemoryTypeFlags
 /// <summary>
 /// Memory-type options list.
 /// </summary>
@@ -510,9 +493,7 @@ public enum MemoryTypeFlags
     /// </summary>
     Private = 0x20000
 }
-#endregion
 
-#region MouseFlags
 /// <summary>
 /// The mouse flags list.
 /// </summary>
@@ -580,9 +561,7 @@ public enum MouseFlags
     /// </summary>
     XUp = 0x100
 }
-#endregion
 
-#region PebStructure
 /// <summary>
 /// The structure of the Process Environment Block.
 /// </summary>
@@ -691,9 +670,7 @@ public enum PebStructure
     SystemAssemblyStorageMap           = 0x204,
     MinimumStackCommit                 = 0x208
 }
-#endregion
 
-#region ProcessAccessFlags
 /// <summary>
 /// Process access rights list.
 /// </summary>
@@ -758,9 +735,7 @@ public enum ProcessAccessFlags
     /// </summary>
     Synchronize = 0x00100000
 }
-#endregion
 
-#region ProcessInformationClass
 /// <summary>
 /// The type of process information to be retrieved.
 /// </summary>
@@ -785,9 +760,7 @@ public enum ProcessInformationClass
     /// </summary>
     ProcessImageFileName = 0x1B
 }
-#endregion
 
-#region SystemMetrics
 /// <summary>
 /// The system metrics list used in the function <see cref="NativeMethods.GetSystemMetrics"/>.
 /// </summary>
@@ -796,9 +769,7 @@ public enum SystemMetrics
     CxScreen = 0,
     CyScreen = 1
 }
-#endregion
 
-#region TebStructure
 /// <summary>
 /// The structure of the Thread Environment Block.
 /// </summary>
@@ -991,9 +962,6 @@ public enum TebStructure
     /// </summary>
     ThreadErrorMode = 0xF28
 }
-#endregion
-
-#region ThreadAccessFlags
 
 /// <summary>
 /// Thread access rights list.
@@ -1055,9 +1023,7 @@ public enum ThreadAccessFlags
     /// </summary>
     Terminate = 0x0001
 }
-#endregion
 
-#region ThreadContextFlags
 /// <summary>
 /// Determines which registers are returned or set when using <see cref="NativeMethods.GetThreadContext"/> or <see cref="NativeMethods.SetThreadContext"/>.
 /// </summary>
@@ -1071,7 +1037,7 @@ public enum ThreadContextFlags
     /// <summary>
     /// The Intel 80486 microprocessor, also known as the i486.
     /// </summary>
-    Intel486 = 0x10000,
+    Intel486 = Intel386,  //  same as i386
     /// <summary>
     /// SS:SP, CS:IP, FLAGS, BP
     /// </summary>
@@ -1105,9 +1071,7 @@ public enum ThreadContextFlags
     /// </summary>
     All = Control | Integer | Segments | FloatingPoint | DebugRegisters | ExtendedRegisters
 }
-#endregion
 
-#region ThreadCreationFlags
 /// <summary>
 /// Thread creation options list.
 /// </summary>
@@ -1121,15 +1085,13 @@ public enum ThreadCreationFlags
     /// <summary>
     /// The thread is created in a suspended state, and does not run until the <see cref="NativeMethods.ResumeThread"/> function is called.
     /// </summary>
-    Suspended = 0x04,
+    Suspended = 0x00000004,
     /// <summary>
     /// The dwStackSize parameter specifies the initial reserve size of the stack. If this flag is not specified, dwStackSize specifies the commit size.
     /// </summary>
     StackSizeParamIsAReservation = 0x10000
 }
-#endregion
 
-#region TranslationTypes
 /// <summary>
 /// The translation types used in the function <see cref="NativeMethods.MapVirtualKey"/> for the keys mapping.
 /// </summary>
@@ -1158,9 +1120,7 @@ public enum TranslationTypes
     /// </summary>
     ScanCodeToVirtualKeyEx = 3
 }
-#endregion
 
-#region WaitReturnValues
 /// <summary>
 /// The return values for the function <see cref="NativeMethods.WaitForSingleObject"/>.
 /// </summary>
@@ -1185,9 +1145,7 @@ public enum WaitValues : uint
     /// </summary>
     Failed = 0xFFFFFFFF
 }
-#endregion
 
-#region WindowsMessages
 /// <summary>
 /// Windows Messages list.
 /// </summary>
@@ -2125,9 +2083,7 @@ public enum WindowsMessages : uint
     SysTimer = 0x118
 
 }
-#endregion
 
-#region WindowStates
 /// <summary>
 /// Window states list.
 /// </summary>
@@ -2189,4 +2145,3 @@ public enum WindowStates
     /// </summary>
     ForceMinimized = 11
 }
-#endregion

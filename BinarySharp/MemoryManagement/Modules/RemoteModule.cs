@@ -18,57 +18,41 @@ namespace Binarysharp.MemoryManagement.Modules;
 /// </summary>
 public class RemoteModule : RemoteRegion
 {
-    #region Fields
     /// <summary>
     /// The dictionary containing all cached functions of the remote module.
     /// </summary>
     internal static readonly IDictionary<Tuple<string, SafeMemoryHandle>, RemoteFunction> CachedFunctions = new Dictionary<Tuple<string, SafeMemoryHandle>, RemoteFunction>();
-    #endregion
 
-    #region Properties
-    #region IsMainModule
     /// <summary>
     /// State if this is the main module of the remote process.
     /// </summary>
     public bool IsMainModule => MemorySharp?.Native.MainModule?.BaseAddress == BaseAddress;
 
-    #endregion
-    #region IsValid
     /// <summary>
     /// Gets if the <see cref="RemoteModule"/> is valid.
     /// </summary>
     public override bool IsValid => base.IsValid && MemorySharp.Native.Modules.Cast<ProcessModule>().Any(m => m.BaseAddress == BaseAddress && m.ModuleName == Name);
 
-    #endregion
-    #region Name
     /// <summary>
     /// The name of the module.
     /// </summary>
     public string Name => Native.ModuleName;
 
-    #endregion
-    #region Native
     /// <summary>
     /// The native <see cref="ProcessModule"/> object corresponding to this module.
     /// </summary>
     public ProcessModule Native { get; }
-    #endregion
 
-    #region Path
     /// <summary>
     /// The full path of the module.
     /// </summary>
     public string Path => Native.FileName;
 
-    #endregion
-    #region Size
     /// <summary>
     /// The size of the module in the memory of the remote process.
     /// </summary>
     public int Size => Native.ModuleMemorySize;
 
-    #endregion
-    #region This
     /// <summary>
     /// Gets the specified function in the remote module.
     /// </summary>
@@ -76,10 +60,6 @@ public class RemoteModule : RemoteRegion
     /// <returns>A new instance of a <see cref="RemoteFunction"/> class.</returns>
     public RemoteFunction this[string functionName] => FindFunction(functionName);
 
-    #endregion
-    #endregion
-
-    #region Constructor
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoteModule"/> class.
     /// </summary>
@@ -87,10 +67,6 @@ public class RemoteModule : RemoteRegion
     /// <param name="module">The native <see cref="ProcessModule"/> object corresponding to this module.</param>
     internal RemoteModule(MemorySharp memorySharp, ProcessModule module) : base(memorySharp, module.BaseAddress) => Native = module;
 
-    #endregion
-
-    #region Methods
-    #region Eject
     /// <summary>
     /// Ejects the loaded dynamic-link library (DLL) module.
     /// </summary>
@@ -101,9 +77,7 @@ public class RemoteModule : RemoteRegion
         // Remove the pointer
         BaseAddress = nint.Zero;
     }
-    #endregion
 
-    #region FindFunction
     /// <summary>
     /// Finds the specified function in the remote module.
     /// </summary>
@@ -133,9 +107,7 @@ public class RemoteModule : RemoteRegion
         // Return the function rebased with the remote module
         return function;
     }
-    #endregion
 
-    #region InternalEject (internal)
     /// <summary>
     /// Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
     /// </summary>
@@ -143,14 +115,8 @@ public class RemoteModule : RemoteRegion
     /// <param name="module">The module to eject.</param>
     internal static void InternalEject(MemorySharp memorySharp, RemoteModule module) => memorySharp.Threads.CreateAndJoin(memorySharp["kernel32"]["FreeLibrary"].BaseAddress, module.BaseAddress);
 
-    #endregion
-
-    #region ToString (override)
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>
     public override string ToString() => $"BaseAddress = 0x{BaseAddress.ToInt64():X} Name = {Name}";
-
-    #endregion
-    #endregion
 }

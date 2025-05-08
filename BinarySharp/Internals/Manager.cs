@@ -14,22 +14,16 @@ namespace Binarysharp.Internals;
 /// </summary>
 public abstract class Manager<T> where T : INamedElement
 {
-    #region Fields
     /// <summary>
     /// The collection of the elements (writable).
     /// </summary>
     protected Dictionary<string, T> InternalItems = new();
-    #endregion
 
-    #region Properties
     /// <summary>
     /// The collection of the elements.
     /// </summary>
     public IReadOnlyDictionary<string, T> Items => InternalItems;
-    #endregion
 
-    #region Methods
-    #region DisableAll
     /// <summary>
     /// Disables all items in the manager.
     /// </summary>
@@ -38,9 +32,7 @@ public abstract class Manager<T> where T : INamedElement
         foreach (var item in InternalItems)
             item.Value.Disable();
     }
-    #endregion
 
-    #region EnableAll
     /// <summary>
     /// Enables all items in the manager.
     /// </summary>
@@ -49,9 +41,7 @@ public abstract class Manager<T> where T : INamedElement
         foreach (var item in InternalItems)
             item.Value.Enable();
     }
-    #endregion
 
-    #region Remove
     /// <summary>
     /// Removes an element by its name in the manager.
     /// </summary>
@@ -79,9 +69,7 @@ public abstract class Manager<T> where T : INamedElement
     /// </summary>
     /// <param name="item">The element to remove.</param>
     public void Remove(T item) => Remove(item.Name);
-    #endregion
 
-    #region RemoveAll
     /// <summary>
     /// Removes all the elements in the manager.
     /// </summary>
@@ -94,6 +82,4 @@ public abstract class Manager<T> where T : INamedElement
         // Clear the dictionary
         InternalItems.Clear();
     }
-    #endregion
-    #endregion
 }

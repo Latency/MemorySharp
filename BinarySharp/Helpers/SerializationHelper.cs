@@ -17,7 +17,6 @@ namespace Binarysharp.Helpers;
 /// </summary>
 public static class SerializationHelper
 {
-    #region ExportToXmlFile
     /// <summary>
     /// Serializes the specified object and writes the XML document to the specified path.
     /// </summary>
@@ -40,9 +39,7 @@ public static class SerializationHelper
     /// <param name="obj">The object to serialize.</param>
     /// <param name="path">The path where the file is saved.</param>
     public static void ExportToXmlFile<T>(T obj, string path) => ExportToXmlFile(obj, path, Encoding.UTF8);
-    #endregion
 
-    #region ExportToXmlString
     /// <summary>
     /// Serializes the specified object and returns the XML document.
     /// </summary>
@@ -59,9 +56,7 @@ public static class SerializationHelper
         // Return the serialized object
         return stringWriter.ToString();
     }
-    #endregion
 
-    #region ImportFromXmlFile
     /// <summary>
     /// Deserializes the specified file into an object.
     /// </summary>
@@ -84,9 +79,7 @@ public static class SerializationHelper
     /// <param name="path">The path where the object is read.</param>
     /// <returns>The deserialized object.</returns>
     public static T? ImportFromXmlFile<T>(string path) => ImportFromXmlFile<T>(path, Encoding.UTF8);
-    #endregion
 
-    #region ImportFromXmlString
     /// <summary>
     /// Deserializes the XML document to the specified object.
     /// </summary>
@@ -101,5 +94,4 @@ public static class SerializationHelper
         // Return the serialized object
         return (T?)serializer.Deserialize(stringWriter);
     }
-    #endregion
 }

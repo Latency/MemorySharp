@@ -7,7 +7,6 @@
  * See the file LICENSE for more information.
 */
 
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.Versioning;
 using Binarysharp.Internals;
@@ -188,6 +187,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
             _parameter?.Dispose();
         });
     }
+
     /// <summary>
     /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection. 
     /// </summary>
@@ -235,28 +235,6 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// Serves as a hash function for a particular type. 
     /// </summary>
     public override int GetHashCode() => Id.GetHashCode() ^ MemorySharp.GetHashCode();
-
-    /// <summary>
-    /// Gets the linear address of a specified segment.
-    /// </summary>
-    /// <param name="segment">The segment to get.</param>
-    /// <returns>A <see cref="nint"/> pointer corresponding to the linear address of the segment.</returns>
-    public nint GetRealSegmentAddress(SegmentRegisters segment)
-    {
-        // Get a selector entry for the segment
-        var entry = segment switch
-        {
-            SegmentRegisters.Cs => ThreadCore.GetThreadSelectorEntry(Handle, Context.SegCs),
-            SegmentRegisters.Ds => ThreadCore.GetThreadSelectorEntry(Handle, Context.SegDs),
-            SegmentRegisters.Es => ThreadCore.GetThreadSelectorEntry(Handle, Context.SegEs),
-            SegmentRegisters.Fs => ThreadCore.GetThreadSelectorEntry(Handle, Context.SegFs),
-            SegmentRegisters.Gs => ThreadCore.GetThreadSelectorEntry(Handle, Context.SegGs),
-            SegmentRegisters.Ss => ThreadCore.GetThreadSelectorEntry(Handle, Context.SegSs),
-            _                   => throw new InvalidEnumArgumentException("segment")
-        };
-        // Compute the linear address
-        return new nint(entry.BaseLow | (entry.BaseMid << 16) | (entry.BaseHi << 24));
-    }
 
     public static bool operator ==(RemoteThread left, RemoteThread right) => Equals(left, right);
 

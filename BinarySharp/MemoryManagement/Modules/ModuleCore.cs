@@ -18,7 +18,6 @@ namespace Binarysharp.MemoryManagement.Modules;
 /// </summary>
 public static class ModuleCore
 {
-    #region GetProcAddress
     /// <summary>
     /// Retrieves the address of an exported function or variable from the specified dynamic-link library (DLL).
     /// </summary>
@@ -37,9 +36,7 @@ public static class ModuleCore
         // Else the function was not found, throws an exception
         throw new Win32Exception($"Couldn't get the function address of {functionName}.");
     }
-    #endregion
 
-    #region FreeLibrary
     /// <summary>
     /// Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
     /// </summary>
@@ -64,9 +61,6 @@ public static class ModuleCore
     /// <param name="module">The <see cref="ProcessModule"/> object corresponding to the library to free.</param>
     public static void FreeLibrary(ProcessModule module) => FreeLibrary(module.ModuleName);
 
-    #endregion
-
-    #region LoadLibrary
     /// <summary>
     /// Loads the specified module into the address space of the calling process.
     /// </summary>
@@ -85,5 +79,4 @@ public static class ModuleCore
         // Enumerate the loaded modules and return the one newly added
         return Process.GetCurrentProcess().Modules.Cast<ProcessModule>().First(m => m.FileName == libraryPath);
     }
-    #endregion
 }

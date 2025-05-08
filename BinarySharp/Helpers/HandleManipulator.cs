@@ -18,7 +18,6 @@ namespace Binarysharp.Helpers;
 /// </summary>
 public static class HandleManipulator
 {
-    #region CloseHandle
     /// <summary>
     /// Closes an open object handle.
     /// </summary>
@@ -32,9 +31,7 @@ public static class HandleManipulator
         if(!NativeMethods.CloseHandle(handle))
             throw new Win32Exception("Couldn't close the handle correctly.");
     }
-    #endregion
 
-    #region HandleToProcess
     /// <summary>
     /// Converts an handle into a <see cref="Process"/> object assuming this is a process handle.
     /// </summary>
@@ -43,9 +40,7 @@ public static class HandleManipulator
     public static Process HandleToProcess(SafeMemoryHandle processHandle) =>
         // Search the process by iterating the processes list
         Process.GetProcesses().First(p => p.Id == HandleToProcessId(processHandle));
-    #endregion
 
-    #region HandleToProcessId
     /// <summary>
     /// Converts an handle into a process id assuming this is a process handle.
     /// </summary>
@@ -66,9 +61,7 @@ public static class HandleManipulator
         // Else the function failed, throws an exception
         throw new Win32Exception("Couldn't find the process id of the specified handle.");
     }
-    #endregion
 
-    #region HandleToThread
     /// <summary>
     /// Converts an handle into a <see cref="ProcessThread"/> object assuming this is a thread handle.
     /// </summary>
@@ -87,9 +80,7 @@ public static class HandleManipulator
         // If no thread was found, throws a exception like the First() function with no element
         throw new InvalidOperationException("Sequence contains no matching element");
     }
-    #endregion
 
-    #region HandleToThreadId
     /// <summary>
     /// Converts an handle into a thread id assuming this is a thread handle.
     /// </summary>
@@ -110,9 +101,7 @@ public static class HandleManipulator
         //Else the function failed, throws an exception
         throw new Win32Exception("Couldn't find the thread id of the specified handle.");
     }
-    #endregion
 
-    #region ValidateAsArgument
     /// <summary>
     /// Validates an handle to fit correctly as argument.
     /// </summary>
@@ -144,5 +133,4 @@ public static class HandleManipulator
         if(handle.IsClosed || handle.IsInvalid)
             throw new ArgumentException("The handle is not valid or closed.", argumentName);
     }
-    #endregion
 }

@@ -9,7 +9,9 @@
 
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using System.Text;
 using Binarysharp.Internals;
+using Binarysharp.Memory;
 using Binarysharp.MemoryManagement;
 using Binarysharp.MemoryManagement.Native;
 
@@ -74,28 +76,35 @@ public class ThreadFactory : IFactory
     /// <param name="parameter">A variable to be passed to the thread function.</param>
     /// <param name="isStarted">Sets if the thread must be started just after being created.</param>
     /// <returns>A new instance of the <see cref="RemoteThread"/> class.</returns>
-    public RemoteThread Create(nint address, dynamic parameter, bool isStarted = true)
+    public async Task<RemoteThread> Create(nint address, dynamic parameter, bool isStarted = true)
     {
-        // Marshal the parameter
-        var marshalledParameter = MarshalValue.Marshal(MemorySharp, parameter);
+        // alocating some memory on the target process - enough to store the name of the dll and storing its address in a pointer
+        var allocMemAddress = MemoryCore.Allocate(MemorySharp.Handle, (uint)parameter.Length);
 
-        //Create the thread
-        var ret = ThreadCore.NtQueryInformationThread(ThreadCore.CreateRemoteThread(MemorySharp.Handle, address, marshalledParameter.Reference, ThreadCreationFlags.Suspended));
+        // writing the name of the dll there
+        MemorySharp.Write(allocMemAddress, Encoding.Default.GetBytes(parameter), false);
 
-        // Get the native thread previously created
-        // Loop until the native thread is retrieved
-        ProcessThread? nativeThread;
+        // creating a thread that will call LoadLibraryA with allocMemAddress as argument
+        var tuple = ThreadCore.CreateRemoteThread(MemorySharp.Handle, address, allocMemAddress, ThreadCreationFlags.Run);
+
+        Trace.WriteLine($"[*] Thread ID: {tuple.Item1}");
+
+        // Get the native thread previously created & loop until the native thread is retrieved
+        RemoteThread? result;
         do
         {
-            nativeThread = MemorySharp.Threads.NativeThreads.FirstOrDefault(t => t.Id == ret.ThreadId);
-        } while (nativeThread == null);
-
-        // Find the managed object corresponding to this thread
-        var result = new RemoteThread(MemorySharp, nativeThread, marshalledParameter);
+            result = MemorySharp.Threads.RemoteThreads.FirstOrDefault(x => x.Id == tuple.Item2);
+            if (result is null)
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
+                MemorySharp.Native.Refresh();
+            }
+        } while (result is null);
 
         // If the thread must be started
         if (isStarted)
             result.Resume();
+
         return result;
     }
 
@@ -110,9 +119,10 @@ public class ThreadFactory : IFactory
     /// <returns>A new instance of the <see cref="RemoteThread"/> class.</returns>
     public RemoteThread Create(nint address, bool isStarted = true)
     {
+        var tuple = ThreadCore.CreateRemoteThread(MemorySharp.Handle, address, nint.Zero, ThreadCreationFlags.Suspended);
+
         // Create the thread
-        var ret = ThreadCore.NtQueryInformationThread(
-            ThreadCore.CreateRemoteThread(MemorySharp.Handle, address, nint.Zero, ThreadCreationFlags.Suspended));
+        var ret = ThreadCore.NtQueryInformationThread(tuple.Item1);
 
         // Get the native thread previously created
         // Loop until the native thread is retrieved
@@ -174,6 +184,8 @@ public class ThreadFactory : IFactory
     public void Dispose()
     {
         // Nothing to dispose... yet
+
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>

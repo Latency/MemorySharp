@@ -16,7 +16,6 @@ namespace Binarysharp.MemoryManagement.Native;
 /// </summary>
 public class ManagedPeb : RemotePointer
 {
-    #region Properties
     public byte InheritedAddressSpace
     {
         get => Read<byte>(PebStructure.InheritedAddressSpace);
@@ -281,8 +280,7 @@ public class ManagedPeb : RemotePointer
     {
         get => Read<nint>(PebStructure.TlsExpansionBitmapBits, 0x20);
         set => Write(PebStructure.TlsExpansionBitmapBits, value);
-    }
-    public nint SessionId
+    } public nint SessionId
     {
         get => Read<nint>(PebStructure.SessionId);
         set => Write(PebStructure.SessionId, value);
@@ -337,9 +335,7 @@ public class ManagedPeb : RemotePointer
         get => Read<nint>(PebStructure.MinimumStackCommit);
         set => Write(PebStructure.MinimumStackCommit, value);
     }
-    #endregion
 
-    #region Constructor
     /// <summary>
     /// Initializes a new instance of the <see cref="ManagedPeb"/> class.
     /// </summary>
@@ -347,15 +343,11 @@ public class ManagedPeb : RemotePointer
     /// <param name="address">The location of the peb.</param>
     internal ManagedPeb(MemorySharp memorySharp, nint address) : base(memorySharp, address)
     {}
-    #endregion
 
-    #region Methods
     /// <summary>
     /// Finds the Process Environment Block address of a specified process.
     /// </summary>
     /// <param name="processHandle">A handle of the process.</param>
     /// <returns>A <see cref="nint"/> pointer of the PEB.</returns>
     public static nint FindPeb(SafeMemoryHandle processHandle) => MemoryCore.NtQueryInformationProcess(processHandle).PebBaseAddress;
-
-    #endregion
 }

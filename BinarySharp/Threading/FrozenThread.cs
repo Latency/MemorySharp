@@ -14,36 +14,36 @@ namespace Binarysharp.Threading;
 /// </summary>
 public class FrozenThread : IDisposable
 {
-    #region Properties
     /// <summary>
     /// The frozen thread.
     /// </summary>
-    public RemoteThread Thread { get; private set; }
-    #endregion
+    public RemoteThread Thread { get; }
 
-    #region Constructor
     /// <summary>
     /// Initializes a new instance of the <see cref="FrozenThread"/> class.
     /// </summary>
     /// <param name="thread">The frozen thread.</param>
     internal FrozenThread(RemoteThread thread) => Thread = thread;
 
-    #endregion
+    /// <summary>
+    /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection. 
+    /// </summary>
+    ~FrozenThread() => Dispose();
 
-    #region Methods
-    #region Dispose (implementation of IDisposable)
     /// <summary>
     /// Releases all resources used by the <see cref="RemoteThread"/> object.
     /// </summary>
-    public virtual void Dispose() => Thread.Resume();
+    public virtual void Dispose()
+    {
+        // Resume the thread.
+        Thread.Resume();
 
-    #endregion
-    #region ToString (override)
+        // Avoid the finalizer
+        GC.SuppressFinalize(this);
+    }
+
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>
     public override string ToString() => $"Id = {Thread.Id}";
-
-    #endregion
-    #endregion
 }

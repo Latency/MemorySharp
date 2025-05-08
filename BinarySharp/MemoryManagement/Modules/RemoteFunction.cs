@@ -16,26 +16,13 @@ namespace Binarysharp.MemoryManagement.Modules;
 /// </summary>
 public class RemoteFunction(MemorySharp memorySharp, nint address, string functionName) : RemotePointer(memorySharp, address)
 {
-    #region Properties
     /// <summary>
     /// The name of the function.
     /// </summary>
-    public string Name { get; private set; } = functionName;
-    #endregion
+    public string Name { get; } = functionName;
 
-    #region Constructor
-
-    // Save the parameter
-
-    #endregion
-
-    #region Methods
-    #region ToString (override)
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>
     public override string ToString() => $"BaseAddress = 0x{BaseAddress.ToInt64():X} Name = {Name}";
-
-    #endregion
-    #endregion
 }
