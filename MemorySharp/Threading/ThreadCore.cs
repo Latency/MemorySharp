@@ -106,8 +106,10 @@ public static class ThreadCore
             case Architecture.LoongArch64:
             case Architecture.Armv6:
             case Architecture.Ppc64le:
+#if NET9_0_OR_GREATER
             case Architecture.RiscV64:
                 throw new NotSupportedException();
+#endif
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -231,8 +233,10 @@ public static class ThreadCore
             case Architecture.LoongArch64:
             case Architecture.Armv6:
             case Architecture.Ppc64le:
+#if NET9_0_OR_GREATER
             case Architecture.RiscV64:
                 throw new NotSupportedException();
+#endif
             default:
                 throw new ArgumentOutOfRangeException();
         }
