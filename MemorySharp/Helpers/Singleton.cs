@@ -6,7 +6,7 @@
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
  */
-namespace Binarysharp.Helpers;
+namespace MemorySharp.Helpers;
 
 /// <summary>
 /// Static helper used to create or get a singleton from another class.

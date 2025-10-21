@@ -6,7 +6,7 @@
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
  */
-namespace Binarysharp.Internals;
+namespace MemorySharp.Internals;
 
 /// <summary>
 /// Defines a element with a name.

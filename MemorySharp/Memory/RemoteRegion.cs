@@ -7,10 +7,10 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.MemoryManagement;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.MemoryManagement;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Memory;
+namespace MemorySharp.Memory;
 
 /// <summary>
 /// Represents a contiguous block of memory in the remote process.
@@ -32,7 +32,7 @@ public class RemoteRegion : RemotePointer, IEquatable<RemoteRegion>
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     /// <param name="baseAddress">The base address of the memory region.</param>
-    internal RemoteRegion(MemorySharp memorySharp, nint baseAddress) : base(memorySharp, baseAddress)
+    internal RemoteRegion(MemoryManagement.MemorySharp memorySharp, nint baseAddress) : base(memorySharp, baseAddress)
     {
     }
 
@@ -64,7 +64,7 @@ public class RemoteRegion : RemotePointer, IEquatable<RemoteRegion>
     }
 
     /// <summary>
-    /// Serves as a hash function for a particular type. 
+    /// Serves as a hash function for a particular type.
     /// </summary>
     public override int GetHashCode() => BaseAddress.GetHashCode() ^ MemorySharp.GetHashCode() ^ Information.RegionSize.GetHashCode();
 

@@ -6,7 +6,7 @@
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
  */
-namespace Binarysharp.Threading;
+namespace MemorySharp.Threading;
 
 #region SegmentRegisters
 /// <summary>

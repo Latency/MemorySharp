@@ -7,11 +7,11 @@
  * See the file LICENSE for more information.
 */
 
+using MemorySharp.Internals;
+using MemorySharp.Memory;
 using System.Diagnostics;
-using Binarysharp.Internals;
-using Binarysharp.Memory;
 
-namespace Binarysharp.MemoryManagement.Modules;
+namespace MemorySharp.MemoryManagement.Modules;
 
 /// <summary>
 /// Class providing tools for manipulating modules and libraries.
@@ -19,14 +19,14 @@ namespace Binarysharp.MemoryManagement.Modules;
 public class ModuleFactory : IFactory
 {
     /// <summary>
-    /// The reference of the <see cref="Binarysharp.MemoryManagement.MemorySharp"/> object.
+    /// The reference of the <see cref="MemoryManagement.MemorySharp"/> object.
     /// </summary>
     protected readonly MemorySharp MemorySharp;
 
     /// <summary>
     /// The list containing all injected modules (writable).
     /// </summary>
-    protected readonly List<InjectedModule> InternalInjectedModules; 
+    protected readonly List<InjectedModule> InternalInjectedModules;
 
     /// <summary>
     /// A collection containing all injected modules.
@@ -62,12 +62,12 @@ public class ModuleFactory : IFactory
     /// </summary>
     /// <param name="moduleName">The name of module (not case sensitive).</param>
     /// <returns>A new instance of a <see cref="RemoteModule"/> class.</returns>
-    public RemoteModule this[string moduleName] => FetchModule(moduleName);
+    public RemoteModule this[string moduleName] => FetchModule(moduleName).ConfigureAwait(false).GetAwaiter().GetResult();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModuleFactory"/> class.
     /// </summary>
-    /// <param name="memorySharp">The reference of the <see cref="Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+    /// <param name="memorySharp">The reference of the <see cref="MemoryManagement.MemorySharp"/> object.</param>
     internal ModuleFactory(MemorySharp memorySharp)
     {
         // Save the parameter
@@ -141,17 +141,36 @@ public class ModuleFactory : IFactory
     /// </summary>
     /// <param name="moduleName">A module name (not case sensitive). If the file name extension is omitted, the default library extension .dll is appended.</param>
     /// <returns>A new instance of a <see cref="RemoteModule"/> class.</returns>
-    protected RemoteModule FetchModule(string moduleName)
+    protected async Task<RemoteModule> FetchModule(string moduleName)
     {
         // Convert module name with lower chars
-        moduleName = moduleName.ToLower();
+        //moduleName = moduleName.ToLower();
 
         // Check if the module name has an extension
         if (!Path.HasExtension(moduleName))
             moduleName += ".dll";
 
+        ProcessModule? mod;
+
+        do
+        {
+            var modules = NativeModules.OrderBy(m => m.FileName).ToList();
+            mod = modules.FirstOrDefault(Condition);
+            if (mod is not null)
+                break;
+
+            await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
+            MemorySharp.Native.Refresh();
+        }
+        while (mod == null);
+
+        if (mod is null)
+            throw new NullReferenceException();
+
         // Fetch and return the module
-        return new RemoteModule(MemorySharp, NativeModules.First(m => m.ModuleName.ToLower() == moduleName));
+        return new RemoteModule(MemorySharp, mod);
+
+        bool Condition(ProcessModule m) => m.ModuleName.Equals(moduleName, StringComparison.CurrentCultureIgnoreCase);
     }
 
     /// <summary>
@@ -159,7 +178,7 @@ public class ModuleFactory : IFactory
     /// </summary>
     /// <param name="module">A module in the remote process.</param>
     /// <returns>A new instance of a <see cref="RemoteModule"/> class.</returns>
-    private RemoteModule FetchModule(ProcessModule module) => FetchModule(module.ModuleName);
+    private RemoteModule FetchModule(ProcessModule module) => FetchModule(module.ModuleName).ConfigureAwait(false).GetAwaiter().GetResult();
 
     /// <summary>
     /// Injects the specified module into the address space of the remote process.

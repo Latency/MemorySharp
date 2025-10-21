@@ -7,9 +7,9 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.Memory;
+using MemorySharp.Memory;
 
-namespace Binarysharp.Internals;
+namespace MemorySharp.Internals;
 
 /// <summary>
 /// Interface representing a value within the memory of a remote process.

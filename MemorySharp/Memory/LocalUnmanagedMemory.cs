@@ -10,7 +10,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace Binarysharp.Memory;
+namespace MemorySharp.Memory;
 
 /// <summary>
 /// Class representing a block of memory allocated in the local process.

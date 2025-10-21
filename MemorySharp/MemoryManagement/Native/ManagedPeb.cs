@@ -7,9 +7,9 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.Memory;
+using MemorySharp.Memory;
 
-namespace Binarysharp.MemoryManagement.Native;
+namespace MemorySharp.MemoryManagement.Native;
 
 /// <summary>
 /// Class representing the Process Environment Block of a remote process.

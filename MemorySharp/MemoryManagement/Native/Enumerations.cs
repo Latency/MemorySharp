@@ -9,7 +9,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Binarysharp.MemoryManagement.Native;
+namespace MemorySharp.MemoryManagement.Native;
 
 /// <summary>
 /// Flash window flags list.
@@ -68,11 +68,11 @@ public enum KeyboardFlags
     /// </summary>
     KeyUp = 2,
     /// <summary>
-    /// If specified, <see cref="KeyboardInput.ScanCode"/> identifies the key and <see cref="KeyboardInput.VirtualKey"/> is ignored. 
+    /// If specified, <see cref="KeyboardInput.ScanCode"/> identifies the key and <see cref="KeyboardInput.VirtualKey"/> is ignored.
     /// </summary>
     ScanCode = 8,
     /// <summary>
-    /// If specified, the system synthesizes a VK_PACKET keystroke. The <see cref="KeyboardInput.VirtualKey"/> parameter must be zero. 
+    /// If specified, the system synthesizes a VK_PACKET keystroke. The <see cref="KeyboardInput.VirtualKey"/> parameter must be zero.
     /// This flag can only be combined with the KEYEVENTF_KEYUP flag.
     /// </summary>
     Unicode = 4
@@ -287,40 +287,40 @@ public enum Keys
 public enum MemoryAllocationFlags
 {
     /// <summary>
-    /// Allocates memory charges (from the overall size of memory and the paging files on disk) for the specified reserved memory pages. 
-    /// The function also guarantees that when the caller later initially accesses the memory, the contents will be zero. 
+    /// Allocates memory charges (from the overall size of memory and the paging files on disk) for the specified reserved memory pages.
+    /// The function also guarantees that when the caller later initially accesses the memory, the contents will be zero.
     /// Actual physical pages are not allocated unless/until the virtual addresses are actually accessed.
     /// To reserve and commit pages in one step, call <see cref="NativeMethods.VirtualAllocEx"/> with MEM_COMMIT | MEM_RESERVE.
     /// The function fails if you attempt to commit a page that has not been reserved. The resulting error code is ERROR_INVALID_ADDRESS.
-    /// An attempt to commit a page that is already committed does not cause the function to fail. 
+    /// An attempt to commit a page that is already committed does not cause the function to fail.
     /// This means that you can commit pages without first determining the current commitment state of each page.
     /// </summary>
     Commit = 0x00001000,
     /// <summary>
     /// Reserves a range of the process's virtual address space without allocating any actual physical storage in memory or in the paging file on disk.
-    /// You commit reserved pages by calling <see cref="NativeMethods.VirtualAllocEx"/> again with MEM_COMMIT. 
+    /// You commit reserved pages by calling <see cref="NativeMethods.VirtualAllocEx"/> again with MEM_COMMIT.
     /// To reserve and commit pages in one step, call VirtualAllocEx with MEM_COMMIT | MEM_RESERVE.
     /// Other memory allocation functions, such as malloc and LocalAlloc, cannot use reserved memory until it has been released.
     /// </summary>
     Reserve = 0x00002000,
     /// <summary>
-    /// Indicates that data in the memory range specified by lpAddress and dwSize is no longer of interest. 
+    /// Indicates that data in the memory range specified by lpAddress and dwSize is no longer of interest.
     /// The pages should not be read from or written to the paging file.
     ///  However, the memory block will be used again later, so it should not be decommitted. This value cannot be used with any other value.
     /// Using this value does not guarantee that the range operated on with MEM_RESET will contain zeros. If you want the range to contain zeros, decommit the memory and then recommit it.
     /// When you use MEM_RESET, the VirtualAllocEx function ignores the value of fProtect. However, you must still set fProtect to a valid protection value, such as PAGE_NOACCESS.
-    /// <see cref="NativeMethods.VirtualAllocEx"/> returns an error if you use MEM_RESET and the range of memory is mapped to a file. 
+    /// <see cref="NativeMethods.VirtualAllocEx"/> returns an error if you use MEM_RESET and the range of memory is mapped to a file.
     /// A shared view is only acceptable if it is mapped to a paging file.
     /// </summary>
     Reset = 0x00080000,
     /// <summary>
-    /// MEM_RESET_UNDO should only be called on an address range to which MEM_RESET was successfully applied earlier. 
-    /// It indicates that the data in the specified memory range specified by lpAddress and dwSize is of interest to the caller and attempts to reverse the effects of MEM_RESET. 
-    /// If the function succeeds, that means all data in the specified address range is intact. 
+    /// MEM_RESET_UNDO should only be called on an address range to which MEM_RESET was successfully applied earlier.
+    /// It indicates that the data in the specified memory range specified by lpAddress and dwSize is of interest to the caller and attempts to reverse the effects of MEM_RESET.
+    /// If the function succeeds, that means all data in the specified address range is intact.
     /// If the function fails, at least some of the data in the address range has been replaced with zeroes.
-    /// This value cannot be used with any other value. 
-    /// If MEM_RESET_UNDO is called on an address range which was not MEM_RESET earlier, the behavior is undefined. 
-    /// When you specify MEM_RESET, the <see cref="NativeMethods.VirtualAllocEx"/> function ignores the value of flProtect. 
+    /// This value cannot be used with any other value.
+    /// If MEM_RESET_UNDO is called on an address range which was not MEM_RESET earlier, the behavior is undefined.
+    /// When you specify MEM_RESET, the <see cref="NativeMethods.VirtualAllocEx"/> function ignores the value of flProtect.
     /// However, you must still set flProtect to a valid protection value, such as PAGE_NOACCESS.
     /// </summary>
     ResetUndo = 0x1000000,
@@ -365,10 +365,10 @@ public enum MemoryProtectionFlags
     /// </summary>
     ExecuteReadWrite = 0x40,
     /// <summary>
-    /// Enables execute, read-only, or copy-on-write access to a mapped view of a file mapping object. 
-    /// An attempt to write to a committed copy-on-write page results in a private copy of the page being made for the process. 
+    /// Enables execute, read-only, or copy-on-write access to a mapped view of a file mapping object.
+    /// An attempt to write to a committed copy-on-write page results in a private copy of the page being made for the process.
     /// The private page is marked as PAGE_EXECUTE_READWRITE, and the change is written to the new page.
-    /// This flag is not supported by the VirtualAlloc or <see cref="NativeMethods.VirtualAllocEx"/> functions. 
+    /// This flag is not supported by the VirtualAlloc or <see cref="NativeMethods.VirtualAllocEx"/> functions.
     /// </summary>
     ExecuteWriteCopy = 0x80,
     /// <summary>
@@ -377,26 +377,26 @@ public enum MemoryProtectionFlags
     /// </summary>
     NoAccess = 0x01,
     /// <summary>
-    /// Enables read-only access to the committed region of pages. An attempt to write to the committed region results in an access violation. 
+    /// Enables read-only access to the committed region of pages. An attempt to write to the committed region results in an access violation.
     /// If Data Execution Prevention is enabled, an attempt to execute code in the committed region results in an access violation.
     /// </summary>
     ReadOnly = 0x02,
     /// <summary>
-    /// Enables read-only or read/write access to the committed region of pages. 
+    /// Enables read-only or read/write access to the committed region of pages.
     /// If Data Execution Prevention is enabled, attempting to execute code in the committed region results in an access violation.
     /// </summary>
     ReadWrite = 0x04,
     /// <summary>
-    /// Enables read-only or copy-on-write access to a mapped view of a file mapping object. 
-    /// An attempt to write to a committed copy-on-write page results in a private copy of the page being made for the process. 
-    /// The private page is marked as PAGE_READWRITE, and the change is written to the new page. 
+    /// Enables read-only or copy-on-write access to a mapped view of a file mapping object.
+    /// An attempt to write to a committed copy-on-write page results in a private copy of the page being made for the process.
+    /// The private page is marked as PAGE_READWRITE, and the change is written to the new page.
     /// If Data Execution Prevention is enabled, attempting to execute code in the committed region results in an access violation.
     /// This flag is not supported by the VirtualAlloc or <see cref="NativeMethods.VirtualAllocEx"/> functions.
     /// </summary>
     WriteCopy = 0x08,
     /// <summary>
-    /// Pages in the region become guard pages. 
-    /// Any attempt to access a guard page causes the system to raise a STATUS_GUARD_PAGE_VIOLATION exception and turn off the guard page status. 
+    /// Pages in the region become guard pages.
+    /// Any attempt to access a guard page causes the system to raise a STATUS_GUARD_PAGE_VIOLATION exception and turn off the guard page status.
     /// Guard pages thus act as a one-time access alarm. For more information, see Creating Guard Pages.
     /// When an access attempt leads the system to turn off guard page status, the underlying page protection takes over.
     /// If a guard page exception occurs during a system service, the service typically returns a failure status indicator.
@@ -405,19 +405,19 @@ public enum MemoryProtectionFlags
     /// </summary>
     Guard = 0x100,
     /// <summary>
-    /// Sets all pages to be non-cachable. Applications should not use this attribute except when explicitly required for a device. 
+    /// Sets all pages to be non-cachable. Applications should not use this attribute except when explicitly required for a device.
     /// Using the interlocked functions with memory that is mapped with SEC_NOCACHE can result in an EXCEPTION_ILLEGAL_INSTRUCTION exception.
     /// The PAGE_NOCACHE flag cannot be used with the PAGE_GUARD, PAGE_NOACCESS, or PAGE_WRITECOMBINE flags.
-    /// The PAGE_NOCACHE flag can be used only when allocating private memory with the VirtualAlloc, <see cref="NativeMethods.VirtualAllocEx"/>, or VirtualAllocExNuma functions. 
+    /// The PAGE_NOCACHE flag can be used only when allocating private memory with the VirtualAlloc, <see cref="NativeMethods.VirtualAllocEx"/>, or VirtualAllocExNuma functions.
     /// To enable non-cached memory access for shared memory, specify the SEC_NOCACHE flag when calling the CreateFileMapping function.
     /// </summary>
     NoCache = 0x200,
     /// <summary>
     /// Sets all pages to be write-combined.
-    /// Applications should not use this attribute except when explicitly required for a device. 
+    /// Applications should not use this attribute except when explicitly required for a device.
     /// Using the interlocked functions with memory that is mapped as write-combined can result in an EXCEPTION_ILLEGAL_INSTRUCTION exception.
     /// The PAGE_WRITECOMBINE flag cannot be specified with the PAGE_NOACCESS, PAGE_GUARD, and PAGE_NOCACHE flags.
-    /// The PAGE_WRITECOMBINE flag can be used only when allocating private memory with the VirtualAlloc, <see cref="NativeMethods.VirtualAllocEx"/>, or VirtualAllocExNuma functions. 
+    /// The PAGE_WRITECOMBINE flag can be used only when allocating private memory with the VirtualAlloc, <see cref="NativeMethods.VirtualAllocEx"/>, or VirtualAllocExNuma functions.
     /// To enable write-combined memory access for shared memory, specify the SEC_WRITECOMBINE flag when calling the CreateFileMapping function.
     /// </summary>
     WriteCombine = 0x400
@@ -431,17 +431,17 @@ public enum MemoryReleaseFlags
 {
     /// <summary>
     /// Decommits the specified region of committed pages. After the operation, the pages are in the reserved state.
-    /// The function does not fail if you attempt to decommit an uncommitted page. 
+    /// The function does not fail if you attempt to decommit an uncommitted page.
     /// This means that you can decommit a range of pages without first determining their current commitment state.
     /// Do not use this value with MEM_RELEASE.
     /// </summary>
     Decommit = 0x4000,
     /// <summary>
     /// Releases the specified region of pages. After the operation, the pages are in the free state.
-    /// If you specify this value, dwSize must be 0 (zero), and lpAddress must point to the base address returned by the VirtualAllocEx function when the region is reserved. 
+    /// If you specify this value, dwSize must be 0 (zero), and lpAddress must point to the base address returned by the VirtualAllocEx function when the region is reserved.
     /// The function fails if either of these conditions is not met.
     /// If any pages in the region are committed currently, the function first decommits, and then releases them.
-    /// The function does not fail if you attempt to release pages that are in different states, some reserved and some committed. 
+    /// The function does not fail if you attempt to release pages that are in different states, some reserved and some committed.
     /// This means that you can release a range of pages without first determining the current commitment state.
     /// Do not use this value with MEM_DECOMMIT.
     /// </summary>
@@ -459,12 +459,12 @@ public enum MemoryStateFlags
     /// </summary>
     Commit = 0x1000,
     /// <summary>
-    /// Indicates free pages not accessible to the calling process and available to be allocated. 
+    /// Indicates free pages not accessible to the calling process and available to be allocated.
     /// For free pages, the information in the AllocationBase, AllocationProtect, Protect, and Type members is undefined.
     /// </summary>
     Free = 0x10000,
     /// <summary>
-    /// Indicates reserved pages where a range of the process's virtual address space is reserved without any physical storage being allocated. 
+    /// Indicates reserved pages where a range of the process's virtual address space is reserved without any physical storage being allocated.
     /// For reserved pages, the information in the Protect member is undefined.
     /// </summary>
     Reserve = 0x2000
@@ -501,7 +501,7 @@ public enum MemoryTypeFlags
 public enum MouseFlags
 {
     /// <summary>
-    /// The DeltaX and DeltaY members contain normalized absolute coordinates. If the flag is not set, DeltaX and DeltaY contain relative data 
+    /// The DeltaX and DeltaY members contain normalized absolute coordinates. If the flag is not set, DeltaX and DeltaY contain relative data
     /// (the change in position since the last reported position). This flag can be set, or not set, regardless of what kind of mouse or other
     /// pointing device, if any, is connected to the system.
     /// </summary>
@@ -549,7 +549,7 @@ public enum MouseFlags
     /// </summary>
     VirtualDesk = 0x4000,
     /// <summary>
-    /// The wheel was moved, if the mouse has a wheel. The amount of movement is specified in MouseData. 
+    /// The wheel was moved, if the mouse has a wheel. The amount of movement is specified in MouseData.
     /// </summary>
     Wheel = 0x800,
     /// <summary>
@@ -698,7 +698,7 @@ public enum ProcessAccessFlags
     /// </summary>
     QueryInformation = 0x0400,
     /// <summary>
-    /// Required to retrieve certain information about a process (see GetExitCodeProcess, GetPriorityClass, IsProcessInJob, QueryFullProcessImageName). 
+    /// Required to retrieve certain information about a process (see GetExitCodeProcess, GetPriorityClass, IsProcessInJob, QueryFullProcessImageName).
     /// A handle that has the PROCESS_QUERY_INFORMATION access right is automatically granted PROCESS_QUERY_LIMITED_INFORMATION.
     /// </summary>
     QueryLimitedInformation = 0x1000,
@@ -742,12 +742,12 @@ public enum ProcessAccessFlags
 public enum ProcessInformationClass
 {
     /// <summary>
-    /// Retrieves a pointer to a PEB structure that can be used to determine whether the specified process is being debugged, 
-    /// and a unique value used by the system to identify the specified process. 
+    /// Retrieves a pointer to a PEB structure that can be used to determine whether the specified process is being debugged,
+    /// and a unique value used by the system to identify the specified process.
     /// </summary>
     ProcessBasicInformation = 0x0,
     /// <summary>
-    /// Retrieves a DWORD_PTR value that is the port number of the debugger for the process. 
+    /// Retrieves a DWORD_PTR value that is the port number of the debugger for the process.
     /// A nonzero value indicates that the process is being run under the control of a ring 3 debugger.
     /// </summary>
     ProcessDebugPort = 0x7,
@@ -994,7 +994,7 @@ public enum ThreadAccessFlags
     /// </summary>
     QueryInformation = 0x0040,
     /// <summary>
-    /// Required to read certain information from the thread objects (see <see cref="NativeMethods.GetThreadContext"/>). 
+    /// Required to read certain information from the thread objects (see <see cref="NativeMethods.GetThreadContext"/>).
     /// A handle that has the THREAD_QUERY_INFORMATION access right is automatically granted THREAD_QUERY_LIMITED_INFORMATION.
     /// </summary>
     QueryLimitedInformation = 0x0800,
@@ -1063,7 +1063,7 @@ public enum ThreadContextFlags
     /// </summary>
     ExtendedRegisters = Intel386 | 0x20,
     /// <summary>
-    /// All flags excepted FloatingPoint, DebugRegisters and ExtendedRegisters. 
+    /// All flags excepted FloatingPoint, DebugRegisters and ExtendedRegisters.
     /// </summary>
     Full = Control | Integer | Segments,
     /// <summary>
@@ -1098,24 +1098,24 @@ public enum ThreadCreationFlags
 public enum TranslationTypes
 {
     /// <summary>
-    /// uCode is a virtual-key code and is translated into a scan code. 
-    /// If it is a virtual-key code that does not distinguish between left- and right-hand keys, the left-hand scan code is returned. 
+    /// uCode is a virtual-key code and is translated into a scan code.
+    /// If it is a virtual-key code that does not distinguish between left- and right-hand keys, the left-hand scan code is returned.
     /// If there is no translation, the function returns 0.
     /// </summary>
     VirtualKeyToScanCode = 0,
     /// <summary>
-    /// uCode is a scan code and is translated into a virtual-key code that does not distinguish between left- and right-hand keys. 
+    /// uCode is a scan code and is translated into a virtual-key code that does not distinguish between left- and right-hand keys.
     /// If there is no translation, the function returns 0.
     /// </summary>
     ScanCodeToVirtualKey = 1,
     /// <summary>
-    /// uCode is a virtual-key code and is translated into an unshifted character value in the low-order word of the return value. 
-    /// Dead keys (diacritics) are indicated by setting the top bit of the return value. 
+    /// uCode is a virtual-key code and is translated into an unshifted character value in the low-order word of the return value.
+    /// Dead keys (diacritics) are indicated by setting the top bit of the return value.
     /// If there is no translation, the function returns 0.
     /// </summary>
     VirtualKeyToChar = 2,
     /// <summary>
-    /// uCode is a scan code and is translated into a virtual-key code that distinguishes between left- and right-hand keys. 
+    /// uCode is a scan code and is translated into a virtual-key code that distinguishes between left- and right-hand keys.
     /// If there is no translation, the function returns 0.
     /// </summary>
     ScanCodeToVirtualKeyEx = 3
@@ -2054,11 +2054,11 @@ public enum WindowsMessages : uint
     /// </summary>
     AfxLast = 0x037F,
     /// <summary>
-    /// Specifies the first penwin msg 
+    /// Specifies the first penwin msg
     /// </summary>
     PenwinFirst = 0x0380,
     /// <summary>
-    /// Specifies the last penwin msg 
+    /// Specifies the last penwin msg
     /// </summary>
     PenwinLast = 0x038F,
     /// <summary>
@@ -2092,7 +2092,7 @@ public enum WindowStates
     /// <summary>Hides the window and activates another window.</summary>
     Hide = 0,
     /// <summary>
-    /// Activates and displays a window. If the window is minimized or maximized, the system restores it to its original size and position. 
+    /// Activates and displays a window. If the window is minimized or maximized, the system restores it to its original size and position.
     /// An application should specify this flag when displaying the window for the first time.
     /// </summary>
     ShowNormal = 1,
@@ -2130,17 +2130,17 @@ public enum WindowStates
     /// </summary>
     ShowNoActivate = 8,
     /// <summary>
-    /// Activates and displays the window. If the window is minimized or maximized, the system restores it to its original size and position. 
+    /// Activates and displays the window. If the window is minimized or maximized, the system restores it to its original size and position.
     /// An application should specify this flag when restoring a minimized window.
     /// </summary>
     Restore = 9,
     /// <summary>
-    /// Sets the show state based on the <see cref="WindowStates"/> value specified in the STARTUPINFO structure passed to the CreateProcess 
+    /// Sets the show state based on the <see cref="WindowStates"/> value specified in the STARTUPINFO structure passed to the CreateProcess
     /// function by the program that started the application.
     /// </summary>
     ShowDefault = 10,
     /// <summary>
-    /// Windows 2000/XP: Minimizes a window, even if the thread that owns the window is hung. 
+    /// Windows 2000/XP: Minimizes a window, even if the thread that owns the window is hung.
     /// This flag should only be used when minimizing windows from a different thread.
     /// </summary>
     ForceMinimized = 11

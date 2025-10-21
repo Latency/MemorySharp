@@ -7,10 +7,9 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.Internals;
-using Binarysharp.MemoryManagement;
+using MemorySharp.Internals;
 
-namespace Binarysharp.Windows;
+namespace MemorySharp.Windows;
 
 /// <summary>
 /// Class providing tools for manipulating windows.
@@ -20,7 +19,7 @@ public class WindowFactory : IFactory
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
-    private readonly MemorySharp _memorySharp;
+    private readonly MemoryManagement.MemorySharp _memorySharp;
 
     /// <summary>
     /// Gets all the child windows that belong to the application.
@@ -63,7 +62,7 @@ public class WindowFactory : IFactory
     /// Initializes a new instance of the <see cref="WindowFactory"/> class.
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
-    internal WindowFactory(MemorySharp memorySharp) => _memorySharp = memorySharp;
+    internal WindowFactory(MemoryManagement.MemorySharp memorySharp) => _memorySharp = memorySharp;
 
     /// <summary>
     /// Releases all resources used by the <see cref="WindowFactory"/> object.

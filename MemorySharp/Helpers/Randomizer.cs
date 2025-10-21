@@ -9,7 +9,7 @@
 
 using System.Text;
 
-namespace Binarysharp.Helpers;
+namespace MemorySharp.Helpers;
 
 /// <summary>
 /// Static helper class providing tools for generating random numbers or strings.

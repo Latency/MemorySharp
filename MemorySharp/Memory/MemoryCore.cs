@@ -8,13 +8,13 @@
 */
 
 using System.ComponentModel;
-using Binarysharp.Helpers;
-using Binarysharp.Internals;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.Helpers;
+using MemorySharp.Internals;
+using MemorySharp.MemoryManagement.Native;
 using Microsoft.Win32.SafeHandles;
-using NativeMethods = Binarysharp.MemoryManagement.Native.NativeMethods;
+using NativeMethods = MemorySharp.MemoryManagement.Native.NativeMethods;
 
-namespace Binarysharp.Memory;
+namespace MemorySharp.Memory;
 
 /// <summary>
 /// Static core class providing tools for memory editing.
@@ -33,7 +33,7 @@ public static class MemoryCore
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
-            
+
         // Allocate a memory page
         var ret = NativeMethods.VirtualAllocEx(processHandle, nint.Zero, size, allocationFlags, protectionFlags);
 
@@ -128,7 +128,7 @@ public static class MemoryCore
         // Check if the handles are valid
         HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
         HandleManipulator.ValidateAsArgument(address,       "address");
-            
+
         // Allocate the buffer
         var buffer = new byte[size];
 
@@ -190,7 +190,7 @@ public static class MemoryCore
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
-            
+
         // Convert the addresses to Int64
         var numberFrom = addressFrom.ToInt64();
         var numberTo   = addressTo.ToInt64();
@@ -198,7 +198,7 @@ public static class MemoryCore
         // The first address must be lower than the second
         if (numberFrom >= numberTo)
             throw new ArgumentException("The starting address must be lower than the ending address.", nameof(addressFrom));
-            
+
         // Create the variable storing the result of the call of VirtualQueryEx
         int ret;
 

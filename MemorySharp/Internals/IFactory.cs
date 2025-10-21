@@ -7,7 +7,7 @@
  * See the file LICENSE for more information.
  */
 
-namespace Binarysharp.Internals;
+namespace MemorySharp.Internals;
 
 /// <summary>
 /// Define a factory for the library.

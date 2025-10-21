@@ -7,7 +7,7 @@
  * See the file LICENSE for more information.
  */
 
-namespace Binarysharp.Internals;
+namespace MemorySharp.Internals;
 
 /// <summary>
 /// Class managing objects implementing <see cref="INamedElement"/> interface.

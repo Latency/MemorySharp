@@ -10,12 +10,11 @@
 using System.Diagnostics;
 using System.Runtime.Versioning;
 using System.Text;
-using Binarysharp.Internals;
-using Binarysharp.Memory;
-using Binarysharp.MemoryManagement;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.Internals;
+using MemorySharp.Memory;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Threading;
+namespace MemorySharp.Threading;
 
 /// <summary>
 /// Class providing tools for manipulating threads.
@@ -25,7 +24,7 @@ public class ThreadFactory : IFactory
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
-    protected readonly MemorySharp MemorySharp;
+    protected readonly MemoryManagement.MemorySharp MemorySharp;
 
     /// <summary>
     /// Gets the main thread of the remote process.
@@ -64,13 +63,13 @@ public class ThreadFactory : IFactory
     /// Initializes a new instance of the <see cref="ThreadFactory"/> class.
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
-    internal ThreadFactory(MemorySharp memorySharp) => MemorySharp = memorySharp;
+    internal ThreadFactory(MemoryManagement.MemorySharp memorySharp) => MemorySharp = memorySharp;
 
     /// <summary>
     /// Creates a thread that runs in the remote process.
     /// </summary>
     /// <param name="address">
-    /// A pointer to the application-defined function to be executed by the thread and represents 
+    /// A pointer to the application-defined function to be executed by the thread and represents
     /// the starting address of the thread in the remote process.
     /// </param>
     /// <param name="parameter">A variable to be passed to the thread function.</param>
@@ -112,7 +111,7 @@ public class ThreadFactory : IFactory
     /// Creates a thread that runs in the remote process.
     /// </summary>
     /// <param name="address">
-    /// A pointer to the application-defined function to be executed by the thread and represents 
+    /// A pointer to the application-defined function to be executed by the thread and represents
     /// the starting address of the thread in the remote process.
     /// </param>
     /// <param name="isStarted">Sets if the thread must be started just after being created.</param>
@@ -145,7 +144,7 @@ public class ThreadFactory : IFactory
     /// Creates a thread in the remote process and blocks the calling thread until the thread terminates.
     /// </summary>
     /// <param name="address">
-    /// A pointer to the application-defined function to be executed by the thread and represents 
+    /// A pointer to the application-defined function to be executed by the thread and represents
     /// the starting address of the thread in the remote process.
     /// </param>
     /// <param name="parameter">A variable to be passed to the thread function.</param>
@@ -164,7 +163,7 @@ public class ThreadFactory : IFactory
     /// Creates a thread in the remote process and blocks the calling thread until the thread terminates.
     /// </summary>
     /// <param name="address">
-    /// A pointer to the application-defined function to be executed by the thread and represents 
+    /// A pointer to the application-defined function to be executed by the thread and represents
     /// the starting address of the thread in the remote process.
     /// </param>
     /// <returns>A new instance of the <see cref="RemoteThread"/> class.</returns>

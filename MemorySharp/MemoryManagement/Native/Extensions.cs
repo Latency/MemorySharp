@@ -7,7 +7,7 @@
 
 using System.Diagnostics;
 
-namespace Binarysharp.MemoryManagement.Native;
+namespace MemorySharp.MemoryManagement.Native;
 
 public static class Extensions
 {

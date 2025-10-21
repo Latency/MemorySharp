@@ -10,7 +10,7 @@
 using System.Diagnostics;
 using Microsoft.Win32.SafeHandles;
 
-namespace Binarysharp.MemoryManagement.Native;
+namespace MemorySharp.MemoryManagement.Native;
 
 /// <summary>
 /// Represents a Win32 handle safely managed.

@@ -7,10 +7,9 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.MemoryManagement;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Memory;
+namespace MemorySharp.Memory;
 
 /// <summary>
 /// Class providing tools for manipulating memory protection.
@@ -20,7 +19,7 @@ public class MemoryProtection : IDisposable
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
-    private readonly MemorySharp _memorySharp;
+    private readonly MemoryManagement.MemorySharp _memorySharp;
 
     /// <summary>
     /// The base address of the altered memory.
@@ -55,7 +54,7 @@ public class MemoryProtection : IDisposable
     /// <param name="size">The size of the memory to change.</param>
     /// <param name="protection">The new protection to apply.</param>
     /// <param name="mustBeDisposed">The resource will be automatically disposed when the finalizer collects the object.</param>
-    public MemoryProtection(MemorySharp memorySharp, nint baseAddress, int size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, bool mustBeDisposed = true)
+    public MemoryProtection(MemoryManagement.MemorySharp memorySharp, nint baseAddress, int size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, bool mustBeDisposed = true)
     {
         // Save the parameters
         _memorySharp   = memorySharp;
@@ -85,7 +84,7 @@ public class MemoryProtection : IDisposable
         // Restore the memory protection
         MemoryCore.ChangeProtection(_memorySharp.Handle, BaseAddress, Size, OldProtection);
 
-        // Avoid the finalizer 
+        // Avoid the finalizer
         GC.SuppressFinalize(this);
     }
 

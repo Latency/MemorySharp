@@ -8,9 +8,9 @@
 */
 
 using System.Diagnostics;
-using Binarysharp.Windows;
+using MemorySharp.Windows;
 
-namespace Binarysharp.Helpers;
+namespace MemorySharp.Helpers;
 
 /// <summary>
 /// Static helper class providing tools for finding applications.
@@ -49,7 +49,7 @@ public static class ApplicationFinder
     public static IEnumerable<Process> FromWindowClassName(string className) => Windows.Where(window => WindowCore.GetClassName(window) == className).Select(FromWindowHandle);
 
     /// <summary>
-    /// Retrieves a new <see cref="Process"/> component that created the window. 
+    /// Retrieves a new <see cref="Process"/> component that created the window.
     /// </summary>
     /// <param name="windowHandle">A handle to the window.</param>
     /// <returns>A <see cref="Process"/>A <see cref="Process"/> component that is associated with the specified window handle.</returns>

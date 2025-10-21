@@ -7,9 +7,9 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Windows.Mouse;
+namespace MemorySharp.Windows.Mouse;
 
 /// <summary>
 /// Class defining a virtual mouse using the API SendInput.

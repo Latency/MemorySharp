@@ -7,9 +7,9 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Windows.Keyboard;
+namespace MemorySharp.Windows.Keyboard;
 
 /// <summary>
 /// Class defining a virtual keyboard using the API Message.
@@ -71,7 +71,7 @@ public class MessageKeyboard(RemoteWindow window) : BaseKeyboard(window)
     /// The value is always 1 for a <see cref="WindowsMessages.KeyUp"/> message.
     /// </param>
     /// <param name="cRepeat">
-    /// [0-15 bits] The repeat count for the current message. 
+    /// [0-15 bits] The repeat count for the current message.
     /// The value is the number of times the keystroke is autorepeated as a result of the user holding down the key.
     /// If the keystroke is held long enough, multiple messages are sent. However, the repeat count is not cumulative.
     /// The repeat count is always 1 for a <see cref="WindowsMessages.KeyUp"/> message.
@@ -81,7 +81,7 @@ public class MessageKeyboard(RemoteWindow window) : BaseKeyboard(window)
     /// The value is always 0 for a <see cref="WindowsMessages.KeyDown"/> message.
     /// The value is always 0 for a <see cref="WindowsMessages.KeyUp"/> message.</param>
     /// <param name="fExtended">
-    /// [24 bit] Indicates whether the key is an extended key, such as the right-hand ALT and CTRL keys that appear on 
+    /// [24 bit] Indicates whether the key is an extended key, such as the right-hand ALT and CTRL keys that appear on
     /// an enhanced 101- or 102-key keyboard. The value is 1 if it is an extended key; otherwise, it is 0.
     /// </param>
     /// <returns>The return value is the lParam when posting or sending a message regarding key press.</returns>

@@ -9,9 +9,9 @@
 
 using System.ComponentModel;
 using System.Diagnostics;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Helpers;
+namespace MemorySharp.Helpers;
 
 /// <summary>
 /// Static helper class providing tools for manipulating handles.

@@ -10,11 +10,11 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Binarysharp.Helpers;
-using Binarysharp.Internals;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.Helpers;
+using MemorySharp.Internals;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Windows;
+namespace MemorySharp.Windows;
 
 /// <summary>
 /// Static core class providing tools for managing windows.
@@ -107,7 +107,7 @@ public static class WindowCore
     }
 
     /// <summary>
-    /// Retrieves the identifier of the process that created the window. 
+    /// Retrieves the identifier of the process that created the window.
     /// </summary>
     /// <param name="windowHandle">A handle to the window.</param>
     /// <returns>The return value is the identifier of the process that created the window.</returns>
@@ -165,25 +165,41 @@ public static class WindowCore
     /// <returns>A collection of handles of the child windows.</returns>
     public static IEnumerable<nint> EnumChildWindows(nint parentHandle)
     {
-        // Create the list of windows
-        var list = new List<nint>();
+        var childHandles = new List<nint>();
 
-        // Enumerate all windows
-        NativeMethods.EnumChildWindows(parentHandle, Callback, nint.Zero);
+        var gcChildhandlesList      = GCHandle.Alloc(childHandles);
+        var pointerChildHandlesList = GCHandle.ToIntPtr(gcChildhandlesList);
 
-        // Returns the list of the windows
-        return list.ToArray();
+        try
+        {
+            var childProc = new EnumWindowsProc(Callback);
+            NativeMethods.EnumChildWindows(parentHandle, childProc, pointerChildHandlesList);
+        }
+        finally
+        {
+            gcChildhandlesList.Free();
+        }
+
+        return childHandles;
 
         // Create the callback
-        bool Callback(nint windowHandle, nint lParam)
+        static bool Callback(nint windowHandle, nint lParam)
         {
-            list.Add(windowHandle);
+            var gcChildhandlesList = GCHandle.FromIntPtr(lParam);
+
+            if (gcChildhandlesList == null || gcChildhandlesList.Target == null)
+                return false;
+
+            var childHandles = gcChildhandlesList.Target as List<nint>;
+            childHandles?.Add(windowHandle);
+
             return true;
         }
     }
 
+
     /// <summary>
-    /// Enumerates all top-level windows on the screen. This function does not search child windows. 
+    /// Enumerates all top-level windows on the screen. This function does not search child windows.
     /// </summary>
     /// <returns>A collection of handles of top-level windows.</returns>
     public static IEnumerable<nint> EnumTopLevelWindows() => EnumChildWindows(nint.Zero);
@@ -194,7 +210,7 @@ public static class WindowCore
     /// </summary>
     /// <param name="windowHandle">A handle to the window to be flashed. The window can be either open or minimized.</param>
     /// <returns>
-    /// The return value specifies the window's state before the call to the <see cref="FlashWindow"/> function. 
+    /// The return value specifies the window's state before the call to the <see cref="FlashWindow"/> function.
     /// If the window caption was drawn as active before the call, the return value is nonzero. Otherwise, the return value is zero.
     /// </returns>
     public static bool FlashWindow(nint windowHandle)
@@ -205,6 +221,7 @@ public static class WindowCore
         // Flash the window
         return NativeMethods.FlashWindow(windowHandle, true);
     }
+
 
     /// <summary>
     /// Flashes the specified window. It does not change the active state of the window.
@@ -258,7 +275,7 @@ public static class WindowCore
     /// The translation to be performed. The value of this parameter depends on the value of the uCode parameter.
     /// </param>
     /// <returns>
-    /// The return value is either a scan code, a virtual-key code, or a character value, depending on the value of uCode and uMapType. 
+    /// The return value is either a scan code, a virtual-key code, or a character value, depending on the value of uCode and uMapType.
     /// If there is no translation, the return value is zero.
     /// </returns>
     public static uint MapVirtualKey(uint key, TranslationTypes translation) => NativeMethods.MapVirtualKey(key, translation);
@@ -274,7 +291,7 @@ public static class WindowCore
     /// The translation to be performed. The value of this parameter depends on the value of the uCode parameter.
     /// </param>
     /// <returns>
-    /// The return value is either a scan code, a virtual-key code, or a character value, depending on the value of uCode and uMapType. 
+    /// The return value is either a scan code, a virtual-key code, or a character value, depending on the value of uCode and uMapType.
     /// If there is no translation, the return value is zero.
     /// </returns>
     public static uint MapVirtualKey(Keys key, TranslationTypes translation) => MapVirtualKey((uint)key, translation);
@@ -357,7 +374,7 @@ public static class WindowCore
     public static nint SendMessage(nint windowHandle, WindowsMessages message, nint wParam, nint lParam) => SendMessage(windowHandle, (uint)message, wParam, lParam);
 
     /// <summary>
-    /// Brings the thread that created the specified window into the foreground and activates the window. 
+    /// Brings the thread that created the specified window into the foreground and activates the window.
     /// The window is restored if minimized. Performs no action if the window is already activated.
     /// </summary>
     /// <param name="windowHandle">A handle to the window that should be activated and brought to the foreground.</param>

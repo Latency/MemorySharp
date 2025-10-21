@@ -7,7 +7,7 @@
  * See the file LICENSE for more information.
  */
 
-namespace Binarysharp.Internals;
+namespace MemorySharp.Internals;
 
 /// <summary>
 /// Defines an IDisposable interface with a known state.

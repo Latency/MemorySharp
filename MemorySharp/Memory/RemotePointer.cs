@@ -9,10 +9,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Binarysharp.MemoryManagement;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Memory;
+namespace MemorySharp.Memory;
 
 /// <summary>
 /// Class representing a pointer in the memory of the remote process.
@@ -32,14 +31,14 @@ public class RemotePointer : IEquatable<RemotePointer>
     /// <summary>
     /// The reference of the <see cref="MemoryManagement.MemorySharp"/> object.
     /// </summary>
-    public MemorySharp MemorySharp { get; }
+    public MemoryManagement.MemorySharp MemorySharp { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RemotePointer"/> class.
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemoryManagement.MemorySharp"/> object.</param>
     /// <param name="address">The location where the pointer points in the remote process.</param>
-    public RemotePointer(MemorySharp memorySharp, nint address)
+    public RemotePointer(MemoryManagement.MemorySharp memorySharp, nint address)
     {
         // Save the parameters
         MemorySharp = memorySharp;
@@ -71,7 +70,7 @@ public class RemotePointer : IEquatable<RemotePointer>
     public bool Equals(RemotePointer? other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || BaseAddress.Equals(other.BaseAddress) && MemorySharp.Equals(other.MemorySharp));
 
     /// <summary>
-    /// Serves as a hash function for a particular type. 
+    /// Serves as a hash function for a particular type.
     /// </summary>
     public override int GetHashCode() => BaseAddress.GetHashCode() ^ MemorySharp.GetHashCode();
 

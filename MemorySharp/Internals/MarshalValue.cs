@@ -8,10 +8,9 @@
 */
 
 using System.Diagnostics.CodeAnalysis;
-using Binarysharp.Memory;
-using Binarysharp.MemoryManagement;
+using MemorySharp.Memory;
 
-namespace Binarysharp.Internals;
+namespace MemorySharp.Internals;
 
 /// <summary>
 /// The factory to create instance of the <see cref="MarshalledValue{T}"/> class.
@@ -29,7 +28,7 @@ public static class MarshalValue
     /// <param name="memorySharp">The concerned process.</param>
     /// <param name="value">The value to marshal.</param>
     /// <returns>The return value is an new instance of the <see cref="MarshalledValue{T}"/> class.</returns>
-    public static MarshalledValue<T> Marshal<T>(MemorySharp memorySharp, [DisallowNull] T value) => new(memorySharp, value);
+    public static MarshalledValue<T> Marshal<T>(MemoryManagement.MemorySharp memorySharp, [DisallowNull] T value) => new(memorySharp, value);
 }
 
 /// <summary>
@@ -41,7 +40,7 @@ public class MarshalledValue<T> : IMarshalledValue
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
-    protected readonly MemorySharp MemorySharp;
+    protected readonly MemoryManagement.MemorySharp MemorySharp;
 
     /// <summary>
     /// The memory allocated where the value is fully written if needed. It can be unused.
@@ -64,7 +63,7 @@ public class MarshalledValue<T> : IMarshalledValue
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     /// <param name="value">The value to marshal.</param>
-    public MarshalledValue(MemorySharp memorySharp, [DisallowNull] T value = default!)
+    public MarshalledValue(MemoryManagement.MemorySharp memorySharp, [DisallowNull] T value = default!)
     {
         // Save the parameters
         MemorySharp = memorySharp;

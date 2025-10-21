@@ -7,7 +7,7 @@
  * See the file LICENSE for more information.
  */
 
-namespace Binarysharp.Windows.Mouse;
+namespace MemorySharp.Windows.Mouse;
 
 /// <summary>
 /// Abstract class defining a virtual mouse.

@@ -9,12 +9,11 @@
 
 using System.Diagnostics;
 using System.Runtime.Versioning;
-using Binarysharp.Internals;
-using Binarysharp.MemoryManagement;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.Internals;
+using MemorySharp.MemoryManagement.Native;
 using ThreadState = System.Diagnostics.ThreadState;
 
-namespace Binarysharp.Threading;
+namespace MemorySharp.Threading;
 
 /// <summary>
 /// Class repesenting a thread in the remote process.
@@ -22,9 +21,9 @@ namespace Binarysharp.Threading;
 public class RemoteThread : IDisposable, IEquatable<RemoteThread>
 {
     /// <summary>
-    /// The reference of the <see cref="Binarysharp.MemoryManagement.MemorySharp"/> object.
+    /// The reference of the <see cref="MemoryManagement.MemorySharp"/> object.
     /// </summary>
-    protected readonly MemorySharp MemorySharp;
+    protected readonly MemoryManagement.MemorySharp MemorySharp;
 
     /// <summary>
     /// The parameter passed to the thread when it was created.
@@ -155,9 +154,9 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoteThread"/> class.
     /// </summary>
-    /// <param name="memorySharp">The reference of the <see cref="Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+    /// <param name="memorySharp">The reference of the <see cref="MemoryManagement.MemorySharp"/> object.</param>
     /// <param name="thread">The native <see cref="ProcessThread"/> object.</param>
-    internal RemoteThread(MemorySharp memorySharp, ProcessThread thread)
+    internal RemoteThread(MemoryManagement.MemorySharp memorySharp, ProcessThread thread)
     {
         // Save the parameters
         MemorySharp = memorySharp;
@@ -173,10 +172,10 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoteThread"/> class.
     /// </summary>
-    /// <param name="memorySharp">The reference of the <see cref="Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+    /// <param name="memorySharp">The reference of the <see cref="MemoryManagement.MemorySharp"/> object.</param>
     /// <param name="thread">The native <see cref="ProcessThread"/> object.</param>
     /// <param name="parameter">The parameter passed to the thread when it was created.</param>
-    internal RemoteThread(MemorySharp memorySharp, ProcessThread thread, IMarshalledValue? parameter = null) : this(memorySharp, thread)
+    internal RemoteThread(MemoryManagement.MemorySharp memorySharp, ProcessThread thread, IMarshalledValue? parameter = null) : this(memorySharp, thread)
     {
         // Save the parameter
         _parameter = parameter;
@@ -189,7 +188,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     }
 
     /// <summary>
-    /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection. 
+    /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
     /// </summary>
     ~RemoteThread() => Dispose();
 
@@ -232,7 +231,7 @@ public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     }
 
     /// <summary>
-    /// Serves as a hash function for a particular type. 
+    /// Serves as a hash function for a particular type.
     /// </summary>
     public override int GetHashCode() => Id.GetHashCode() ^ MemorySharp.GetHashCode();
 

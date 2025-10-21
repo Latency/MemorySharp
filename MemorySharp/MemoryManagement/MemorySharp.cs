@@ -10,15 +10,15 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Binarysharp.Helpers;
-using Binarysharp.Internals;
-using Binarysharp.Memory;
-using Binarysharp.MemoryManagement.Modules;
-using Binarysharp.MemoryManagement.Native;
-using Binarysharp.Threading;
-using Binarysharp.Windows;
+using MemorySharp.Helpers;
+using MemorySharp.Internals;
+using MemorySharp.Memory;
+using MemorySharp.MemoryManagement.Modules;
+using MemorySharp.MemoryManagement.Native;
+using MemorySharp.Threading;
+using MemorySharp.Windows;
 
-namespace Binarysharp.MemoryManagement;
+namespace MemorySharp.MemoryManagement;
 
 /// <summary>
 /// Class for memory editing a remote process.
@@ -108,7 +108,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         Handle = MemoryCore.OpenProcess(ProcessAccessFlags.AllAccess, process.Id);
 
         // Initialize the PEB
-        Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
+        //Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
 
         // Create instances of the factories
         Factories = [];
@@ -129,7 +129,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     { }
 
     /// <summary>
-    /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection. 
+    /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
     /// </summary>
     ~MemorySharp() => Dispose();
 
@@ -177,7 +177,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     public bool Equals(MemorySharp? other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Handle.Equals(other.Handle));
 
     /// <summary>
-    /// Serves as a hash function for a particular type. 
+    /// Serves as a hash function for a particular type.
     /// </summary>
     public override int GetHashCode() => Handle.GetHashCode();
 
@@ -354,7 +354,7 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
     {
         // Allocate an array containing the values of the array converted into bytes
         var valuesInBytes = new byte[MarshalType<T>.Size * array.Length];
-            
+
         // Convert each value into its bytes representation
         for (var i = 0; i < array.Length; i++)
         {

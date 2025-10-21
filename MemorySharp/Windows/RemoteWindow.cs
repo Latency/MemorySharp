@@ -7,13 +7,12 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.MemoryManagement;
-using Binarysharp.MemoryManagement.Native;
-using Binarysharp.Threading;
-using Binarysharp.Windows.Keyboard;
-using Binarysharp.Windows.Mouse;
+using MemorySharp.MemoryManagement.Native;
+using MemorySharp.Threading;
+using MemorySharp.Windows.Keyboard;
+using MemorySharp.Windows.Mouse;
 
-namespace Binarysharp.Windows;
+namespace MemorySharp.Windows;
 
 /// <summary>
 /// Class repesenting a window in the remote process.
@@ -23,7 +22,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
-    protected readonly MemorySharp MemorySharp;
+    protected readonly MemoryManagement.MemorySharp MemorySharp;
 
     /// <summary>
     /// Gets all the child windows of this window.
@@ -164,7 +163,7 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
     /// <param name="handle">The handle of a window.</param>
-    internal RemoteWindow(MemorySharp memorySharp, nint handle)
+    internal RemoteWindow(MemoryManagement.MemorySharp memorySharp, nint handle)
     {
         // Save the parameters
         MemorySharp = memorySharp;
@@ -219,14 +218,14 @@ public class RemoteWindow : IEquatable<RemoteWindow>
     public void Flash(uint count, TimeSpan timeout, FlashWindowFlags flags = FlashWindowFlags.All) => WindowCore.FlashWindowEx(Handle, flags, count, timeout);
 
     /// <summary>
-    /// Serves as a hash function for a particular type. 
+    /// Serves as a hash function for a particular type.
     /// </summary>
     public override int GetHashCode()
     {
         unchecked
         {
             var hashCode = MemorySharp.GetHashCode();
-            hashCode = (hashCode * 397) ^ Handle.GetHashCode();
+            hashCode = hashCode * 397 ^ Handle.GetHashCode();
             return hashCode;
         }
     }

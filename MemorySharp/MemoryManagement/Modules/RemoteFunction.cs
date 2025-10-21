@@ -7,9 +7,9 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.Memory;
+using MemorySharp.Memory;
 
-namespace Binarysharp.MemoryManagement.Modules;
+namespace MemorySharp.MemoryManagement.Modules;
 
 /// <summary>
 /// Class representing a function in the remote process.

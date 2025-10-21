@@ -8,10 +8,10 @@
 */
 
 using System.Diagnostics;
-using Binarysharp.Memory;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.Memory;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.MemoryManagement.Modules;
+namespace MemorySharp.MemoryManagement.Modules;
 
 /// <summary>
 /// Class repesenting a module in the remote process.

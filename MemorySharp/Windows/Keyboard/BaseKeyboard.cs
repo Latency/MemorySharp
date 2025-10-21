@@ -7,9 +7,9 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Windows.Keyboard;
+namespace MemorySharp.Windows.Keyboard;
 
 /// <summary>
 /// Abstract class defining a virtual keyboard.

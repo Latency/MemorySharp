@@ -7,11 +7,11 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.Internals;
-using Binarysharp.MemoryManagement;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.Internals;
+using MemorySharp.MemoryManagement;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Memory;
+namespace MemorySharp.Memory;
 
 /// <summary>
 /// Class representing an allocated memory in a remote process.
@@ -35,7 +35,7 @@ public class RemoteAllocation : RemoteRegion, IDisposableState
     /// <param name="size">The size of the allocated memory.</param>
     /// <param name="protection">The protection of the allocated memory.</param>
     /// <param name="mustBeDisposed">The allocated memory will be released when the finalizer collects the object.</param>
-    internal RemoteAllocation(MemorySharp memorySharp, uint size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, bool mustBeDisposed = true) 
+    internal RemoteAllocation(MemoryManagement.MemorySharp memorySharp, uint size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, bool mustBeDisposed = true)
         : base(memorySharp, MemoryCore.Allocate(memorySharp.Handle, size, protection))
     {
         // Set local vars
@@ -69,7 +69,7 @@ public class RemoteAllocation : RemoteRegion, IDisposableState
             // Remove the pointer
             BaseAddress = nint.Zero;
 
-            // Avoid the finalizer 
+            // Avoid the finalizer
             GC.SuppressFinalize(this);
         }
     }

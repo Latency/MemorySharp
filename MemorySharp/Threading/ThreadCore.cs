@@ -9,11 +9,11 @@
 
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using Binarysharp.Helpers;
-using Binarysharp.Internals;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.Helpers;
+using MemorySharp.Internals;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Threading;
+namespace MemorySharp.Threading;
 
 /// <summary>
 /// Static core class providing tools for manipulating threads.

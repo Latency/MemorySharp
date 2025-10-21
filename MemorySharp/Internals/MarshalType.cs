@@ -11,10 +11,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
-using Binarysharp.Memory;
-using Binarysharp.MemoryManagement;
+using MemorySharp.Memory;
 
-namespace Binarysharp.Internals;
+namespace MemorySharp.Internals;
 
 /// <summary>
 /// Static class providing tools for extracting information related to types.
@@ -202,7 +201,7 @@ public static class MarshalType<T>
     /// <param name="memorySharp">The concerned process.</param>
     /// <param name="pointer">The pointer to convert.</param>
     /// <returns>The return value is the pointer converted to the given data type.</returns>
-    public static T? PtrToObject(MemorySharp memorySharp, nint pointer) => ByteArrayToObject(CanBeStoredInRegisters
-                                                                                                 ? BitConverter.GetBytes(pointer.ToInt64())
-                                                                                                 : memorySharp.Read<byte>(pointer, Size, false));
+    public static T? PtrToObject(MemoryManagement.MemorySharp memorySharp, nint pointer) => ByteArrayToObject(CanBeStoredInRegisters
+                                                                                                                  ? BitConverter.GetBytes(pointer.ToInt64())
+                                                                                                                  : memorySharp.Read<byte>(pointer, Size, false));
 }

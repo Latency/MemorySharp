@@ -8,9 +8,9 @@
 */
 
 using System.Diagnostics;
-using Binarysharp.Internals;
+using MemorySharp.Internals;
 
-namespace Binarysharp.MemoryManagement.Modules;
+namespace MemorySharp.MemoryManagement.Modules;
 
 /// <summary>
 /// Class representing an injected module in a remote process.
@@ -61,7 +61,7 @@ public class InjectedModule : RemoteModule, IDisposableState
             // Eject the module
             MemorySharp.Modules.Eject(this);
 
-            // Avoid the finalizer 
+            // Avoid the finalizer
             GC.SuppressFinalize(this);
         }
     }

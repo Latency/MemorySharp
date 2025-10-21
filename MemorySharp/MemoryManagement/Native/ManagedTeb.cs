@@ -7,10 +7,10 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.Memory;
-using Binarysharp.Threading;
+using MemorySharp.Memory;
+using MemorySharp.Threading;
 
-namespace Binarysharp.MemoryManagement.Native;
+namespace MemorySharp.MemoryManagement.Native;
 
 /// <summary>
 /// Class representing the Thread Environment Block of a remote thread.

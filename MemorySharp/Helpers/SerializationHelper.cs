@@ -10,7 +10,7 @@
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Binarysharp.Helpers;
+namespace MemorySharp.Helpers;
 
 /// <summary>
 /// Static helper class providing tools for serializing/deserializing objects.

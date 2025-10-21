@@ -7,11 +7,10 @@
  * See the file LICENSE for more information.
 */
 
-using Binarysharp.Internals;
-using Binarysharp.MemoryManagement;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.Internals;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.Memory;
+namespace MemorySharp.Memory;
 
 /// <summary>
 /// Class providing tools for manipulating memory space.
@@ -21,11 +20,11 @@ public class MemoryFactory : IFactory
     /// <summary>
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
-    protected readonly MemorySharp MemorySharp;
+    protected readonly MemoryManagement.MemorySharp MemorySharp;
     /// <summary>
     /// The list containing all allocated memory.
     /// </summary>
-    protected readonly List<RemoteAllocation> InternalRemoteAllocations; 
+    protected readonly List<RemoteAllocation> InternalRemoteAllocations;
 
     /// <summary>
     /// A collection containing all allocated memory in the remote process.
@@ -52,7 +51,7 @@ public class MemoryFactory : IFactory
     /// Initializes a new instance of the <see cref="MemoryFactory"/> class.
     /// </summary>
     /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
-    internal MemoryFactory(MemorySharp memorySharp)
+    internal MemoryFactory(MemoryManagement.MemorySharp memorySharp)
     {
         // Save the parameter
         MemorySharp = memorySharp;

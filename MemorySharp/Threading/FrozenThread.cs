@@ -7,7 +7,7 @@
  * See the file LICENSE for more information.
  */
 
-namespace Binarysharp.Threading;
+namespace MemorySharp.Threading;
 
 /// <summary>
 /// Class containing a frozen thread. If an instance of this class is disposed, its associated thread is resumed.
@@ -26,7 +26,7 @@ public class FrozenThread : IDisposable
     internal FrozenThread(RemoteThread thread) => Thread = thread;
 
     /// <summary>
-    /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection. 
+    /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
     /// </summary>
     ~FrozenThread() => Dispose();
 

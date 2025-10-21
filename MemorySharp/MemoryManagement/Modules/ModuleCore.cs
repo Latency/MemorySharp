@@ -9,9 +9,9 @@
 
 using System.ComponentModel;
 using System.Diagnostics;
-using Binarysharp.MemoryManagement.Native;
+using MemorySharp.MemoryManagement.Native;
 
-namespace Binarysharp.MemoryManagement.Modules;
+namespace MemorySharp.MemoryManagement.Modules;
 
 /// <summary>
 /// Static core class providing tools for manipulating modules and libraries.
@@ -71,7 +71,7 @@ public static class ModuleCore
         // Check whether the file exists
         if(!File.Exists(libraryPath))
             throw new FileNotFoundException($"Couldn't load the library {libraryPath} because the file doesn't exist.");
-            
+
         // Load the library
         if(NativeMethods.LoadLibrary(libraryPath) == nint.Zero)
             throw new Win32Exception($"Couldn't load the library {libraryPath}.");
