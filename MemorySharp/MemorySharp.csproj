@@ -4,13 +4,11 @@
 		<OutputType>Library</OutputType>
 		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
 		<Description>MemorySharp is a C# based memory editing library targeting Windows applications, offering various functions to extract and inject data and codes into remote processes to allow interoperability.</Description>
 		<XamlDebuggingInformation Condition="'$(Configuration)' == 'Debug'">True</XamlDebuggingInformation>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<WarningsAsErrors>$(WarningsAsErrors);NU1605</WarningsAsErrors>
 		<NoWarn>$(NoWarn);NU5104;MSB3270</NoWarn>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 	
 	<ItemGroup>
