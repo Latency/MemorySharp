@@ -130,8 +130,8 @@ public static partial class NativeMethods
     /// If the function succeeds, the return value is the address of the exported function or variable.
     /// If the function fails, the return value is NULL. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
     /// </returns>
-    [LibraryImport("kernel32", SetLastError = true)]
-    internal static partial nint GetProcAddress(nint hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
+    [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+    public static extern nint GetProcAddress(nint hModule, string procName);
 
     /// <summary>
     /// Retrieves the process identifier of the specified process.
@@ -394,10 +394,29 @@ public static partial class NativeMethods
     /// but if the buffer was too small, this is the minimum size of buffer needed to receive the information successfully.
     /// </param>
     /// <returns>Returns an NTSTATUS success or error code. (STATUS_SUCCESS = 0x0).</returns>
-    [LibraryImport("ntdll.dll",  SetLastError = true)]
-    [ResourceExposure(ResourceScope.Machine)]
-    internal static partial int NtQueryInformationProcess(SafeProcessHandle processHandle, int infoclass, ProcessBasicInformation processinfo, int size, int[] returnedSize);
+    //[LibraryImport("ntdll.dll",  SetLastError = true)]
+    //[ResourceExposure(ResourceScope.Machine)]
+    //internal static partial int NtQueryInformationProcess(SafeProcessHandle processHandle, int infoclass, ProcessBasicInformation processinfo, int size, int[] returnedSize);
 
+    [DllImport("ntdll.dll", SetLastError = true)]
+    internal static extern int NtQueryInformationProcess(
+        nint                          processHandle,
+        int                           processInformationClass,
+        ref PROCESS_BASIC_INFORMATION processInformation,
+        uint                          processInformationLength,
+        out int                       returnLength
+    );
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PROCESS_BASIC_INFORMATION
+    {
+        public nint ExitStatus;
+        public nint PebBaseAddress;
+        public nint AffinityMask;
+        public nint BasePriority;
+        public nint UniqueProcessId;
+        public nint InheritedFromUniqueProcessId; // This is the Parent PID
+    }
     /// <summary>
     /// Retrieves information about the specified thread.
     /// </summary>

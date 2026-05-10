@@ -21,6 +21,7 @@ public class MemoryFactory : IFactory
     /// The reference of the <see cref="MemorySharp"/> object.
     /// </summary>
     protected readonly MemoryManagement.MemorySharp MemorySharp;
+
     /// <summary>
     /// The list containing all allocated memory.
     /// </summary>
@@ -39,7 +40,7 @@ public class MemoryFactory : IFactory
         get
         {
             #if x64
-                var adresseTo = new nint(0x7fffffffffffffff);
+            var adresseTo = new nint(0x7fffffffffffffff);
             #else
             var adresseTo = new nint(0x7fffffff);
             #endif

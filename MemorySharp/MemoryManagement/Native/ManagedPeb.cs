@@ -349,5 +349,5 @@ public class ManagedPeb : RemotePointer
     /// </summary>
     /// <param name="processHandle">A handle of the process.</param>
     /// <returns>A <see cref="nint"/> pointer of the PEB.</returns>
-    public static nint FindPeb(SafeMemoryHandle processHandle) => MemoryCore.NtQueryInformationProcess(processHandle).PebBaseAddress;
+    public static nint FindPeb(SafeMemoryHandle processHandle) => MemoryCore.NtQueryInformationProcess(processHandle)?.PebBaseAddress ?? 0;
 }

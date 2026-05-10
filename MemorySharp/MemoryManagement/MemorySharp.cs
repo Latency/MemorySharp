@@ -108,11 +108,10 @@ public class MemorySharp : IDisposable, IEquatable<MemorySharp>
         Handle = MemoryCore.OpenProcess(ProcessAccessFlags.AllAccess, process.Id);
 
         // Initialize the PEB
-        //Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
+        Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
 
         // Create instances of the factories
-        Factories = [];
-        Factories.AddRange([
+        Factories = new List<IFactory>([
             Memory   = new MemoryFactory(this),
             Modules  = new ModuleFactory(this),
             Threads  = new ThreadFactory(this),

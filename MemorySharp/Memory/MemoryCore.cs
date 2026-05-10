@@ -7,11 +7,12 @@
  * See the file LICENSE for more information.
 */
 
-using System.ComponentModel;
 using MemorySharp.Helpers;
 using MemorySharp.Internals;
 using MemorySharp.MemoryManagement.Native;
-using Microsoft.Win32.SafeHandles;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using static MemorySharp.MemoryManagement.Native.NativeMethods;
 using NativeMethods = MemorySharp.MemoryManagement.Native.NativeMethods;
 
 namespace MemorySharp.Memory;
@@ -71,7 +72,7 @@ public static class MemoryCore
         HandleManipulator.ValidateAsArgument(address,       "address");
 
         // Free the memory
-        if (!NativeMethods.VirtualFreeEx(processHandle, address, 0, MemoryReleaseFlags.Release))
+        if (!VirtualFreeEx(processHandle, address, 0, MemoryReleaseFlags.Release))
             // If the memory wasn't correctly freed, throws an exception
             throw new Win32Exception($"The memory page 0x{address:X} cannot be freed.");
     }
@@ -81,20 +82,16 @@ public static class MemoryCore
     /// </summary>
     /// <param name="processHandle">A handle to the process to query.</param>
     /// <returns>A <see cref="ProcessBasicInformation"/> structure containg process information.</returns>
-    public static ProcessBasicInformation NtQueryInformationProcess(SafeMemoryHandle processHandle)
+    public static PROCESS_BASIC_INFORMATION? NtQueryInformationProcess(SafeMemoryHandle processHandle)
     {
         // Check if the handle is valid
         HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
 
         // Create a structure to store process info
-        var info = new ProcessBasicInformation();
-
-        var p = new SafeProcessHandle(processHandle.DangerousGetHandle(), true);
-        int[] returnedSize = [];
+        var info = new PROCESS_BASIC_INFORMATION();
 
         // Get the process info
-        var retval = NativeMethods.NtQueryInformationProcess(p, (int)ProcessInformationClass.ProcessBasicInformation, info, info.Size, returnedSize);
-        return new ProcessBasicInformation();
+        return NativeMethods.NtQueryInformationProcess(processHandle.DangerousGetHandle(), (int)ProcessInformationClass.ProcessBasicInformation, ref info, (uint)Unsafe.SizeOf<PROCESS_BASIC_INFORMATION>(), out _) == 0 ? info : null;
     }
 
     /// <summary>
@@ -133,7 +130,7 @@ public static class MemoryCore
         var buffer = new byte[size];
 
         // Read the data from the target process
-        if (NativeMethods.ReadProcessMemory(processHandle, address, buffer, size, out var nbBytesRead) && size == nbBytesRead)
+        if (ReadProcessMemory(processHandle, address, buffer, size, out var nbBytesRead) && size == nbBytesRead)
             return buffer;
 
         // Else the data couldn't be read, throws an exception

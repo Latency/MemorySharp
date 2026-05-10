@@ -597,7 +597,7 @@ public enum PebStructure
     /// <summary>
     /// Length: 8 bytes.
     /// </summary>
-    TlsBitmapBits = 0x44,
+    TlsBitmapBits             = 0x44,
     ReadOnlySharedMemoryBase = 0x4C,
     ReadOnlySharedMemoryHeap = 0x50,
     ReadOnlyStaticServerData = 0x54,
@@ -658,12 +658,12 @@ public enum PebStructure
     /// Length: 8 bytes (LARGE_INTEGER type).
     /// </summary>
     AppCompatFlagsUser = 0x1E0,
-    ShimData      = 0x1E8,
-    AppCompatInfo = 0x1EC,
+    ShimData           = 0x1E8,
+    AppCompatInfo      = 0x1EC,
     /// <summary>
     /// Length: 8 bytes (UNICODE_STRING type).
     /// </summary>
-    CsdVersion = 0x1F0,
+    CsdVersion                         = 0x1F0,
     ActivationContextData              = 0x1F8,
     ProcessAssemblyStorageMap          = 0x1FC,
     SystemDefaultActivationContextData = 0x200,

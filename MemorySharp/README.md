@@ -16,11 +16,11 @@ MemorySharp is a C# based memory editing library targeting Windows applications,
 </tr>
 <tr>
 <td>UPDATED:</td>
-<td>10/25/2025</td>
+<td>5/7/2026</td>
 </tr>
 <tr>
 <td>FRAMEWORK:</td>
-<td>net8.0, net9.0, net10.0</td>
+<td>net8.0, net9.0, net10.0, net11.0</td>
 </tr>
 <tr>
 <td>LANGUAGE:</td>
